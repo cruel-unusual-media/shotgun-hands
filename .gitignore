@@ -1,0 +1,7 @@
+# System/tool ignores
+.DS_Store
+.vscode/
+
+# Godot 4+ specific ignores
+.godot/
+/android/
