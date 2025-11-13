@@ -11,10 +11,19 @@ config_version=5
 [application]
 
 config/name="shotgun-hands"
+run/main_scene="uid://bafuodme2iqql"
 config/features=PackedStringArray("4.5", "GL Compatibility")
 boot_splash/bg_color=Color(0, 0, 0, 1)
 boot_splash/image="uid://c4i0smuihfpkw"
 config/icon="uid://cttdpeep55w18"
+
+[autoload]
+
+PersistentUI="*res://Globals/Scenes/PersistentUI/persistent_ui.tscn"
+DefaultPaths="*res://Globals/Scripts/DefaultPaths.gd"
+GameLogger="*res://Globals/Scripts/GameLogger.gd"
+GlobalEnums="*res://Globals/Scripts/GlobalEnums.gd"
+SceneManager="*res://Globals/Scripts/SceneManager.gd"
 
 [rendering]
 
