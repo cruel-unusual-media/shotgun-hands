@@ -1,6 +1,6 @@
 extends Node
 
-##Autoload that is used to load levels and menu's. test
+##Autoload that is used to load levels and menu's. test test
 
 func launch_level(level_scene_path : StringName) -> void:
 	pass
