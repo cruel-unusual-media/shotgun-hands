@@ -1,0 +1,58 @@
+[gd_scene load_steps=2 format=3 uid="uid://bjy4bw3q11ddo"]
+
+[ext_resource type="Script" uid="uid://bdbu66pvbk0bk" path="res://Globals/Scenes/PersistentUI/PersistentUI.gd" id="1_517ut"]
+
+[node name="PersistentUI" type="Control"]
+z_index = 100
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_517ut")
+
+[node name="BlackOverlay" type="ColorRect" parent="."]
+modulate = Color(1, 1, 1, 0)
+z_index = 100
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="LevelLoading" type="Control" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="LevelLoading"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.08662925, 0.08662925, 0.08662925, 1)
+
+[node name="Label" type="Label" parent="LevelLoading"]
+layout_mode = 0
+offset_left = 501.0
+offset_top = 220.0
+offset_right = 616.0
+offset_bottom = 243.0
+text = "Loading level..."
+
+[node name="Label2" type="Label" parent="LevelLoading"]
+layout_mode = 0
+offset_left = 394.0
+offset_top = 375.0
+offset_right = 722.0
+offset_bottom = 398.0
+text = "There will be some tips here at some point"
