@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://deanc4lyevhej"
-path="res://.godot/imported/BarbedWire.png-4448da932f5176e9735baccb51bc4a59.ctex"
+uid="uid://6il14dhov8x6"
+path="res://.godot/imported/TrashCan.png-6134ae9c8f2572ff656a6a0cbbd8d69f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://unsorted_assets/BarbedWire.png"
-dest_files=["res://.godot/imported/BarbedWire.png-4448da932f5176e9735baccb51bc4a59.ctex"]
+source_file="res://Levels/Sprites/Decorations/TrashCan.png"
+dest_files=["res://.godot/imported/TrashCan.png-6134ae9c8f2572ff656a6a0cbbd8d69f.ctex"]
 
 [params]
 

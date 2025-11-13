@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bjau3wpcti3wd"
-path="res://.godot/imported/spritesheet_sh_no_borders_notext_bu.png-9a5887d033163474551e5a739606348d.ctex"
+uid="uid://dl6oij53hfog7"
+path="res://.godot/imported/Boxes.png-3e6b1c6f1dc90b9256737f0f569da12f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://unsorted_assets/player_sprites/spritesheet_sh_no_borders_notext_bu.png"
-dest_files=["res://.godot/imported/spritesheet_sh_no_borders_notext_bu.png-9a5887d033163474551e5a739606348d.ctex"]
+source_file="res://Levels/Sprites/Decorations/Boxes.png"
+dest_files=["res://.godot/imported/Boxes.png-3e6b1c6f1dc90b9256737f0f569da12f.ctex"]
 
 [params]
 

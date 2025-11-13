@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cq6ixs0chqk0l"
-path="res://.godot/imported/road-tile-pixilart_1.png-224fbdb5591799773707043c6b04fb01.ctex"
+uid="uid://5i443h6tdth"
+path="res://.godot/imported/GrafittiBench.png-14c749c3bfb28ee1d6b585fb3bc3e76e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://unsorted_assets/road-tile-pixilart_1.png"
-dest_files=["res://.godot/imported/road-tile-pixilart_1.png-224fbdb5591799773707043c6b04fb01.ctex"]
+source_file="res://Levels/Sprites/Decorations/GrafittiBench.png"
+dest_files=["res://.godot/imported/GrafittiBench.png-14c749c3bfb28ee1d6b585fb3bc3e76e.ctex"]
 
 [params]
 

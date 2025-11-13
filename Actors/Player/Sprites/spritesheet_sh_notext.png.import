@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://3jcf4fufwwc1"
-path="res://.godot/imported/PotPlant.png-149ccb64aec550189aec7eef1bd88f90.ctex"
+uid="uid://gf4agagiun0e"
+path="res://.godot/imported/spritesheet_sh_notext.png-f415a0f5a2fc8ce8cd5c8708b4c2d38f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://unsorted_assets/PotPlant.png"
-dest_files=["res://.godot/imported/PotPlant.png-149ccb64aec550189aec7eef1bd88f90.ctex"]
+source_file="res://Actors/Player/Sprites/spritesheet_sh_notext.png"
+dest_files=["res://.godot/imported/spritesheet_sh_notext.png-f415a0f5a2fc8ce8cd5c8708b4c2d38f.ctex"]
 
 [params]
 

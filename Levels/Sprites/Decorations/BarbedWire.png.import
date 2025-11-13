@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ovcmrnpsk6nw"
-path="res://.godot/imported/concrete_block.png-1cddd2c1bdd1ca699efbb221ae25ef67.ctex"
+uid="uid://deanc4lyevhej"
+path="res://.godot/imported/BarbedWire.png-8ca060132ecb6f6b47f5502b80120175.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://unsorted_assets/concrete_block.png"
-dest_files=["res://.godot/imported/concrete_block.png-1cddd2c1bdd1ca699efbb221ae25ef67.ctex"]
+source_file="res://Levels/Sprites/Decorations/BarbedWire.png"
+dest_files=["res://.godot/imported/BarbedWire.png-8ca060132ecb6f6b47f5502b80120175.ctex"]
 
 [params]
 

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bghkfqjdu7320"
-path="res://.godot/imported/malarkey-labs-1.png-eaaa2d01c6dff06e14cb66753810141c.ctex"
+uid="uid://b0oprurrdx40d"
+path="res://.godot/imported/SkullPike.png-51813178658372d38412d5679a3b02d3.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://unsorted_assets/malarkey-labs-1.png"
-dest_files=["res://.godot/imported/malarkey-labs-1.png-eaaa2d01c6dff06e14cb66753810141c.ctex"]
+source_file="res://Levels/Sprites/Decorations/SkullPike.png"
+dest_files=["res://.godot/imported/SkullPike.png-51813178658372d38412d5679a3b02d3.ctex"]
 
 [params]
 

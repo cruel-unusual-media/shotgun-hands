@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bpfjwb8aa7fi2"
-path="res://.godot/imported/Gears.png-85b22502e66ce71746295c449ff3951b.ctex"
+uid="uid://cmxnqlx04ktmf"
+path="res://.godot/imported/spritesheet_sh.png-8b61a7811cc95fdaa6a1c3dc63723a96.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://unsorted_assets/Gears.png"
-dest_files=["res://.godot/imported/Gears.png-85b22502e66ce71746295c449ff3951b.ctex"]
+source_file="res://Actors/Player/Sprites/spritesheet_sh.png"
+dest_files=["res://.godot/imported/spritesheet_sh.png-8b61a7811cc95fdaa6a1c3dc63723a96.ctex"]
 
 [params]
 

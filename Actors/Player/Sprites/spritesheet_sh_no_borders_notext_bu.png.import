@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://clw1rnvebt65a"
-path="res://.godot/imported/FireCan.png-99ccc18c22a0c7939af6d85fc63e465e.ctex"
+uid="uid://bjau3wpcti3wd"
+path="res://.godot/imported/spritesheet_sh_no_borders_notext_bu.png-d2338fae191ef51167f6d5477f8fa859.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://unsorted_assets/FireCan.png"
-dest_files=["res://.godot/imported/FireCan.png-99ccc18c22a0c7939af6d85fc63e465e.ctex"]
+source_file="res://Actors/Player/Sprites/spritesheet_sh_no_borders_notext_bu.png"
+dest_files=["res://.godot/imported/spritesheet_sh_no_borders_notext_bu.png-d2338fae191ef51167f6d5477f8fa859.ctex"]
 
 [params]
 

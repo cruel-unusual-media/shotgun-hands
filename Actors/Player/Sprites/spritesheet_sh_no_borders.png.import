@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c8lcmrwpxonaj"
-path="res://.godot/imported/Mailbox.png-60b93209df8468818d064f4d06b94145.ctex"
+uid="uid://bclrqw4g4wik1"
+path="res://.godot/imported/spritesheet_sh_no_borders.png-f2c7c5932b0130c4ba2afc803d330527.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://unsorted_assets/Mailbox.png"
-dest_files=["res://.godot/imported/Mailbox.png-60b93209df8468818d064f4d06b94145.ctex"]
+source_file="res://Actors/Player/Sprites/spritesheet_sh_no_borders.png"
+dest_files=["res://.godot/imported/spritesheet_sh_no_borders.png-f2c7c5932b0130c4ba2afc803d330527.ctex"]
 
 [params]
 

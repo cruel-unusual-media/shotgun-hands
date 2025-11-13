@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://d2lkml6jsftk1"
-path="res://.godot/imported/road_tile.png-db98e5b7888ad306d5924c3edbe53e94.ctex"
+uid="uid://3jcf4fufwwc1"
+path="res://.godot/imported/PotPlant.png-2891d8cb38eaeec26024832d01f6064f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://unsorted_assets/road_tile.png"
-dest_files=["res://.godot/imported/road_tile.png-db98e5b7888ad306d5924c3edbe53e94.ctex"]
+source_file="res://Levels/Sprites/Decorations/PotPlant.png"
+dest_files=["res://.godot/imported/PotPlant.png-2891d8cb38eaeec26024832d01f6064f.ctex"]
 
 [params]
 

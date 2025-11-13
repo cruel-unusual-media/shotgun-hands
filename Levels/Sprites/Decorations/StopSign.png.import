@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dxbyylnrmlegf"
-path="res://.godot/imported/WichesHat.png-f8c6c7cae704cf78b9f4950b5ed6301d.ctex"
+uid="uid://cocdku2o3gtin"
+path="res://.godot/imported/StopSign.png-4a05366012ece36bd8db03f163c18cbb.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://unsorted_assets/WichesHat.png"
-dest_files=["res://.godot/imported/WichesHat.png-f8c6c7cae704cf78b9f4950b5ed6301d.ctex"]
+source_file="res://Levels/Sprites/Decorations/StopSign.png"
+dest_files=["res://.godot/imported/StopSign.png-4a05366012ece36bd8db03f163c18cbb.ctex"]
 
 [params]
 

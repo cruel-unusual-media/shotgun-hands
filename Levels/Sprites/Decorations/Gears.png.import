@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://gf4agagiun0e"
-path="res://.godot/imported/spritesheet_sh_notext.png-5baff3614721eb24cbbc1386a32bcc8f.ctex"
+uid="uid://bpfjwb8aa7fi2"
+path="res://.godot/imported/Gears.png-b58fd8ca295111551951f7f00b988081.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://unsorted_assets/player_sprites/spritesheet_sh_notext.png"
-dest_files=["res://.godot/imported/spritesheet_sh_notext.png-5baff3614721eb24cbbc1386a32bcc8f.ctex"]
+source_file="res://Levels/Sprites/Decorations/Gears.png"
+dest_files=["res://.godot/imported/Gears.png-b58fd8ca295111551951f7f00b988081.ctex"]
 
 [params]
 

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://5i443h6tdth"
-path="res://.godot/imported/GrafittiBench.png-4ba1737ed778e14d2c2b84f060cda7bf.ctex"
+uid="uid://c8lcmrwpxonaj"
+path="res://.godot/imported/Mailbox.png-896d2ff8231d0b6ce986eb5c19b4bd73.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://unsorted_assets/GrafittiBench.png"
-dest_files=["res://.godot/imported/GrafittiBench.png-4ba1737ed778e14d2c2b84f060cda7bf.ctex"]
+source_file="res://Levels/Sprites/Decorations/Mailbox.png"
+dest_files=["res://.godot/imported/Mailbox.png-896d2ff8231d0b6ce986eb5c19b4bd73.ctex"]
 
 [params]
 

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cocdku2o3gtin"
-path="res://.godot/imported/StopSign.png-5b141817ef44616445a2d24ac8a357f5.ctex"
+uid="uid://d2lkml6jsftk1"
+path="res://.godot/imported/road_tile.png-e3dbeefec1e195bf13f42ccfbee858cd.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://unsorted_assets/StopSign.png"
-dest_files=["res://.godot/imported/StopSign.png-5b141817ef44616445a2d24ac8a357f5.ctex"]
+source_file="res://Levels/Sprites/Tiles/road_tile.png"
+dest_files=["res://.godot/imported/road_tile.png-e3dbeefec1e195bf13f42ccfbee858cd.ctex"]
 
 [params]
 

@@ -12,6 +12,8 @@ config_version=5
 
 config/name="shotgun-hands"
 config/features=PackedStringArray("4.5", "GL Compatibility")
+boot_splash/bg_color=Color(0, 0, 0, 1)
+boot_splash/image="uid://c4i0smuihfpkw"
 config/icon="uid://cttdpeep55w18"
 
 [rendering]

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dl6oij53hfog7"
-path="res://.godot/imported/Boxes.png-78e5481b37d65d472a6e2d9b0f0d4e10.ctex"
+uid="uid://c4i0smuihfpkw"
+path="res://.godot/imported/CruelUnusualGamesLogo.png-9151f8b121e0a555cee3bd57c1967cfe.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://unsorted_assets/Boxes.png"
-dest_files=["res://.godot/imported/Boxes.png-78e5481b37d65d472a6e2d9b0f0d4e10.ctex"]
+source_file="res://CruelUnusualGamesLogo.png"
+dest_files=["res://.godot/imported/CruelUnusualGamesLogo.png-9151f8b121e0a555cee3bd57c1967cfe.ctex"]
 
 [params]
 

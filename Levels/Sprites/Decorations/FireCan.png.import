@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://6il14dhov8x6"
-path="res://.godot/imported/TrashCan.png-171e715a382c2c887c17646b8a04eeb6.ctex"
+uid="uid://clw1rnvebt65a"
+path="res://.godot/imported/FireCan.png-f4dddf669e1150d2c3be691bfb5a1eb1.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://unsorted_assets/TrashCan.png"
-dest_files=["res://.godot/imported/TrashCan.png-171e715a382c2c887c17646b8a04eeb6.ctex"]
+source_file="res://Levels/Sprites/Decorations/FireCan.png"
+dest_files=["res://.godot/imported/FireCan.png-f4dddf669e1150d2c3be691bfb5a1eb1.ctex"]
 
 [params]
 
