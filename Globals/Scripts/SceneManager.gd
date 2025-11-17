@@ -1,9 +1,6 @@
 extends Node
 
-##Autoload that is used to load levels and menu's. test test
-
-func launch_level(level_scene_path : StringName) -> void:
-	pass
+##Autoload that is used to load levels and menu's.
 
 func switch_to_menu_scene(menu_scene_path : String) -> void:
 	GameLogger.print_as_autoload(self, "Loading scene from path \"" + menu_scene_path + "\" ...")
