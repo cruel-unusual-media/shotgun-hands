@@ -26,6 +26,10 @@ GlobalEnums="*res://Globals/Scripts/GlobalEnums.gd"
 SceneManager="*res://Globals/Scripts/SceneManager.gd"
 LevelManager="*res://Globals/Scripts/LevelManager.gd"
 
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/sgh_le/plugin.cfg")
+
 [rendering]
 
 renderer/rendering_method="gl_compatibility"
