@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=4 uid="uid://cmp3q5bkbe7os"]
+[gd_scene load_steps=4 format=4 uid="uid://dhrk6jnsru3pf"]
 
-[ext_resource type="Script" path="res://Classes/Nodes/Level.gd" id="1_dudpr"]
+[ext_resource type="Script" uid="uid://b8jimhiabxqwq" path="res://Classes/Nodes/Level.gd" id="1_dudpr"]
 [ext_resource type="TileSet" uid="uid://h5ykt387ck0w" path="res://Tilesets/Resources/debug.tres" id="2_a51vj"]
+[ext_resource type="Script" uid="uid://dgh8puau3rarb" path="res://Classes/Nodes/LevelStart.gd" id="3_a51vj"]
 
 [node name="test_level" type="Node2D"]
 script = ExtResource("1_dudpr")
@@ -12,6 +13,10 @@ metadata/_custom_type_script = "uid://b8jimhiabxqwq"
 [node name="foreground" type="TileMapLayer" parent="room1"]
 tile_map_data = PackedByteArray("AAAAAAMAAAABAAAAAAABAAMAAAABAAAAAAACAAMAAAABAAAAAAADAAMAAAABAAAAAAAEAAMAAAABAAAAAAAFAAMAAAABAAAAAAAGAAMAAAABAAAAAAAHAAMAAAABAAAAAAAIAAMAAAABAAAAAAAJAAMAAAABAAAAAAAKAAMAAAABAAAAAAALAAMAAAABAAAAAAAMAAMAAAABAAAAAAANAAMAAAABAAAAAAAOAAMAAAABAAAAAAAPAAMAAAAAAAAAAAAQAAMAAAAAAAAAAAARAAMAAAAAAAAAAAASAAMAAAAAAAAAAAA=")
 tile_set = ExtResource("2_a51vj")
+
+[node name="LevelStart" type="Node2D" parent="room1"]
+script = ExtResource("3_a51vj")
+metadata/_custom_type_script = "uid://dgh8puau3rarb"
 
 [node name="room2" type="Node2D" parent="."]
 visible = false
