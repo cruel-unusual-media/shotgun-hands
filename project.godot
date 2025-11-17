@@ -37,6 +37,10 @@ enabled=PackedStringArray("res://addons/sgh_le/plugin.cfg")
 
 enabled=PackedStringArray("res://addons/sgh_le/plugin.cfg")
 
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/sgh_le/plugin.cfg")
+
 [rendering]
 
 renderer/rendering_method="gl_compatibility"
