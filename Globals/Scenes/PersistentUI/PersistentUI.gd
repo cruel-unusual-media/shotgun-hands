@@ -39,7 +39,7 @@ func set_level_loading_screen_progress(progress_fac : float) -> void: #maybe rep
 func finish_loading_level() -> void:
 	$LevelLoading/status.text = "Finished loading level!"
 	
-	await get_tree().create_timer(1.0).timeout
+	await get_tree().create_timer(0.3).timeout
 	
 	hide_loading_screen()
 
