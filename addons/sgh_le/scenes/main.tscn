@@ -82,6 +82,14 @@ layout_mode = 2
 size_flags_vertical = 10
 text = "Close"
 
+[node name="not_a_level_warning" type="Label" parent="main"]
+layout_mode = 0
+offset_left = 273.0
+offset_top = 323.0
+offset_right = 876.0
+offset_bottom = 346.0
+text = "The currently selected scene is not a SGH level. Please select a different scene."
+
 [node name="room_list" type="Control" parent="."]
 visible = false
 layout_mode = 1
