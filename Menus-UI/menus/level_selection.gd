@@ -13,3 +13,7 @@ func _process(delta: float) -> void:
 
 func _on_back_to_main_menu_button_down() -> void:
 	SceneManager.switch_to_menu(GlobalEnums.Menus.MAIN)
+
+
+func _on_debug_level_button_down() -> void:
+	LevelManager.launch_level("debug_level")

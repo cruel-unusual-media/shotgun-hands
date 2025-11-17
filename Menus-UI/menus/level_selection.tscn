@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://bxpg36hshchth"]
 
-[ext_resource type="Script" path="res://Menus-UI/menus/level_selection.gd" id="1_rnedf"]
+[ext_resource type="Script" uid="uid://c7n14yxddsmg3" path="res://Menus-UI/menus/level_selection.gd" id="1_rnedf"]
 
 [node name="LevelSelection" type="Control"]
 layout_mode = 3
@@ -27,4 +27,13 @@ offset_right = 68.0
 offset_bottom = 38.0
 text = "< Back"
 
+[node name="DebugLevel" type="Button" parent="."]
+layout_mode = 0
+offset_left = 113.0
+offset_top = 124.0
+offset_right = 212.0
+offset_bottom = 155.0
+text = "Debug level"
+
 [connection signal="button_down" from="BackToMainMenu" to="." method="_on_back_to_main_menu_button_down"]
+[connection signal="button_down" from="DebugLevel" to="." method="_on_debug_level_button_down"]
