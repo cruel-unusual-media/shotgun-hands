@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=4 uid="uid://cmp3q5bkbe7os"]
+
+[ext_resource type="Script" path="res://Classes/Nodes/Level.gd" id="1_dudpr"]
+[ext_resource type="TileSet" uid="uid://h5ykt387ck0w" path="res://Tilesets/Resources/debug.tres" id="2_a51vj"]
+
+[node name="test_level" type="Node2D"]
+script = ExtResource("1_dudpr")
+metadata/_custom_type_script = "uid://b8jimhiabxqwq"
+
+[node name="room1" type="Node2D" parent="."]
+
+[node name="foreground" type="TileMapLayer" parent="room1"]
+tile_map_data = PackedByteArray("AAAAAAMAAAABAAAAAAABAAMAAAABAAAAAAACAAMAAAABAAAAAAADAAMAAAABAAAAAAAEAAMAAAABAAAAAAAFAAMAAAABAAAAAAAGAAMAAAABAAAAAAAHAAMAAAABAAAAAAAIAAMAAAABAAAAAAAJAAMAAAABAAAAAAAKAAMAAAABAAAAAAALAAMAAAABAAAAAAAMAAMAAAABAAAAAAANAAMAAAABAAAAAAAOAAMAAAABAAAAAAAPAAMAAAAAAAAAAAAQAAMAAAAAAAAAAAARAAMAAAAAAAAAAAASAAMAAAAAAAAAAAA=")
+tile_set = ExtResource("2_a51vj")
+
+[node name="room2" type="Node2D" parent="."]
+visible = false

@@ -25,6 +25,10 @@ GameLogger="*res://Globals/Scripts/GameLogger.gd"
 GlobalEnums="*res://Globals/Scripts/GlobalEnums.gd"
 SceneManager="*res://Globals/Scripts/SceneManager.gd"
 
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/sgh_le/plugin.cfg")
+
 [rendering]
 
 renderer/rendering_method="gl_compatibility"
