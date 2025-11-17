@@ -24,7 +24,6 @@ grow_vertical = 2
 color = Color(0, 0, 0, 1)
 
 [node name="LevelLoading" type="Control" parent="."]
-visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -41,18 +40,35 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.08662925, 0.08662925, 0.08662925, 1)
 
-[node name="Label" type="Label" parent="LevelLoading"]
-layout_mode = 0
-offset_left = 501.0
-offset_top = 220.0
-offset_right = 616.0
-offset_bottom = 243.0
+[node name="status" type="Label" parent="LevelLoading"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -57.5
+offset_top = -131.0
+offset_right = 57.5
+offset_bottom = -108.0
+grow_horizontal = 2
+grow_vertical = 2
 text = "Loading level..."
+horizontal_alignment = 1
+
+[node name="progress" type="Label" parent="LevelLoading"]
+layout_mode = 0
+offset_left = 515.0
+offset_top = 284.0
+offset_right = 630.0
+offset_bottom = 307.0
+text = "0%"
+horizontal_alignment = 1
 
 [node name="Label2" type="Label" parent="LevelLoading"]
 layout_mode = 0
-offset_left = 394.0
-offset_top = 375.0
-offset_right = 722.0
-offset_bottom = 398.0
+offset_left = 415.0
+offset_top = 377.0
+offset_right = 743.0
+offset_bottom = 400.0
 text = "There will be some tips here at some point"

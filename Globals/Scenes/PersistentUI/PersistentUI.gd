@@ -5,7 +5,11 @@ extends Control
 var _locked : bool = false ##Whether other scripts can currently call animation/transition functions. Set this to true when this autoload is using itself to transition between levels and such.
 
 func _busy_error() -> void:
-	GameLogger.printerr_as_autoload(self, "Cannot play animation, PersistentUI has been locked")
+	GameLogger.printerr_as_autoload(self, "Cannot execute method, PersistentUI has been locked")
+
+
+
+
 
 
 func show_loading_screen() -> void: ##Fade in the loading screen with tips. Can be used when a level is loading.
@@ -14,15 +18,33 @@ func show_loading_screen() -> void: ##Fade in the loading screen with tips. Can 
 	_locked = true
 	await _fade_in_black()
 	$LevelLoading.visible = true
+	$LevelLoading/status.text = "Loading level..."
 	_fade_out_black()
+	return
+
 
 func hide_loading_screen() -> void: ##Fade out the loading screen with tips.
 	GameLogger.print_verbose_as_autoload(self, "Fading out tips screen...")
 	
-	await _fade_in_black()
+	await _fade_in_black(1.0)
 	$LevelLoading.visible = false
-	_fade_out_black()
+	_fade_out_black(0.4)
 	_locked = false
+	
+
+func set_level_loading_screen_progress(progress_fac : float) -> void: #maybe replace that label with a progress bar at some point?
+	$LevelLoading/progress.text = str(int(progress_fac * 100.0)) + "%"
+
+
+func finish_loading_level() -> void:
+	$LevelLoading/status.text = "Finished loading level!"
+	
+	await get_tree().create_timer(1.0).timeout
+	
+	hide_loading_screen()
+
+
+
 
 
 
