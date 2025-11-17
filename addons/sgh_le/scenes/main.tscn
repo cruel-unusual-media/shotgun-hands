@@ -1,4 +1,8 @@
-[gd_scene format=3 uid="uid://c8wue25i20fjs"]
+[gd_scene load_steps=4 format=3 uid="uid://c8wue25i20fjs"]
+
+[ext_resource type="Script" uid="uid://dwb08gw8ei4lh" path="res://addons/sgh_le/scenes/main.gd" id="1_ep5ol"]
+[ext_resource type="Script" uid="uid://dmbt3fcdusf8e" path="res://addons/sgh_le/scenes/room_list.gd" id="1_x6thf"]
+[ext_resource type="Script" uid="uid://o82ogn8ay18o" path="res://addons/sgh_le/scenes/main_screen.gd" id="2_8fyc8"]
 
 [node name="Main" type="Control"]
 layout_mode = 3
@@ -7,11 +11,128 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_ep5ol")
 
-[node name="Label" type="Label" parent="."]
-layout_mode = 0
-offset_left = 16.0
-offset_top = 11.0
-offset_right = 140.0
-offset_bottom = 34.0
-text = "SGH level editor"
+[node name="main" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_8fyc8")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="main"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_right = 223.0
+offset_bottom = 31.0
+grow_horizontal = 2
+
+[node name="file" type="MenuButton" parent="main/HBoxContainer"]
+layout_mode = 2
+text = "File"
+item_count = 3
+popup/item_0/text = "New Level..."
+popup/item_0/id = 0
+popup/item_1/text = "Open Level..."
+popup/item_1/id = 1
+popup/item_2/text = "Save Level"
+popup/item_2/id = 2
+
+[node name="rooms" type="Button" parent="main/HBoxContainer"]
+layout_mode = 2
+text = "Rooms"
+flat = true
+
+[node name="level_config" type="Button" parent="main/HBoxContainer"]
+layout_mode = 2
+text = "Level Configuration"
+flat = true
+
+[node name="level_configuration" type="Window" parent="main"]
+oversampling_override = 1.0
+size = Vector2i(400, 300)
+visible = false
+
+[node name="MarginContainer" type="MarginContainer" parent="main/level_configuration"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="main/level_configuration/MarginContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="main/level_configuration/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "test"
+
+[node name="close" type="Button" parent="main/level_configuration/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 10
+text = "Close"
+
+[node name="room_list" type="Control" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_x6thf")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="room_list"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+grow_horizontal = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="room_list/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="back_to_main" type="Button" parent="room_list/VBoxContainer/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "< Back"
+
+[node name="GridContainer" type="GridContainer" parent="room_list/VBoxContainer"]
+layout_mode = 2
+columns = 4
+
+[node name="Button" type="Button" parent="room_list/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "test"
+
+[node name="Button2" type="Button" parent="room_list/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "test"
+
+[node name="Button3" type="Button" parent="room_list/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "test"
+
+[node name="Button4" type="Button" parent="room_list/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "test"
+
+[node name="Button5" type="Button" parent="room_list/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "test"
+
+[connection signal="button_down" from="main/HBoxContainer/level_config" to="main" method="_on_level_config_button_down"]
+[connection signal="button_down" from="main/level_configuration/MarginContainer/VBoxContainer/close" to="main" method="_on_level_config_close_button_down"]
