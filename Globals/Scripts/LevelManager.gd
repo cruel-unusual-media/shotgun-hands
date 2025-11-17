@@ -2,6 +2,8 @@ extends Node
 
 ##Autoload that is used to load levels. Uses SceneManager under the hood.
 
+var loaded_level : Level
+
 func launch_level(level_name : String) -> void: ##Loads and initializes the level with the specified name.
 	var _path : String = DefaultPaths.level_scenes_path + level_name + ".tscn"
 	
@@ -28,7 +30,10 @@ func launch_level(level_name : String) -> void: ##Loads and initializes the leve
 	
 	var _level_scene : PackedScene = ResourceLoader.load_threaded_get(_path)
 	get_tree().change_scene_to_packed(_level_scene)
+	loaded_level = get_tree().current_scene
 	
 	PersistentUI.finish_loading_level()
 	
-	GameLogger.print_as_autoload(self, "Loaded level \"" + level_name + "\" (" + _path + ")")
+	GameLogger.print_as_autoload(self, "Loaded level \"" + level_name + "\" (" + _path + "), initializing...")
+	
+	loaded_level.initialize_level()

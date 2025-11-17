@@ -17,9 +17,6 @@ boot_splash/bg_color=Color(0, 0, 0, 1)
 boot_splash/image="uid://c4i0smuihfpkw"
 config/icon="uid://cttdpeep55w18"
 
-[editor_plugins]
-
-enabled=PackedStringArray("res://addons/sgh_le/plugin.cfg")
 [autoload]
 
 PersistentUI="*res://Globals/Scenes/PersistentUI/persistent_ui.tscn"
@@ -28,14 +25,6 @@ GameLogger="*res://Globals/Scripts/GameLogger.gd"
 GlobalEnums="*res://Globals/Scripts/GlobalEnums.gd"
 SceneManager="*res://Globals/Scripts/SceneManager.gd"
 LevelManager="*res://Globals/Scripts/LevelManager.gd"
-
-[editor_plugins]
-
-enabled=PackedStringArray("res://addons/sgh_le/plugin.cfg")
-
-[editor_plugins]
-
-enabled=PackedStringArray("res://addons/sgh_le/plugin.cfg")
 
 [editor_plugins]
 
