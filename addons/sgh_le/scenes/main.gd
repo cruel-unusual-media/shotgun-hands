@@ -40,15 +40,17 @@ func add_node_to_level(child : Node, parent : Node) -> void:
 	parent.add_child(child)
 	child.owner = current_scene_root
 
-
 func open_room_creation_dialog() -> void:
 	$room_creation_dialog.open_dialog()
 
 func create_room(room_name : String) -> void:
 	var _new_room_node : LevelRoom = LevelRoom.new()
 	_new_room_node.name = room_name
-	#undo_redo.add_do_method(current_scene_root, "add_child", [_new_room_node])
-	add_node_to_level(_new_room_node, current_scene_root)
+	
+	undo_redo.add_do_method(self, "add_node_to_level", _new_room_node, current_scene_root)
+	undo_redo.add_undo_method(_new_room_node, "queue_free")
+	undo_redo.commit_action()
+	
 	edit_room(room_name)
 
 func edit_room(room_name : String) -> void:

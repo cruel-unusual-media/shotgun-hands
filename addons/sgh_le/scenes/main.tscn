@@ -6,6 +6,7 @@
 [ext_resource type="Script" uid="uid://bdcu3kvxga6t3" path="res://addons/sgh_le/scenes/room_creation_dialog.gd" id="4_xpdnm"]
 
 [node name="Main" type="Control"]
+visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
