@@ -41,3 +41,6 @@ func _on_file_option_pressed(id : int) -> void:
 	match id:
 		0:
 			get_parent().create_new_level_scene()
+
+func _create_first_room() -> void:
+	get_parent().open_room_creation_dialog()

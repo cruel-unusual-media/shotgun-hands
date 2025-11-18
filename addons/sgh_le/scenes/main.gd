@@ -1,10 +1,13 @@
 @tool
 extends Control
 
+var current_scene_root : Node
 var loaded_scene_path : String = "a"
 var shown_room_name : String
 
 var _is_current_scene_a_level : bool = false
+
+@onready var undo_redo = EditorInterface.get_editor_undo_redo()
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -13,9 +16,11 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	_is_current_scene_a_level = EditorInterface.get_edited_scene_root() is Level
+	current_scene_root = EditorInterface.get_edited_scene_root()
+	_is_current_scene_a_level = current_scene_root is Level
+	
 	$main/not_a_level_warning.visible = !_is_current_scene_a_level
-
+	$main/no_rooms_yet_warning.visible = _is_current_scene_a_level and current_scene_root.get_children().size() == 0
 		
 
 func _show_control(control_name : String) -> void:
@@ -29,6 +34,25 @@ func show_room_list() -> void:
 
 func show_main_screen() -> void:
 	_show_control("main")
+
+
+func add_node_to_level(child : Node, parent : Node) -> void:
+	parent.add_child(child)
+	child.owner = current_scene_root
+
+
+func open_room_creation_dialog() -> void:
+	$room_creation_dialog.open_dialog()
+
+func create_room(room_name : String) -> void:
+	var _new_room_node : LevelRoom = LevelRoom.new()
+	_new_room_node.name = room_name
+	#undo_redo.add_do_method(current_scene_root, "add_child", [_new_room_node])
+	add_node_to_level(_new_room_node, current_scene_root)
+	edit_room(room_name)
+
+func edit_room(room_name : String) -> void:
+	print("edit room ", room_name)
 
 
 var _scene_path : String = ""

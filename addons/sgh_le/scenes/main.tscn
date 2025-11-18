@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://c8wue25i20fjs"]
+[gd_scene load_steps=5 format=3 uid="uid://c8wue25i20fjs"]
 
 [ext_resource type="Script" uid="uid://dwb08gw8ei4lh" path="res://addons/sgh_le/scenes/main.gd" id="1_ep5ol"]
 [ext_resource type="Script" uid="uid://dmbt3fcdusf8e" path="res://addons/sgh_le/scenes/room_list.gd" id="1_x6thf"]
 [ext_resource type="Script" uid="uid://o82ogn8ay18o" path="res://addons/sgh_le/scenes/main_screen.gd" id="2_8fyc8"]
+[ext_resource type="Script" uid="uid://bdcu3kvxga6t3" path="res://addons/sgh_le/scenes/room_creation_dialog.gd" id="4_xpdnm"]
 
 [node name="Main" type="Control"]
 layout_mode = 3
@@ -95,7 +96,52 @@ offset_right = 301.5
 offset_bottom = 11.5
 grow_horizontal = 2
 grow_vertical = 2
-text = "The currently selected scene is not a SGH level. Please select a different scene."
+text = "The currently selected scene is not a SGH level. Please select a different scene or create a level (File > New Level...)."
+
+[node name="no_rooms_yet_warning" type="Control" parent="main"]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="main/no_rooms_yet_warning"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -296.0
+offset_top = -11.5
+offset_right = 296.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "This level does not have any rooms yet. Click the button below to create one."
+
+[node name="create_room" type="Button" parent="main/no_rooms_yet_warning"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -54.5
+offset_top = 27.0
+offset_right = 54.5
+offset_bottom = 58.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Create Room"
 
 [node name="room_list" type="Control" parent="."]
 visible = false
@@ -149,7 +195,55 @@ text = "test"
 layout_mode = 2
 text = "test"
 
+[node name="room_creation_dialog" type="Window" parent="."]
+oversampling_override = 1.0
+position = Vector2i(0, 36)
+size = Vector2i(350, 170)
+visible = false
+script = ExtResource("4_xpdnm")
+
+[node name="MarginContainer" type="MarginContainer" parent="room_creation_dialog"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="room_creation_dialog/MarginContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="room_creation_dialog/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Please enter a name for your new room before continuing."
+autowrap_mode = 2
+
+[node name="room_name" type="LineEdit" parent="room_creation_dialog/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 2
+placeholder_text = "Enter room name"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="room_creation_dialog/MarginContainer/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="cancel" type="Button" parent="room_creation_dialog/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Cancel"
+
+[node name="create_room" type="Button" parent="room_creation_dialog/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Create"
+
 [connection signal="button_down" from="main/HBoxContainer/rooms" to="main" method="_on_rooms_button_down"]
 [connection signal="button_down" from="main/HBoxContainer/level_config" to="main" method="_on_level_config_button_down"]
 [connection signal="button_down" from="main/level_configuration/MarginContainer/VBoxContainer/close" to="main" method="_on_level_config_close_button_down"]
+[connection signal="button_down" from="main/no_rooms_yet_warning/create_room" to="main" method="_create_first_room"]
 [connection signal="button_down" from="room_list/VBoxContainer/MarginContainer/back_to_main" to="room_list" method="_on_back_to_main_button_down"]
+[connection signal="close_requested" from="room_creation_dialog" to="room_creation_dialog" method="_close_dialog"]
+[connection signal="button_down" from="room_creation_dialog/MarginContainer/VBoxContainer/HBoxContainer/cancel" to="room_creation_dialog" method="_on_cancel_button_down"]
+[connection signal="button_down" from="room_creation_dialog/MarginContainer/VBoxContainer/HBoxContainer/create_room" to="room_creation_dialog" method="_on_create_room_button_down"]
