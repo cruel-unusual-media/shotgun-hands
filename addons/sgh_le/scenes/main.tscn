@@ -11,6 +11,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 script = ExtResource("1_ep5ol")
 
 [node name="main" type="Control" parent="."]
@@ -32,22 +34,21 @@ grow_horizontal = 2
 
 [node name="file" type="MenuButton" parent="main/HBoxContainer"]
 layout_mode = 2
+disabled = true
 text = "File"
-item_count = 3
+item_count = 1
 popup/item_0/text = "New Level..."
 popup/item_0/id = 0
-popup/item_1/text = "Open Level..."
-popup/item_1/id = 1
-popup/item_2/text = "Save Level"
-popup/item_2/id = 2
 
 [node name="rooms" type="Button" parent="main/HBoxContainer"]
 layout_mode = 2
+disabled = true
 text = "Rooms"
 flat = true
 
 [node name="level_config" type="Button" parent="main/HBoxContainer"]
 layout_mode = 2
+disabled = true
 text = "Level Configuration"
 flat = true
 
@@ -83,11 +84,18 @@ size_flags_vertical = 10
 text = "Close"
 
 [node name="not_a_level_warning" type="Label" parent="main"]
-layout_mode = 0
-offset_left = 273.0
-offset_top = 323.0
-offset_right = 876.0
-offset_bottom = 346.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -301.5
+offset_top = -11.5
+offset_right = 301.5
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
 text = "The currently selected scene is not a SGH level. Please select a different scene."
 
 [node name="room_list" type="Control" parent="."]
@@ -142,5 +150,7 @@ text = "test"
 layout_mode = 2
 text = "test"
 
+[connection signal="button_down" from="main/HBoxContainer/rooms" to="main" method="_on_rooms_button_down"]
 [connection signal="button_down" from="main/HBoxContainer/level_config" to="main" method="_on_level_config_button_down"]
 [connection signal="button_down" from="main/level_configuration/MarginContainer/VBoxContainer/close" to="main" method="_on_level_config_close_button_down"]
+[connection signal="button_down" from="room_list/VBoxContainer/MarginContainer/back_to_main" to="room_list" method="_on_back_to_main_button_down"]

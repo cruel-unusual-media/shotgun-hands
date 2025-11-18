@@ -4,12 +4,19 @@ extends Control
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	pass # Replace with function body.
+	$HBoxContainer/file.get_popup().id_pressed.connect(_on_file_option_pressed)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	pass
+	_toggle_toolbar_enabled(get_parent()._is_current_scene_a_level)
+
+
+func _toggle_toolbar_enabled(state : bool = true) -> void:
+	$HBoxContainer/file.disabled = !state
+	$HBoxContainer/rooms.disabled = !state
+	$HBoxContainer/level_config.disabled = !state
+	
 
 func _toggle_level_configuration(state : bool) -> void:
 	if state:
@@ -26,3 +33,11 @@ func _on_level_config_button_down() -> void:
 
 func _on_level_config_close_button_down() -> void:
 	_toggle_level_configuration(false)
+
+func _on_rooms_button_down() -> void:
+	get_parent().show_room_list()
+
+func _on_file_option_pressed(id : int) -> void:
+	match id:
+		0:
+			get_parent().create_new_level_scene()
