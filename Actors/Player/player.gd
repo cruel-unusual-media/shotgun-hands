@@ -1,25 +1,31 @@
 extends CharacterBody2D
 
 
-const SPEED = 300.0
-const JUMP_VELOCITY = -400.0
+const SPEED = 500.0
+const JUMP_VELOCITY = -600.0
+
+enum {IDLE, MOVING, FALLING, JUMPING, SHOOTING_IDLE, SHOOTING_MOVING, SHOOTING_FALLING, SHOTGUN_JUMP, CROUCHING, SLIDING}
+
+var state = IDLE # State is used to determine the currently used animation
+@onready var shootTarget : Node2D = $Target
+var prevState = IDLE
+@onready var sprite = $AnimatedSprite2D
 
 
 func _physics_process(delta: float) -> void:
-	# Add the gravity.
-	if not is_on_floor():
-		velocity += get_gravity() * delta
+	# Code was moved to $ControllerComponent
+	if prevState != state:
+		stateChanged(state)
+	prevState = state
+	
 
-	# Handle jump.
-	if Input.is_action_just_pressed("ui_accept") and is_on_floor():
-		velocity.y = JUMP_VELOCITY
-
-	# Get the input direction and handle the movement/deceleration.
-	# As good practice, you should replace UI actions with custom gameplay actions.
-	var direction := Input.get_axis("ui_left", "ui_right")
-	if direction:
-		velocity.x = direction * SPEED
-	else:
-		velocity.x = move_toward(velocity.x, 0, SPEED)
-
-	move_and_slide()
+func stateChanged(newState):
+	match newState:
+		IDLE:
+			sprite.play("idle")
+		MOVING:
+			sprite.play("run")
+		JUMPING:
+			sprite.play("jump")
+		CROUCHING:
+			sprite.play("crouch")

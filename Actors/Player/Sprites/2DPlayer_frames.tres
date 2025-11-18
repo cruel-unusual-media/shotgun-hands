@@ -1,0 +1,89 @@
+[gd_resource type="SpriteFrames" load_steps=11 format=3 uid="uid://cxeoa46tbwhsa"]
+
+[ext_resource type="Texture2D" uid="uid://gf4agagiun0e" path="res://Actors/Player/Sprites/spritesheet_sh_notext.png" id="1_4n0o7"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sh4ar"]
+atlas = ExtResource("1_4n0o7")
+region = Rect2(316, 182, 158, 182)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qu366"]
+atlas = ExtResource("1_4n0o7")
+region = Rect2(474, 182, 158, 182)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dm2m2"]
+atlas = ExtResource("1_4n0o7")
+region = Rect2(0, 182, 158, 182)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cygah"]
+atlas = ExtResource("1_4n0o7")
+region = Rect2(0, 368, 158, 182)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_va3cr"]
+atlas = ExtResource("1_4n0o7")
+region = Rect2(158, 368, 158, 182)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ug2ck"]
+atlas = ExtResource("1_4n0o7")
+region = Rect2(316, 368, 158, 182)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_r7h1e"]
+atlas = ExtResource("1_4n0o7")
+region = Rect2(474, 368, 158, 182)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3ap7i"]
+atlas = ExtResource("1_4n0o7")
+region = Rect2(632, 368, 158, 182)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hxgl1"]
+atlas = ExtResource("1_4n0o7")
+region = Rect2(790, 368, 158, 182)
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_sh4ar")
+}],
+"loop": true,
+"name": &"crouch",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qu366")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dm2m2")
+}],
+"loop": true,
+"name": &"jump",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cygah")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_va3cr")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ug2ck")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_r7h1e")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3ap7i")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hxgl1")
+}],
+"loop": true,
+"name": &"run",
+"speed": 12.0
+}]
