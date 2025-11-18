@@ -27,11 +27,6 @@ func _show_control(control_name : String) -> void:
 	for _control in get_children():
 		_control.visible = _control.name == control_name
 
-
-func show_room_list() -> void:
-	$room_list.build_room_list()
-	_show_control("room_list")
-
 func show_main_screen() -> void:
 	_show_control("main")
 
@@ -52,10 +47,17 @@ func create_room(room_name : String) -> void:
 	undo_redo.commit_action()
 	
 	edit_room(room_name)
+	
+	$main.update_room_list()
+
+
+func edit_room_idx(idx : int) -> void:
+	edit_room(current_scene_root.get_children()[idx].name)
 
 func edit_room(room_name : String) -> void:
-	print("edit room ", room_name)
-
+	shown_room_name = room_name	
+	$main.update_room_list()
+	
 
 var _scene_path : String = ""
 func _scene_creation_path_entered(_path : String) -> void:

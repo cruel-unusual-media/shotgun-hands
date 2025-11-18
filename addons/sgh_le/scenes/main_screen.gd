@@ -5,6 +5,7 @@ extends Control
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	$HBoxContainer/file.get_popup().id_pressed.connect(_on_file_option_pressed)
+	$HBoxContainer/rooms.get_popup().id_pressed.connect(_room_option_pressed)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -34,8 +35,32 @@ func _on_level_config_button_down() -> void:
 func _on_level_config_close_button_down() -> void:
 	_toggle_level_configuration(false)
 
-func _on_rooms_button_down() -> void:
-	get_parent().show_room_list()
+
+func _room_option_pressed(id : int) -> void:
+	match id:
+		0:
+			get_parent().open_room_creation_dialog()
+		_:
+			get_parent().edit_room_idx(id - 1)
+
+
+func update_room_list() -> void:
+	var _rooms_popup : PopupMenu = $HBoxContainer/rooms.get_popup()
+	
+	for idx in _rooms_popup.item_count - 2:
+		_rooms_popup.remove_item(_rooms_popup.item_count - 1)
+	
+	var _id : int = 1
+	for room : LevelRoom in get_parent().current_scene_root.get_children():
+		var _label : String = ""
+		
+		if get_parent().shown_room_name == room.name:
+			_label = "> "
+		
+		_label += room.name
+		
+		_rooms_popup.add_item(_label, _id)
+		_id += 1
 
 func _on_file_option_pressed(id : int) -> void:
 	match id:

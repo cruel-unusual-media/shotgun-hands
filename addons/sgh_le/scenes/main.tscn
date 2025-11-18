@@ -1,12 +1,20 @@
-[gd_scene load_steps=5 format=3 uid="uid://c8wue25i20fjs"]
+[gd_scene load_steps=7 format=3 uid="uid://c8wue25i20fjs"]
 
 [ext_resource type="Script" uid="uid://dwb08gw8ei4lh" path="res://addons/sgh_le/scenes/main.gd" id="1_ep5ol"]
-[ext_resource type="Script" uid="uid://dmbt3fcdusf8e" path="res://addons/sgh_le/scenes/room_list.gd" id="1_x6thf"]
 [ext_resource type="Script" uid="uid://o82ogn8ay18o" path="res://addons/sgh_le/scenes/main_screen.gd" id="2_8fyc8"]
 [ext_resource type="Script" uid="uid://bdcu3kvxga6t3" path="res://addons/sgh_le/scenes/room_creation_dialog.gd" id="4_xpdnm"]
 
-[node name="Main" type="Control"]
-visible = false
+[sub_resource type="InputEventKey" id="InputEventKey_8fyc8"]
+device = -1
+keycode = 4194305
+
+[sub_resource type="Shortcut" id="Shortcut_xpdnm"]
+events = [SubResource("InputEventKey_8fyc8")]
+
+[sub_resource type="Shortcut" id="Shortcut_8nfjm"]
+events = [SubResource("InputEventKey_8fyc8")]
+
+[node name="root" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -41,11 +49,16 @@ item_count = 1
 popup/item_0/text = "New Level..."
 popup/item_0/id = 0
 
-[node name="rooms" type="Button" parent="main/HBoxContainer"]
+[node name="rooms" type="MenuButton" parent="main/HBoxContainer"]
 layout_mode = 2
 disabled = true
 text = "Rooms"
-flat = true
+item_count = 2
+popup/item_0/text = "Create room..."
+popup/item_0/id = 0
+popup/item_1/id = 0
+popup/item_1/disabled = true
+popup/item_1/separator = true
 
 [node name="level_config" type="Button" parent="main/HBoxContainer"]
 layout_mode = 2
@@ -144,58 +157,6 @@ grow_horizontal = 2
 grow_vertical = 2
 text = "Create Room"
 
-[node name="room_list" type="Control" parent="."]
-visible = false
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-script = ExtResource("1_x6thf")
-
-[node name="VBoxContainer" type="VBoxContainer" parent="room_list"]
-layout_mode = 1
-anchors_preset = 10
-anchor_right = 1.0
-grow_horizontal = 2
-
-[node name="MarginContainer" type="MarginContainer" parent="room_list/VBoxContainer"]
-layout_mode = 2
-theme_override_constants/margin_left = 5
-theme_override_constants/margin_top = 5
-theme_override_constants/margin_right = 5
-theme_override_constants/margin_bottom = 5
-
-[node name="back_to_main" type="Button" parent="room_list/VBoxContainer/MarginContainer"]
-layout_mode = 2
-size_flags_horizontal = 0
-text = "< Back"
-
-[node name="GridContainer" type="GridContainer" parent="room_list/VBoxContainer"]
-layout_mode = 2
-columns = 4
-
-[node name="Button" type="Button" parent="room_list/VBoxContainer/GridContainer"]
-layout_mode = 2
-text = "test"
-
-[node name="Button2" type="Button" parent="room_list/VBoxContainer/GridContainer"]
-layout_mode = 2
-text = "test"
-
-[node name="Button3" type="Button" parent="room_list/VBoxContainer/GridContainer"]
-layout_mode = 2
-text = "test"
-
-[node name="Button4" type="Button" parent="room_list/VBoxContainer/GridContainer"]
-layout_mode = 2
-text = "test"
-
-[node name="Button5" type="Button" parent="room_list/VBoxContainer/GridContainer"]
-layout_mode = 2
-text = "test"
-
 [node name="room_creation_dialog" type="Window" parent="."]
 oversampling_override = 1.0
 position = Vector2i(0, 36)
@@ -234,17 +195,17 @@ alignment = 1
 
 [node name="cancel" type="Button" parent="room_creation_dialog/MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
+shortcut = SubResource("Shortcut_xpdnm")
 text = "Cancel"
 
 [node name="create_room" type="Button" parent="room_creation_dialog/MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
+shortcut = SubResource("Shortcut_8nfjm")
 text = "Create"
 
-[connection signal="button_down" from="main/HBoxContainer/rooms" to="main" method="_on_rooms_button_down"]
 [connection signal="button_down" from="main/HBoxContainer/level_config" to="main" method="_on_level_config_button_down"]
 [connection signal="button_down" from="main/level_configuration/MarginContainer/VBoxContainer/close" to="main" method="_on_level_config_close_button_down"]
 [connection signal="button_down" from="main/no_rooms_yet_warning/create_room" to="main" method="_create_first_room"]
-[connection signal="button_down" from="room_list/VBoxContainer/MarginContainer/back_to_main" to="room_list" method="_on_back_to_main_button_down"]
 [connection signal="close_requested" from="room_creation_dialog" to="room_creation_dialog" method="_close_dialog"]
 [connection signal="button_down" from="room_creation_dialog/MarginContainer/VBoxContainer/HBoxContainer/cancel" to="room_creation_dialog" method="_on_cancel_button_down"]
 [connection signal="button_down" from="room_creation_dialog/MarginContainer/VBoxContainer/HBoxContainer/create_room" to="room_creation_dialog" method="_on_create_room_button_down"]
