@@ -30,5 +30,29 @@ func show_room_list() -> void:
 func show_main_screen() -> void:
 	_show_control("main")
 
+
+var _scene_path : String = ""
+func _scene_creation_path_entered(_path : String) -> void:
+	_scene_path = _path
+
 func create_new_level_scene() -> void:
-	print("create new level")
+	var _dialog : EditorFileDialog = EditorFileDialog.new()
+	_dialog.title = "Pick a location for your level file"
+	_dialog.file_mode = EditorFileDialog.FILE_MODE_SAVE_FILE
+	_dialog.filters = PackedStringArray(["*.tscn ; Godot Scenes"])
+	add_child(_dialog)
+	_dialog.popup_file_dialog()
+	
+	#save the scene to the selected path
+	_dialog.file_selected.connect(_scene_creation_path_entered)
+	
+	await _dialog.file_selected
+	
+	var _new_root_node : Level = Level.new() #setup scene to be created
+	_new_root_node.name = _scene_path.get_file().get_basename().to_pascal_case()
+	var _new_packed_scene : PackedScene = PackedScene.new()
+	_new_packed_scene.pack(_new_root_node)
+	
+	ResourceSaver.save(_new_packed_scene, _scene_path)
+	
+	EditorInterface.open_scene_from_path(_scene_path) #open the scene in the editor

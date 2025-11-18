@@ -13,7 +13,7 @@ func _process(delta: float) -> void:
 
 
 func _toggle_toolbar_enabled(state : bool = true) -> void:
-	$HBoxContainer/file.disabled = !state
+	$HBoxContainer/file.disabled = false
 	$HBoxContainer/rooms.disabled = !state
 	$HBoxContainer/level_config.disabled = !state
 	

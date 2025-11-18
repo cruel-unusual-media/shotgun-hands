@@ -34,7 +34,6 @@ grow_horizontal = 2
 
 [node name="file" type="MenuButton" parent="main/HBoxContainer"]
 layout_mode = 2
-disabled = true
 text = "File"
 item_count = 1
 popup/item_0/text = "New Level..."
