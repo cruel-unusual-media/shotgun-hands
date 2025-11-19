@@ -1,10 +1,18 @@
 extends Node2D
 
 @onready var player : CharacterBody2D = get_parent()
+var hitbox : CollisionShape2D
+var hitbox_default_size : float
+var hitbox_default_pos : Vector2
+var head_check : Area2D
+var friction : int = 10
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	pass # Replace with function body.
+	hitbox = player.get_node("Collidor")
+	head_check = player.get_node("HeadCheck")
+	hitbox_default_size = hitbox.shape.size.y
+	hitbox_default_pos = hitbox.position
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -17,10 +25,23 @@ func _process(delta: float) -> void:
 	# As good practice, you should replace UI actions with custom gameplay actions.
 	var direction := Input.get_axis("move_left", "move_right")
 	if direction:
-		player.velocity.x = direction * player.SPEED
-		player.sprite.flip_h = direction < 0
-		if player.is_on_floor():
-			player.state = player.MOVING
+		if not player.state == player.SLIDING:
+			if player.state == player.CROUCHING:
+				player.velocity.x += direction * player.SPEED*0.5*delta
+				player.velocity.x = clamp(player.velocity.x, -player.SPEED*0.5, player.SPEED*0.5)
+				player.sprite.flip_h = direction < 0
+			else:
+				player.velocity.x += direction * player.SPEED*2*delta
+				if player.is_on_floor():
+					player.velocity.x = clamp(player.velocity.x, -player.SPEED, player.SPEED)
+				else:
+					if player.velocity.x == clamp(player.velocity.x, -player.SPEED*1.25, player.SPEED*1.25):
+						pass
+					else:
+						player.velocity.x -= direction * player.SPEED*2*delta
+				player.sprite.flip_h = direction < 0
+			if player.is_on_floor() and not player.state == player.CROUCHING:
+				player.state = player.MOVING
 	else:
 		player.velocity.x = move_toward(player.velocity.x, 0, player.SPEED)
 		if player.is_on_floor():
@@ -31,10 +52,42 @@ func _process(delta: float) -> void:
 		player.velocity.y = player.JUMP_VELOCITY
 		player.state = player.JUMPING
 	
-	if player.is_on_floor() and Input.is_action_pressed("move_crouch"):
-		player.state = player.CROUCHING
-		if direction != 0:
-			player.state = player.SLIDING
+	if player.is_on_floor():
+		handle_crouch()
+	else:
+		if player.velocity.y < 0:
+			player.state = player.FALLING
 
 
 	player.move_and_slide()
+
+
+func handle_crouch():
+	if Input.is_action_pressed("move_crouch") or head_check.get_overlapping_bodies().size() > 0:
+		if not (player.state == player.CROUCHING or player.state == player.SLIDING):
+			hitbox.position.y = hitbox_default_pos.y/2
+			hitbox.shape.size.y = hitbox_default_size/2
+			
+			player.state = player.CROUCHING
+			if player.velocity.x != 0 and Input.is_action_pressed("move_crouch"):
+				player.state = player.SLIDING
+				player.velocity.x = sign(player.velocity.x) * player.SPEED*1.25
+				
+		else:
+			if player.state == player.CROUCHING:
+				if player.velocity.x != 0 and Input.is_action_pressed("move_crouch"):
+					player.state = player.SLIDING
+					player.velocity.x = sign(player.velocity.x) * player.SPEED*0.75
+			elif player.state == player.SLIDING:
+				player.velocity.x = move_toward(player.velocity.x, 0, friction)
+				if player.velocity.x == 0 or Input.is_action_just_released("move_crouch"):
+					player.state = player.CROUCHING
+	else:
+		if (player.state == player.CROUCHING or player.state == player.SLIDING):
+			player.state = player.IDLE
+	
+	
+	
+	
+	#if direction != 0:
+		#player.state = player.SLIDING

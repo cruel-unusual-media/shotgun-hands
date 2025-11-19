@@ -1,7 +1,7 @@
 extends CharacterBody2D
 
 
-const SPEED = 500.0
+const SPEED = 1000.0
 const JUMP_VELOCITY = -600.0
 
 enum {IDLE, MOVING, FALLING, JUMPING, SHOOTING_IDLE, SHOOTING_MOVING, SHOOTING_FALLING, SHOTGUN_JUMP, CROUCHING, SLIDING}
@@ -15,7 +15,6 @@ var prevState = IDLE
 func _physics_process(delta: float) -> void:
 	# Code was moved to $ControllerComponent
 	if prevState != state:
-		print("State changed")
 		stateChanged(state)
 	prevState = state
 	

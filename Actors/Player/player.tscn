@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://crs1vr2enasav"]
+[gd_scene load_steps=8 format=3 uid="uid://crs1vr2enasav"]
 
 [ext_resource type="Script" uid="uid://dv54xufs4ao3l" path="res://Actors/Player/player.gd" id="1_vhr1b"]
 [ext_resource type="SpriteFrames" uid="uid://cxeoa46tbwhsa" path="res://Actors/Player/Sprites/2DPlayer_frames.tres" id="2_5ni5v"]
@@ -9,30 +9,43 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_vhr1b"]
 size = Vector2(58, 156)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_n7l8t"]
+size = Vector2(58, 79)
+
 [node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_vhr1b")
 
 [node name="ControllerComponent" type="Node2D" parent="."]
 script = ExtResource("2_b63gh")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, 42)
+[node name="HeadFocus" type="Node2D" parent="."]
+position = Vector2(0, -121)
+
+[node name="Collidor" type="CollisionShape2D" parent="."]
+position = Vector2(0, -79)
 shape = SubResource("RectangleShape2D_vhr1b")
+
+[node name="HeadCheck" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HeadCheck"]
+position = Vector2(0, -118.5)
+shape = SubResource("RectangleShape2D_n7l8t")
 
 [node name="ColorRect" type="ColorRect" parent="."]
 offset_left = -29.0
-offset_top = -37.0
+offset_top = -158.0
 offset_right = 29.0
-offset_bottom = 121.0
 color = Color(1, 0, 1, 1)
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
-position = Vector2(0, 30)
+position = Vector2(0, -91)
 sprite_frames = ExtResource("2_5ni5v")
 animation = &"crouch"
 
-[node name="PlayerRecticle" type="Node2D" parent="."]
+[node name="PlayerRecticle" type="Node2D" parent="." node_paths=PackedStringArray("focus")]
+position = Vector2(0, -121)
 script = ExtResource("4_n7l8t")
+focus = NodePath("../HeadFocus")
 
 [node name="Polygon2D" type="Polygon2D" parent="PlayerRecticle"]
 position = Vector2(1.7881393e-07, -2.3841858e-07)
@@ -42,7 +55,9 @@ polygon = PackedVector2Array(2, -2, 2, 2, -2, 2, -2, -2)
 
 [node name="ShootingComponent" type="Node2D" parent="PlayerRecticle"]
 
-[node name="Camera2D" type="Camera2D" parent="."]
+[node name="Camera2D" type="Camera2D" parent="." node_paths=PackedStringArray("focus")]
+position = Vector2(0, -121)
 position_smoothing_enabled = true
 position_smoothing_speed = 50.0
 script = ExtResource("3_v1key")
+focus = NodePath("../HeadFocus")
