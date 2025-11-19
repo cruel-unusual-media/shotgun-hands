@@ -4,8 +4,8 @@ extends Control
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	$HBoxContainer/file.get_popup().id_pressed.connect(_on_file_option_pressed)
-	$HBoxContainer/rooms.get_popup().id_pressed.connect(_room_option_pressed)
+	$VBoxContainer/HBoxContainer/file.get_popup().id_pressed.connect(_on_file_option_pressed)
+	$VBoxContainer/HBoxContainer/rooms.get_popup().id_pressed.connect(_room_option_pressed)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -14,9 +14,9 @@ func _process(delta: float) -> void:
 
 
 func _toggle_toolbar_enabled(state : bool = true) -> void:
-	$HBoxContainer/file.disabled = false
-	$HBoxContainer/rooms.disabled = !state
-	$HBoxContainer/level_config.disabled = !state
+	$VBoxContainer/HBoxContainer/file.disabled = false
+	$VBoxContainer/HBoxContainer/rooms.disabled = !state
+	$VBoxContainer/HBoxContainer/level_config.disabled = !state
 	
 
 func _toggle_level_configuration(state : bool) -> void:
@@ -29,7 +29,7 @@ func _toggle_level_configuration(state : bool) -> void:
 func _on_level_config_button_down() -> void:
 	if get_parent().loaded_scene_path != "":
 		_toggle_level_configuration(true)
-		$HBoxContainer/level_config.release_focus()
+		$VBoxContainer/HBoxContainer/level_config.release_focus()
 
 
 func _on_level_config_close_button_down() -> void:
@@ -45,7 +45,7 @@ func _room_option_pressed(id : int) -> void:
 
 
 func update_room_list() -> void:
-	var _rooms_popup : PopupMenu = $HBoxContainer/rooms.get_popup()
+	var _rooms_popup : PopupMenu = $VBoxContainer/HBoxContainer/rooms.get_popup()
 	
 	for idx in _rooms_popup.item_count - 2:
 		_rooms_popup.remove_item(_rooms_popup.item_count - 1)

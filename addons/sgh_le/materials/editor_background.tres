@@ -1,0 +1,10 @@
+[gd_resource type="ShaderMaterial" load_steps=3 format=3 uid="uid://dnivymobr6n"]
+
+[ext_resource type="Shader" uid="uid://cglc67sktfqyk" path="res://addons/sgh_le/materials/editor_background.gdshader" id="1_mbdfq"]
+[ext_resource type="Texture2D" uid="uid://w6pbo131hd1v" path="res://addons/sgh_le/textures/editor_grid.png" id="2_urdsv"]
+
+[resource]
+shader = ExtResource("1_mbdfq")
+shader_parameter/grid_texture = ExtResource("2_urdsv")
+shader_parameter/camera_position = Vector2(0, 0)
+shader_parameter/camera_zoom = -0.05

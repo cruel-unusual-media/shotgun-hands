@@ -1,8 +1,11 @@
-[gd_scene load_steps=7 format=3 uid="uid://c8wue25i20fjs"]
+[gd_scene load_steps=10 format=3 uid="uid://c8wue25i20fjs"]
 
 [ext_resource type="Script" uid="uid://dwb08gw8ei4lh" path="res://addons/sgh_le/scenes/main.gd" id="1_ep5ol"]
 [ext_resource type="Script" uid="uid://o82ogn8ay18o" path="res://addons/sgh_le/scenes/main_screen.gd" id="2_8fyc8"]
+[ext_resource type="Material" uid="uid://dnivymobr6n" path="res://addons/sgh_le/materials/editor_background.tres" id="4_8nfjm"]
+[ext_resource type="Script" uid="uid://c5vhnx1modamr" path="res://addons/sgh_le/scenes/editor_camera.gd" id="4_ien0c"]
 [ext_resource type="Script" uid="uid://bdcu3kvxga6t3" path="res://addons/sgh_le/scenes/room_creation_dialog.gd" id="4_xpdnm"]
+[ext_resource type="Texture2D" uid="uid://clw1rnvebt65a" path="res://Levels/Sprites/Decorations/FireCan.png" id="5_ien0c"]
 
 [sub_resource type="InputEventKey" id="InputEventKey_8fyc8"]
 device = -1
@@ -34,22 +37,25 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("2_8fyc8")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="main"]
+[node name="VBoxContainer" type="VBoxContainer" parent="main"]
 layout_mode = 1
-anchors_preset = 10
+anchors_preset = 15
 anchor_right = 1.0
-offset_right = 223.0
-offset_bottom = 31.0
+anchor_bottom = 1.0
 grow_horizontal = 2
+grow_vertical = 2
 
-[node name="file" type="MenuButton" parent="main/HBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="main/VBoxContainer"]
+layout_mode = 2
+
+[node name="file" type="MenuButton" parent="main/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 text = "File"
 item_count = 1
 popup/item_0/text = "New Level..."
 popup/item_0/id = 0
 
-[node name="rooms" type="MenuButton" parent="main/HBoxContainer"]
+[node name="rooms" type="MenuButton" parent="main/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 disabled = true
 text = "Rooms"
@@ -60,11 +66,56 @@ popup/item_1/id = 0
 popup/item_1/disabled = true
 popup/item_1/separator = true
 
-[node name="level_config" type="Button" parent="main/HBoxContainer"]
+[node name="level_config" type="Button" parent="main/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 disabled = true
 text = "Level Configuration"
 flat = true
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="main/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="main/VBoxContainer/SubViewportContainer"]
+handle_input_locally = false
+size = Vector2i(1152, 613)
+render_target_update_mode = 4
+
+[node name="level_proxy" type="Node2D" parent="main/VBoxContainer/SubViewportContainer/SubViewport"]
+
+[node name="editor_camera" type="Camera2D" parent="main/VBoxContainer/SubViewportContainer/SubViewport/level_proxy"]
+position = Vector2(574, 325)
+zoom = Vector2(1.22, 1.22)
+script = ExtResource("4_ien0c")
+
+[node name="Control" type="Control" parent="main/VBoxContainer/SubViewportContainer/SubViewport/level_proxy/editor_camera"]
+z_index = -315
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -472.13113
+offset_top = -251.2295
+offset_right = 472.13113
+offset_bottom = 251.2295
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="background" type="ColorRect" parent="main/VBoxContainer/SubViewportContainer/SubViewport/level_proxy/editor_camera/Control"]
+material = ExtResource("4_8nfjm")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Sprite2D" type="Sprite2D" parent="main/VBoxContainer/SubViewportContainer/SubViewport/level_proxy"]
+position = Vector2(272, 460)
+texture = ExtResource("5_ien0c")
 
 [node name="level_configuration" type="Window" parent="main"]
 oversampling_override = 1.0
@@ -200,10 +251,11 @@ text = "Cancel"
 
 [node name="create_room" type="Button" parent="room_creation_dialog/MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
+disabled = true
 shortcut = SubResource("Shortcut_8nfjm")
 text = "Create"
 
-[connection signal="button_down" from="main/HBoxContainer/level_config" to="main" method="_on_level_config_button_down"]
+[connection signal="button_down" from="main/VBoxContainer/HBoxContainer/level_config" to="main" method="_on_level_config_button_down"]
 [connection signal="button_down" from="main/level_configuration/MarginContainer/VBoxContainer/close" to="main" method="_on_level_config_close_button_down"]
 [connection signal="button_down" from="main/no_rooms_yet_warning/create_room" to="main" method="_create_first_room"]
 [connection signal="close_requested" from="room_creation_dialog" to="room_creation_dialog" method="_close_dialog"]
