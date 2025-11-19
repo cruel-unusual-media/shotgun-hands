@@ -27,6 +27,8 @@ func stateChanged(newState):
 			sprite.play("run")
 		JUMPING:
 			sprite.play("jump")
+		FALLING:
+			sprite.play("jump")
 		CROUCHING:
 			sprite.play("crouch")
 			

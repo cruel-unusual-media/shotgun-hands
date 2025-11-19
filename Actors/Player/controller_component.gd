@@ -56,6 +56,8 @@ func _process(delta: float) -> void:
 		handle_crouch()
 	else:
 		if player.velocity.y < 0:
+			player.state = player.JUMPING
+		else:
 			player.state = player.FALLING
 
 
