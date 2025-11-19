@@ -76,6 +76,15 @@ func _add_layer_proxy(layer_name : String, room_proxy_parent : LevelRoom, linked
 	return _new_layer
 
 
+func _add_tilemaplayer_proxy(tilemaplayer_name : String, parent_proxy : Node, linked_tilemaplayer : Node) -> TileMapLayer:
+	var _new_tilemaplayer_proxy : TileMapLayer = TileMapLayer.new()
+	_new_tilemaplayer_proxy.name = tilemaplayer_name
+	_new_tilemaplayer_proxy.set_meta("linked_node", linked_tilemaplayer)
+	parent_proxy.add_child(_new_tilemaplayer_proxy)
+	
+	return _new_tilemaplayer_proxy
+
+
 func _add_level_start_proxy(proxy_owner : Node, linked_node : Node) -> LevelStart:
 	print("adding level start proxy")
 	var _new_level_start_proxy : LevelStart = LevelStart.new()
@@ -122,27 +131,26 @@ func create_room(room_name : String) -> void:
 	undo_redo.add_undo_method(_new_room_node, "queue_free")
 	undo_redo.commit_action()
 	
-	var _new_foreground_layer : Node2D = Node2D.new()
-	_new_foreground_layer.name = "foreground"
-	var _new_main_layer : Node2D = Node2D.new()
-	_new_main_layer.name = "main"
-	var _new_background_layer : Node2D = Node2D.new()
-	_new_background_layer.name = "background"
-	var _new_other_layer : Node2D = Node2D.new()
-	_new_other_layer.name = "other"
-	
-	add_node_to_level(_new_foreground_layer, _new_room_node)
-	add_node_to_level(_new_main_layer, _new_room_node)
-	add_node_to_level(_new_background_layer, _new_room_node)
-	add_node_to_level(_new_other_layer, _new_room_node)
+	var _layers_to_be_made = ["foreground", "main", "background"]
 	
 	var _room_proxy = _add_room_proxy(room_name, $main/VBoxContainer/SubViewportContainer/SubViewport/level_proxies.get_node(NodePath(current_scene_root.name)), _new_room_node)
 	
-	if current_scene_root.get_children().size() == 1: #if the room we just added was the first one
-		$main/VBoxContainer/SubViewportContainer/SubViewport/level_proxies/Sprite2D.reparent(_room_proxy)
-		_create_level_start(_new_main_layer, _room_proxy)
+	for _layer_name in _layers_to_be_made:
+		var _new_layer : Node2D = Node2D.new()
+		_new_layer.name = _layer_name
+		add_node_to_level(_new_layer, _new_room_node)
+		var _layer_proxy = _add_layer_proxy(_layer_name, _room_proxy, _new_layer)
+		
+		var _new_tilemap : TileMapLayer = TileMapLayer.new()
+		_new_tilemap.name = _layer_name + "_tiles"
+		add_node_to_level(_new_tilemap, _new_layer)
+		_add_tilemaplayer_proxy(_layer_name + "_tiles", _layer_proxy, _new_tilemap)
 	
 	edit_room(room_name)
+	
+	if current_scene_root.get_children().size() == 1: #if the room we just added was the first one
+		$main/VBoxContainer/SubViewportContainer/SubViewport/level_proxies/Sprite2D.reparent(_room_proxy)
+		_create_level_start(current_scene_root.get_node(shown_room_names[current_scene_root] + "/main"), _room_proxy)
 
 func _create_level_start(owner_node : Node, room_proxy : Node) -> void:
 	print("creating level start")
@@ -173,6 +181,7 @@ func _move_level_start(room_name : String, new_position : Vector2) -> void:
 func _delete_current_room() -> void:
 	if current_scene_root.get_children().size() > 0:
 		current_scene_root.get_node(shown_room_names[current_scene_root]).queue_free()
+		get_current_room_proxy().queue_free()
 	await get_tree().create_timer(0.1).timeout
 	if current_scene_root.get_children().size() > 0:
 		edit_room_idx(0)
@@ -228,6 +237,7 @@ func _show_context_menu(at_position : Vector2i) -> void:
 	if !_is_current_scene_a_level or current_scene_root.get_children().size() == 0:
 		return
 	
+	$context_menu._update_context_menu()
 	$context_menu.popup(Rect2i(at_position + Vector2i(0, 75), Vector2i(200, 400)))
 	
 func get_currently_edited_layer() -> int:
@@ -244,3 +254,6 @@ func get_current_room_proxy() -> LevelRoom:
 
 func get_global_mouse_position() -> Vector2:
 	return (get_global_mouse_position() + ($main/VBoxContainer/SubViewportContainer/SubViewport/editor_camera.position / 2.0) + 0.5 * get_viewport_rect().size) / $main/VBoxContainer/SubViewportContainer/SubViewport/editor_camera.zoom
+
+func get_currently_edited_tilemaplayer_proxy() -> TileMapLayer:
+	return null

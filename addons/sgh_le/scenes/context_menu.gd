@@ -8,6 +8,8 @@ func _ready() -> void:
 	id_pressed.connect(get_parent().context_menu_option_chosen)
 
 func _update_context_menu() -> void:
+	clear()
+	
 	add_submenu_node_item("Add object...", $add_object)
 	add_item("Place level start here")
 	add_separator("Layers")
