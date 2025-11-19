@@ -15,7 +15,13 @@ func initialize_level() -> void:
 	for _room : LevelRoom in get_children():
 		pass
 	
+	var _new_player_instance = preload("res://Actors/Player/player.tscn").instantiate()
+	_level_start.add_sibling(_new_player_instance)
+	_new_player_instance.position = _level_start.position
 	
+	PersistentUI.add_to_camera(_new_player_instance.get_node("Camera2D"))
+	await get_tree().create_timer(0.5).timeout
+	PersistentUI.return_to_root()
 
 
 func enter_room(room_to_enter : LevelRoom, entrance : RoomEntrance) -> void:

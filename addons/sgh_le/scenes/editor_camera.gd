@@ -3,6 +3,8 @@ extends Camera2D
 
 var _panning : bool = false
 
+signal _right_clicked(pos : Vector2i)
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	get_parent().get_parent().get_parent().gui_input.connect(viewport_input)
@@ -27,6 +29,8 @@ func viewport_input(event: InputEvent) -> void:
 			zoom *= 0.9
 		elif event.button_index == MOUSE_BUTTON_MIDDLE:
 			_panning = event.pressed
+		elif event.button_index == MOUSE_BUTTON_RIGHT:
+			_right_clicked.emit(event.global_position)
 	
 	if event is InputEventMouseMotion:
 		if _panning:
