@@ -1,6 +1,10 @@
-[gd_resource type="SpriteFrames" load_steps=11 format=3 uid="uid://cxeoa46tbwhsa"]
+[gd_resource type="SpriteFrames" load_steps=12 format=3 uid="uid://cxeoa46tbwhsa"]
 
 [ext_resource type="Texture2D" uid="uid://gf4agagiun0e" path="res://Actors/Player/Sprites/spritesheet_sh_notext.png" id="1_4n0o7"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yffoj"]
+atlas = ExtResource("1_4n0o7")
+region = Rect2(160, 182, 160, 182)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_sh4ar"]
 atlas = ExtResource("1_4n0o7")
@@ -41,10 +45,13 @@ region = Rect2(790, 368, 158, 182)
 [resource]
 animations = [{
 "frames": [{
+"duration": 3.0,
+"texture": SubResource("AtlasTexture_yffoj")
+}, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_sh4ar")
 }],
-"loop": true,
+"loop": false,
 "name": &"crouch",
 "speed": 12.0
 }, {

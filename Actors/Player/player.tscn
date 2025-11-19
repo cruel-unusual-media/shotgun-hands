@@ -29,8 +29,7 @@ color = Color(1, 0, 1, 1)
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, 30)
 sprite_frames = ExtResource("2_5ni5v")
-animation = &"jump"
-frame_progress = 0.78278315
+animation = &"crouch"
 
 [node name="PlayerRecticle" type="Node2D" parent="."]
 script = ExtResource("4_n7l8t")

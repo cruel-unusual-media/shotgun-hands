@@ -30,6 +30,11 @@ func _process(delta: float) -> void:
 	if Input.is_action_just_pressed("move_jump") and player.is_on_floor():
 		player.velocity.y = player.JUMP_VELOCITY
 		player.state = player.JUMPING
+	
+	if player.is_on_floor() and Input.is_action_pressed("move_crouch"):
+		player.state = player.CROUCHING
+		if direction != 0:
+			player.state = player.SLIDING
 
 
 	player.move_and_slide()
