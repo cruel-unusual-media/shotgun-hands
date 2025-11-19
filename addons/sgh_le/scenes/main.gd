@@ -4,8 +4,9 @@ extends Control
 var current_scene_root : Node
 #var loaded_scene_path : String = "a"
 
-var shown_room_names : Dictionary = {}
-var editing_layers : Dictionary = {}
+var shown_room_names : Dictionary = {} #the rooms that are shown per level scene. Keeps context across scenes.
+var editing_layers : Dictionary = {} #the layers that are being edited per level scene. Keeps context across scenes.
+var level_starts : Dictionary = {} #proxies. Same thing as above
 
 var _is_current_scene_a_level : bool = false
 
@@ -13,14 +14,13 @@ var _is_current_scene_a_level : bool = false
 
 signal scene_changed
 
-# Called when the node enters the scene tree for the first time.
+
 func _ready() -> void:
 	$main/VBoxContainer/SubViewportContainer/SubViewport/editor_camera._right_clicked.connect(_show_context_menu)
 	scene_changed.connect(_scene_changed)
 	_show_control("main")
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	if current_scene_root != EditorInterface.get_edited_scene_root():
 		scene_changed.emit(EditorInterface.get_edited_scene_root())
@@ -31,12 +31,20 @@ func _process(delta: float) -> void:
 	$main/no_rooms_yet_warning.visible = _is_current_scene_a_level and current_scene_root.get_children().size() == 0
 	
 	if _is_current_scene_a_level and !$main/VBoxContainer/SubViewportContainer/SubViewport/level_proxies.find_child(current_scene_root.name):
-		var _new_level_proxy = _add_level_proxy(current_scene_root.name, $main/VBoxContainer/SubViewportContainer/SubViewport/level_proxies)
-		for _room : LevelRoom in current_scene_root.get_children():
-			_add_room_proxy(_room.name, _new_level_proxy)
+		_load_currently_opened_level()
 		
-		$main/VBoxContainer/SubViewportContainer/SubViewport/level_proxies.print_tree()
 		
+
+func _load_currently_opened_level() -> void:
+	var _new_level_proxy = _add_level_proxy(current_scene_root.name, $main/VBoxContainer/SubViewportContainer/SubViewport/level_proxies)
+	for _room : LevelRoom in current_scene_root.get_children():
+		var _room_proxy : LevelRoom = _add_room_proxy(_room.name, _new_level_proxy, _room)
+		
+		for _layer : Node2D in _room.get_children():
+			var _layer_proxy : Node2D = _add_layer_proxy(_layer.name, _room_proxy, _layer)
+	
+	$main/VBoxContainer/SubViewportContainer/SubViewport/level_proxies.get_node(NodePath(current_scene_root.name)).print_tree_pretty()
+
 
 func _add_level_proxy(proxy_name : String, owner : Node) -> Node:
 	print("add level proxy node")
@@ -48,15 +56,41 @@ func _add_level_proxy(proxy_name : String, owner : Node) -> Node:
 	return _new_level_proxy
 
 
-func _add_room_proxy(proxy_name : String, owner : Node) -> Node:
+func _add_room_proxy(proxy_name : String, owner : Node, linked_node : Node) -> Node:
 	print("add room proxy node")
 	var _new_room_proxy : LevelRoom = LevelRoom.new()
 	owner.add_child(_new_room_proxy)
 	_new_room_proxy.name = proxy_name
 	_new_room_proxy.owner = owner
+	_new_room_proxy.set_meta("linked_node", linked_node)
 	
 	return _new_room_proxy
-		
+
+
+func _add_layer_proxy(layer_name : String, room_proxy_parent : LevelRoom, linked_layer : Node2D) -> Node2D:
+	print("add layer proxy node")
+	var _new_layer : Node2D = Node2D.new()
+	_new_layer.name = layer_name
+	_new_layer.set_meta("linked_node", linked_layer)
+	room_proxy_parent.add_child(_new_layer)
+	return _new_layer
+
+
+func _add_level_start_proxy(proxy_owner : Node, linked_node : Node) -> LevelStart:
+	print("adding level start proxy")
+	var _new_level_start_proxy : LevelStart = LevelStart.new()
+	proxy_owner.add_child(_new_level_start_proxy)
+	_new_level_start_proxy.owner = proxy_owner
+	_new_level_start_proxy.set_meta("linked_node", linked_node)
+	
+	var _test_sprite = Sprite2D.new()
+	_test_sprite.texture = load("res://sh_logo.png")
+	_new_level_start_proxy.add_child(_test_sprite)
+	
+	level_starts.get_or_add(current_scene_root)
+	level_starts[current_scene_root] = _new_level_start_proxy
+	
+	return _new_level_start_proxy
 
 
 func _scene_changed(new_scene : Node) -> void:
@@ -88,30 +122,62 @@ func create_room(room_name : String) -> void:
 	undo_redo.add_undo_method(_new_room_node, "queue_free")
 	undo_redo.commit_action()
 	
-	var _new_foreground_tilemap : TileMapLayer = TileMapLayer.new()
-	_new_foreground_tilemap.name = "foreground"
-	var _new_background_tilemap : TileMapLayer = TileMapLayer.new()
-	_new_background_tilemap.name = "background"
-	var _new_custom_layer : Node2D = Node2D.new()
-	_new_custom_layer.name = "custom"
-	var _new_custom_static_body : StaticBody2D = StaticBody2D.new()
-	_new_custom_static_body.name = "custom_static_collision"
+	var _new_foreground_layer : Node2D = Node2D.new()
+	_new_foreground_layer.name = "foreground"
+	var _new_main_layer : Node2D = Node2D.new()
+	_new_main_layer.name = "main"
+	var _new_background_layer : Node2D = Node2D.new()
+	_new_background_layer.name = "background"
+	var _new_other_layer : Node2D = Node2D.new()
+	_new_other_layer.name = "other"
 	
-	add_node_to_level(_new_foreground_tilemap, _new_room_node)
-	add_node_to_level(_new_background_tilemap, _new_room_node)
-	add_node_to_level(_new_custom_layer, _new_room_node)
-	add_node_to_level(_new_custom_static_body, _new_custom_layer)
+	add_node_to_level(_new_foreground_layer, _new_room_node)
+	add_node_to_level(_new_main_layer, _new_room_node)
+	add_node_to_level(_new_background_layer, _new_room_node)
+	add_node_to_level(_new_other_layer, _new_room_node)
 	
-	_add_room_proxy(room_name, $main/VBoxContainer/SubViewportContainer/SubViewport/level_proxies.get_node(NodePath(current_scene_root.name)))
+	var _room_proxy = _add_room_proxy(room_name, $main/VBoxContainer/SubViewportContainer/SubViewport/level_proxies.get_node(NodePath(current_scene_root.name)), _new_room_node)
+	
+	if current_scene_root.get_children().size() == 1: #if the room we just added was the first one
+		$main/VBoxContainer/SubViewportContainer/SubViewport/level_proxies/Sprite2D.reparent(_room_proxy)
+		_create_level_start(_new_main_layer, _room_proxy)
 	
 	edit_room(room_name)
 
+func _create_level_start(owner_node : Node, room_proxy : Node) -> void:
+	print("creating level start")
+	
+	if level_starts.has(current_scene_root):
+		printerr("Tried creating level start but it already exists in this level. Try moving the currently existing one.")
+		return
+		
+	var _new_level_start : LevelStart = LevelStart.new()
+	_new_level_start.name = "level_start"
+	add_node_to_level(_new_level_start, owner_node)
+	_add_level_start_proxy(room_proxy, _new_level_start)
+
+func _move_level_start(room_name : String, new_position : Vector2) -> void:
+	var _new_proxy_parent = get_current_room_proxy().get_node("main")
+	var _current_level_start_proxy : LevelStart = level_starts[current_scene_root]
+	
+	var _new_parent = current_scene_root.get_node(room_name + "/main")
+	var _current_level_start = _current_level_start_proxy.get_meta("linked_node")
+	
+	if _current_level_start_proxy.get_parent() != _new_proxy_parent:
+		_current_level_start_proxy.reparent(_new_proxy_parent)
+		_current_level_start.reparent(_new_parent)
+		
+	_current_level_start_proxy.position = new_position
+	_current_level_start.position = new_position
 
 func _delete_current_room() -> void:
 	if current_scene_root.get_children().size() > 0:
 		current_scene_root.get_node(shown_room_names[current_scene_root]).queue_free()
 	await get_tree().create_timer(0.1).timeout
-	edit_room_idx(0)
+	if current_scene_root.get_children().size() > 0:
+		edit_room_idx(0)
+	else:
+		$main.update_room_list()
 
 
 func edit_room_idx(idx : int) -> void:
@@ -119,8 +185,11 @@ func edit_room_idx(idx : int) -> void:
 
 func edit_room(room_name : String) -> void:
 	shown_room_names.get_or_add(current_scene_root)
-	shown_room_names[current_scene_root] = room_name	
+	shown_room_names[current_scene_root] = room_name
 	$main.update_room_list()
+	
+	for _room in get_current_level_proxy().get_children():
+		_room.visible = room_name == _room.name
 	
 
 var _scene_path : String = ""
@@ -150,12 +219,28 @@ func create_new_level_scene() -> void:
 	EditorInterface.open_scene_from_path(_scene_path) #open the scene in the editor
 
 
+func context_menu_option_chosen(id : int) -> void:
+	match id:
+		1:
+			_move_level_start(shown_room_names[current_scene_root], get_global_mouse_position())
+
 func _show_context_menu(at_position : Vector2i) -> void:
-	if !_is_current_scene_a_level:
+	if !_is_current_scene_a_level or current_scene_root.get_children().size() == 0:
 		return
 	
 	$context_menu.popup(Rect2i(at_position + Vector2i(0, 75), Vector2i(200, 400)))
 	
 func get_currently_edited_layer() -> int:
 	return 1
-	
+
+func get_current_level_start() -> LevelStart:
+	return null
+
+func get_current_level_proxy() -> Level:
+	return $main/VBoxContainer/SubViewportContainer/SubViewport/level_proxies.get_node(NodePath(current_scene_root.name))
+
+func get_current_room_proxy() -> LevelRoom:
+	return get_current_level_proxy().get_node(shown_room_names[current_scene_root])
+
+func get_global_mouse_position() -> Vector2:
+	return (get_global_mouse_position() + ($main/VBoxContainer/SubViewportContainer/SubViewport/editor_camera.position / 2.0) + 0.5 * get_viewport_rect().size) / $main/VBoxContainer/SubViewportContainer/SubViewport/editor_camera.zoom

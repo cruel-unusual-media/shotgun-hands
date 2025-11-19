@@ -5,6 +5,7 @@ extends PopupMenu
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	_update_context_menu()
+	id_pressed.connect(get_parent().context_menu_option_chosen)
 
 func _update_context_menu() -> void:
 	add_submenu_node_item("Add object...", $add_object)
