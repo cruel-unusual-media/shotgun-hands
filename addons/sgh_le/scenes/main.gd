@@ -14,6 +14,9 @@ var _is_current_scene_a_level : bool = false
 
 signal scene_changed
 
+enum EditTool {SELECT, PAINT, DRAW_COL}
+
+var _current_tool : EditTool = EditTool.SELECT
 
 func _ready() -> void:
 	$main/VBoxContainer/SubViewportContainer/SubViewport/editor_camera._right_clicked.connect(_show_context_menu)
@@ -32,8 +35,24 @@ func _process(delta: float) -> void:
 	
 	if _is_current_scene_a_level and !$main/VBoxContainer/SubViewportContainer/SubViewport/level_proxies.find_child(current_scene_root.name):
 		_load_currently_opened_level()
-		
-		
+	
+	
+	
+	$main/VBoxContainer/SubViewportContainer/SubViewport/level_proxies/tile_cursor.visible = _current_tool == EditTool.PAINT
+	$main/VBoxContainer/SubViewportContainer/SubViewport/level_proxies/tile_cursor.position = (get_global_space_mouse_position() - Vector2(32,32)).snapped(Vector2(64,64)) + Vector2(32,32)
+	if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and _current_tool == EditTool.PAINT:
+		get_current_room_proxy().get_node("main/main_tiles").set_cell(Vector2i(get_global_space_mouse_position()) / Vector2i(64, 64), 0, Vector2i(0,0))
+
+func _select_edit_mode(id : int) -> void:
+	match id:
+		0:
+			_current_tool = EditTool.SELECT
+		1:
+			_current_tool = EditTool.PAINT
+		2:
+			_current_tool = EditTool.DRAW_COL
+
+
 
 func _load_currently_opened_level() -> void:
 	var _new_level_proxy = _add_level_proxy(current_scene_root.name, $main/VBoxContainer/SubViewportContainer/SubViewport/level_proxies)
@@ -42,6 +61,10 @@ func _load_currently_opened_level() -> void:
 		
 		for _layer : Node2D in _room.get_children():
 			var _layer_proxy : Node2D = _add_layer_proxy(_layer.name, _room_proxy, _layer)
+			
+			for _object in _layer.get_children():
+				if _object is TileMapLayer:
+					_add_tilemaplayer_proxy(_object.name, _layer_proxy, _object)
 	
 	$main/VBoxContainer/SubViewportContainer/SubViewport/level_proxies.get_node(NodePath(current_scene_root.name)).print_tree_pretty()
 
@@ -77,10 +100,15 @@ func _add_layer_proxy(layer_name : String, room_proxy_parent : LevelRoom, linked
 
 
 func _add_tilemaplayer_proxy(tilemaplayer_name : String, parent_proxy : Node, linked_tilemaplayer : Node) -> TileMapLayer:
+	print("add tilemap proxy")
 	var _new_tilemaplayer_proxy : TileMapLayer = TileMapLayer.new()
 	_new_tilemaplayer_proxy.name = tilemaplayer_name
 	_new_tilemaplayer_proxy.set_meta("linked_node", linked_tilemaplayer)
 	parent_proxy.add_child(_new_tilemaplayer_proxy)
+	_new_tilemaplayer_proxy.changed.connect(_update_linked_tilemaplayer.bind(_new_tilemaplayer_proxy))
+	
+	_new_tilemaplayer_proxy.tile_set = load("res://Tilesets/Resources/debug.tres")
+	_new_tilemaplayer_proxy.set_cell(Vector2i(0,0), 0, Vector2i(0,0))
 	
 	return _new_tilemaplayer_proxy
 
@@ -100,6 +128,14 @@ func _add_level_start_proxy(proxy_owner : Node, linked_node : Node) -> LevelStar
 	level_starts[current_scene_root] = _new_level_start_proxy
 	
 	return _new_level_start_proxy
+
+
+
+func _update_linked_tilemaplayer(tilemap_proxy : TileMapLayer) -> void:
+	print("update linked tilemap")
+	var _linked_tilemap : TileMapLayer = tilemap_proxy.get_meta("linked_node")
+	_linked_tilemap.get_used_cells()
+
 
 
 func _scene_changed(new_scene : Node) -> void:
@@ -142,6 +178,7 @@ func create_room(room_name : String) -> void:
 		var _layer_proxy = _add_layer_proxy(_layer_name, _room_proxy, _new_layer)
 		
 		var _new_tilemap : TileMapLayer = TileMapLayer.new()
+		_new_tilemap.tile_set = preload("res://Tilesets/Resources/debug.tres")
 		_new_tilemap.name = _layer_name + "_tiles"
 		add_node_to_level(_new_tilemap, _new_layer)
 		_add_tilemaplayer_proxy(_layer_name + "_tiles", _layer_proxy, _new_tilemap)
@@ -231,7 +268,9 @@ func create_new_level_scene() -> void:
 func context_menu_option_chosen(id : int) -> void:
 	match id:
 		1:
-			_move_level_start(shown_room_names[current_scene_root], get_global_mouse_position())
+			_move_level_start(shown_room_names[current_scene_root], get_global_space_mouse_position())
+		6:
+			$main/VBoxContainer/SubViewportContainer/SubViewport/editor_camera._return_to_origin()
 
 func _show_context_menu(at_position : Vector2i) -> void:
 	if !_is_current_scene_a_level or current_scene_root.get_children().size() == 0:
@@ -252,8 +291,15 @@ func get_current_level_proxy() -> Level:
 func get_current_room_proxy() -> LevelRoom:
 	return get_current_level_proxy().get_node(shown_room_names[current_scene_root])
 
-func get_global_mouse_position() -> Vector2:
-	return (get_global_mouse_position() + ($main/VBoxContainer/SubViewportContainer/SubViewport/editor_camera.position / 2.0) + 0.5 * get_viewport_rect().size) / $main/VBoxContainer/SubViewportContainer/SubViewport/editor_camera.zoom
+func get_global_space_mouse_position() -> Vector2:
+	var _mouse_pos_fac = ((get_local_mouse_position() - Vector2(0, $main/VBoxContainer/HBoxContainer.size.y)) / $main/VBoxContainer/SubViewportContainer/SubViewport/editor_camera.get_viewport_rect().size) - Vector2(0.5, 0.5) #some small addition for calibration due to god knows what
+	return $main/VBoxContainer/SubViewportContainer/SubViewport/editor_camera.global_position + (_mouse_pos_fac * ($main/VBoxContainer/SubViewportContainer/SubViewport/editor_camera.get_viewport_rect().size / $main/VBoxContainer/SubViewportContainer/SubViewport/editor_camera.zoom))
+	#return (get_global_mouse_position() + ($main/VBoxContainer/SubViewportContainer/SubViewport/editor_camera.position / 2.0) + 0.5 * get_viewport_rect().size) / $main/VBoxContainer/SubViewportContainer/SubViewport/editor_camera.zoom
 
 func get_currently_edited_tilemaplayer_proxy() -> TileMapLayer:
 	return null
+
+func _debug_func(id : int) -> void:
+	match id:
+		0:
+			get_current_level_proxy().print_tree_pretty()

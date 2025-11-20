@@ -35,3 +35,7 @@ func viewport_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
 		if _panning:
 			position -= event.relative / zoom
+
+func _return_to_origin() -> void:
+	zoom = Vector2i(1,1)
+	position = Vector2.ZERO

@@ -1,12 +1,30 @@
-[gd_scene load_steps=11 format=3 uid="uid://c8wue25i20fjs"]
+[gd_scene load_steps=18 format=3 uid="uid://c8wue25i20fjs"]
 
 [ext_resource type="Script" uid="uid://dwb08gw8ei4lh" path="res://addons/sgh_le/scenes/main.gd" id="1_ep5ol"]
 [ext_resource type="Script" uid="uid://o82ogn8ay18o" path="res://addons/sgh_le/scenes/main_screen.gd" id="2_8fyc8"]
+[ext_resource type="Texture2D" uid="uid://drud7df30ok6j" path="res://addons/sgh_le/textures/ToolSelect.svg" id="3_ugtkf"]
 [ext_resource type="Material" uid="uid://dnivymobr6n" path="res://addons/sgh_le/materials/editor_background.tres" id="4_8nfjm"]
+[ext_resource type="Texture2D" uid="uid://vw1rx2mj7rhn" path="res://addons/sgh_le/textures/Paint.svg" id="4_hpmdb"]
 [ext_resource type="Script" uid="uid://c5vhnx1modamr" path="res://addons/sgh_le/scenes/editor_camera.gd" id="4_ien0c"]
 [ext_resource type="Script" uid="uid://bdcu3kvxga6t3" path="res://addons/sgh_le/scenes/room_creation_dialog.gd" id="4_xpdnm"]
-[ext_resource type="Texture2D" uid="uid://clw1rnvebt65a" path="res://Levels/Sprites/Decorations/FireCan.png" id="5_ien0c"]
+[ext_resource type="Texture2D" uid="uid://ditx70qecap7y" path="res://addons/sgh_le/textures/tile_cursor.png" id="5_qjw2d"]
+[ext_resource type="ButtonGroup" uid="uid://cntiefrla3jgv" path="res://addons/sgh_le/tools_button_group.tres" id="6_hpmdb"]
 [ext_resource type="Script" uid="uid://bra4kv4gxbjc6" path="res://addons/sgh_le/scenes/context_menu.gd" id="7_txer4"]
+[ext_resource type="Texture2D" uid="uid://igt75vgbqosq" path="res://addons/sgh_le/textures/ToolMove.svg" id="9_ipiro"]
+[ext_resource type="Texture2D" uid="uid://br4ws8ca0y1ft" path="res://addons/sgh_le/textures/ToolTriangle.svg" id="9_qjw2d"]
+[ext_resource type="Texture2D" uid="uid://dyf3lxdjf8c56" path="res://addons/sgh_le/textures/ToolRotate.svg" id="11_smjk1"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ugtkf"]
+bg_color = Color(0.16386127, 0.1638613, 0.16386116, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.41024035, 0.41024032, 0.4102403, 1)
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
 
 [sub_resource type="InputEventKey" id="InputEventKey_8fyc8"]
 device = -1
@@ -51,7 +69,7 @@ layout_mode = 2
 
 [node name="file" type="MenuButton" parent="main/VBoxContainer/HBoxContainer"]
 layout_mode = 2
-text = "File"
+text = "  File"
 item_count = 1
 popup/item_0/text = "New Level..."
 popup/item_0/id = 0
@@ -74,6 +92,14 @@ layout_mode = 2
 disabled = true
 text = "Level Configuration"
 flat = true
+
+[node name="debug" type="MenuButton" parent="main/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "Developer Debug"
+item_count = 1
+popup/item_0/text = "Print Current Level Proxy Tree"
+popup/item_0/id = 0
 
 [node name="SubViewportContainer" type="SubViewportContainer" parent="main/VBoxContainer"]
 visible = false
@@ -117,9 +143,95 @@ grow_vertical = 2
 
 [node name="level_proxies" type="Node2D" parent="main/VBoxContainer/SubViewportContainer/SubViewport"]
 
-[node name="Sprite2D" type="Sprite2D" parent="main/VBoxContainer/SubViewportContainer/SubViewport/level_proxies"]
-position = Vector2(272, 460)
-texture = ExtResource("5_ien0c")
+[node name="tile_cursor" type="Sprite2D" parent="main/VBoxContainer/SubViewportContainer/SubViewport/level_proxies"]
+visible = false
+z_index = 840
+position = Vector2(1888, 1056)
+texture = ExtResource("5_qjw2d")
+
+[node name="tools_margin_container" type="MarginContainer" parent="main"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -48.0
+offset_top = 53.0
+offset_right = -8.0
+offset_bottom = 234.0
+grow_horizontal = 0
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="inverted_margin" type="MarginContainer" parent="main/tools_margin_container"]
+layout_mode = 2
+theme_override_constants/margin_left = -5
+theme_override_constants/margin_top = -5
+theme_override_constants/margin_right = -5
+theme_override_constants/margin_bottom = -5
+
+[node name="Panel" type="Panel" parent="main/tools_margin_container/inverted_margin"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_ugtkf")
+
+[node name="tools" type="VBoxContainer" parent="main/tools_margin_container"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="select" type="Button" parent="main/tools_margin_container/tools"]
+layout_mode = 2
+theme_override_constants/h_separation = 4
+toggle_mode = true
+button_group = ExtResource("6_hpmdb")
+text = "
+"
+icon = ExtResource("3_ugtkf")
+icon_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="main/tools_margin_container/tools"]
+layout_mode = 2
+
+[node name="paint" type="Button" parent="main/tools_margin_container/tools"]
+layout_mode = 2
+theme_override_constants/h_separation = 0
+toggle_mode = true
+button_group = ExtResource("6_hpmdb")
+text = "
+"
+icon = ExtResource("4_hpmdb")
+icon_alignment = 1
+
+[node name="draw_collision" type="Button" parent="main/tools_margin_container/tools"]
+layout_mode = 2
+theme_override_constants/h_separation = 0
+toggle_mode = true
+button_group = ExtResource("6_hpmdb")
+text = "
+"
+icon = ExtResource("9_qjw2d")
+icon_alignment = 1
+
+[node name="move" type="Button" parent="main/tools_margin_container/tools"]
+layout_mode = 2
+theme_override_constants/h_separation = 0
+toggle_mode = true
+button_group = ExtResource("6_hpmdb")
+text = "
+"
+icon = ExtResource("9_ipiro")
+icon_alignment = 1
+
+[node name="rotate" type="Button" parent="main/tools_margin_container/tools"]
+layout_mode = 2
+theme_override_constants/h_separation = 0
+toggle_mode = true
+button_group = ExtResource("6_hpmdb")
+text = "
+"
+icon = ExtResource("11_smjk1")
+icon_alignment = 1
 
 [node name="level_configuration" type="Window" parent="main"]
 oversampling_override = 1.0
@@ -261,56 +373,26 @@ text = "Create"
 
 [node name="context_menu" type="PopupMenu" parent="."]
 oversampling_override = 1.0
-item_count = 18
+item_count = 7
 item_0/text = "Add object..."
 item_0/id = 0
 item_1/text = "Place level start here"
 item_1/id = 1
-item_2/text = "Layers"
-item_2/id = -1
-item_2/separator = true
-item_3/text = "Foreground"
-item_3/checkable = 2
-item_3/id = 3
-item_4/text = "Main"
+item_2/text = "Return to level origin"
+item_2/id = 6
+item_3/text = "Layers"
+item_3/id = -1
+item_3/separator = true
+item_4/text = "Foreground"
 item_4/checkable = 2
 item_4/checked = true
-item_4/id = 4
-item_5/text = "Background"
+item_4/id = 3
+item_5/text = "Main"
 item_5/checkable = 2
-item_5/id = 5
-item_6/text = "Add object..."
-item_6/id = 6
-item_7/text = "Place level start here"
-item_7/id = 7
-item_8/text = "Layers"
-item_8/id = -1
-item_8/separator = true
-item_9/text = "Foreground"
-item_9/checkable = 2
-item_9/id = 9
-item_10/text = "Main"
-item_10/checkable = 2
-item_10/id = 10
-item_11/text = "Background"
-item_11/checkable = 2
-item_11/id = 11
-item_12/text = "Add object..."
-item_12/id = 12
-item_13/text = "Place level start here"
-item_13/id = 13
-item_14/text = "Layers"
-item_14/id = -1
-item_14/separator = true
-item_15/text = "Foreground"
-item_15/checkable = 2
-item_15/id = 15
-item_16/text = "Main"
-item_16/checkable = 2
-item_16/id = 16
-item_17/text = "Background"
-item_17/checkable = 2
-item_17/id = 17
+item_5/id = 4
+item_6/text = "Background"
+item_6/checkable = 2
+item_6/id = 5
 script = ExtResource("7_txer4")
 
 [node name="add_object" type="PopupMenu" parent="context_menu"]
@@ -333,6 +415,9 @@ item_6/text = "Enemy"
 item_6/id = 6
 
 [connection signal="button_down" from="main/VBoxContainer/HBoxContainer/level_config" to="main" method="_on_level_config_button_down"]
+[connection signal="button_down" from="main/tools_margin_container/tools/select" to="." method="_select_edit_mode" binds= [0]]
+[connection signal="button_down" from="main/tools_margin_container/tools/paint" to="." method="_select_edit_mode" binds= [1]]
+[connection signal="button_down" from="main/tools_margin_container/tools/draw_collision" to="." method="_select_edit_mode" binds= [2]]
 [connection signal="button_down" from="main/level_configuration/MarginContainer/VBoxContainer/close" to="main" method="_on_level_config_close_button_down"]
 [connection signal="button_down" from="main/no_rooms_yet_warning/create_room" to="main" method="_create_first_room"]
 [connection signal="close_requested" from="room_creation_dialog" to="room_creation_dialog" method="_close_dialog"]

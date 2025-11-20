@@ -6,6 +6,7 @@ extends Control
 func _ready() -> void:
 	$VBoxContainer/HBoxContainer/file.get_popup().id_pressed.connect(_on_file_option_pressed)
 	$VBoxContainer/HBoxContainer/rooms.get_popup().id_pressed.connect(_room_option_pressed)
+	$VBoxContainer/HBoxContainer/debug.get_popup().id_pressed.connect(get_parent()._debug_func)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
