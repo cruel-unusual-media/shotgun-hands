@@ -14,9 +14,21 @@ var _is_current_scene_a_level : bool = false
 
 signal scene_changed
 
+var _was_mouse_pressed : bool = false
+
 enum EditTool {SELECT, PAINT, DRAW_COL}
 
-var _current_tool : EditTool = EditTool.SELECT
+var _current_tool : EditTool = EditTool.SELECT:
+	set(x):
+		_current_tool = x
+		
+		match x:
+			EditTool.SELECT:
+				$main/tools_margin_container/tools.get_node("select").button_pressed = true
+			EditTool.PAINT:
+				$main/tools_margin_container/tools.get_node("paint").button_pressed = true
+			EditTool.DRAW_COL:
+				$main/tools_margin_container/tools.get_node("draw_collision").button_pressed = true
 
 func _ready() -> void:
 	$main/VBoxContainer/SubViewportContainer/SubViewport/editor_camera._right_clicked.connect(_show_context_menu)
@@ -27,6 +39,9 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	if current_scene_root != EditorInterface.get_edited_scene_root():
 		scene_changed.emit(EditorInterface.get_edited_scene_root())
+	
+	if !Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and _was_mouse_pressed:
+		_mouse_lifted()
 	
 	_is_current_scene_a_level = current_scene_root is Level
 	
@@ -39,10 +54,17 @@ func _process(delta: float) -> void:
 	
 	
 	$main/VBoxContainer/SubViewportContainer/SubViewport/level_proxies/tile_cursor.visible = _current_tool == EditTool.PAINT
-	$main/VBoxContainer/SubViewportContainer/SubViewport/level_proxies/tile_cursor.position = (get_global_space_mouse_position() - Vector2(32,32)).snapped(Vector2(64,64)) + Vector2(32,32)
-	if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and _current_tool == EditTool.PAINT:
-		get_current_room_proxy().get_node("main/main_tiles").set_cell(Vector2i(get_global_space_mouse_position()) / Vector2i(64, 64), 0, Vector2i(0,0))
-
+	$main/VBoxContainer/SubViewportContainer/SubViewport/level_proxies/tile_cursor.position = (get_global_space_mouse_position() - Vector2(32,32)).snappedf(64.0) + Vector2(32,32)
+	if _current_tool == EditTool.PAINT:
+		if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT): 
+			get_current_room_proxy().get_node("main/main_tiles").set_cell(Vector2i(get_global_space_mouse_position()) / Vector2i(64, 64), 0, Vector2i(0,0))
+		elif Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT):
+			get_current_room_proxy().get_node("main/main_tiles").set_cell(Vector2i(get_global_space_mouse_position()) / Vector2i(64, 64), -1)
+		elif Input.is_key_pressed(KEY_ESCAPE):
+			_current_tool = EditTool.SELECT
+	
+	_was_mouse_pressed = Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) 
+		
 func _select_edit_mode(id : int) -> void:
 	match id:
 		0:
@@ -107,8 +129,7 @@ func _add_tilemaplayer_proxy(tilemaplayer_name : String, parent_proxy : Node, li
 	parent_proxy.add_child(_new_tilemaplayer_proxy)
 	_new_tilemaplayer_proxy.changed.connect(_update_linked_tilemaplayer.bind(_new_tilemaplayer_proxy))
 	
-	_new_tilemaplayer_proxy.tile_set = load("res://Tilesets/Resources/debug.tres")
-	_new_tilemaplayer_proxy.set_cell(Vector2i(0,0), 0, Vector2i(0,0))
+	_new_tilemaplayer_proxy.tile_set = preload("res://Tilesets/Resources/debug.tres")
 	
 	return _new_tilemaplayer_proxy
 
@@ -132,10 +153,12 @@ func _add_level_start_proxy(proxy_owner : Node, linked_node : Node) -> LevelStar
 
 
 func _update_linked_tilemaplayer(tilemap_proxy : TileMapLayer) -> void:
-	print("update linked tilemap")
 	var _linked_tilemap : TileMapLayer = tilemap_proxy.get_meta("linked_node")
-	_linked_tilemap.get_used_cells()
-
+	var _used_cells = tilemap_proxy.get_used_cells()
+	
+	_linked_tilemap.clear()
+	for _cell : Vector2i in _used_cells:
+		_linked_tilemap.set_cell(_cell, tilemap_proxy.get_cell_source_id(_cell), tilemap_proxy.get_cell_atlas_coords(_cell), tilemap_proxy.get_cell_alternative_tile(_cell))
 
 
 func _scene_changed(new_scene : Node) -> void:
@@ -273,7 +296,7 @@ func context_menu_option_chosen(id : int) -> void:
 			$main/VBoxContainer/SubViewportContainer/SubViewport/editor_camera._return_to_origin()
 
 func _show_context_menu(at_position : Vector2i) -> void:
-	if !_is_current_scene_a_level or current_scene_root.get_children().size() == 0:
+	if !_is_current_scene_a_level or current_scene_root.get_children().size() == 0 or _current_tool != EditTool.SELECT:
 		return
 	
 	$context_menu._update_context_menu()
@@ -303,3 +326,7 @@ func _debug_func(id : int) -> void:
 	match id:
 		0:
 			get_current_level_proxy().print_tree_pretty()
+
+func _mouse_lifted() -> void:
+	if _current_tool == EditTool.PAINT:
+		_update_linked_tilemaplayer(get_current_room_proxy().get_node("main/main_tiles"))
