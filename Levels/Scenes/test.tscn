@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=4 uid="uid://byocn5xc5pqem"]
+[gd_scene load_steps=6 format=4 uid="uid://byocn5xc5pqem"]
 
 [ext_resource type="Script" uid="uid://b8jimhiabxqwq" path="res://Classes/Nodes/Level.gd" id="1_wck56"]
 [ext_resource type="Script" uid="uid://cpya70aw6wa8c" path="res://Classes/Nodes/LevelRoom.gd" id="2_p3f6t"]
 [ext_resource type="TileSet" uid="uid://h5ykt387ck0w" path="res://Tilesets/Resources/debug.tres" id="3_yucxy"]
 [ext_resource type="Script" uid="uid://dgh8puau3rarb" path="res://Classes/Nodes/LevelStart.gd" id="4_apk60"]
+[ext_resource type="Script" uid="uid://c116lbly7rw0s" path="res://Classes/Nodes/RoomEntrance.gd" id="5_yucxy"]
 
 [node name="Test" type="Node2D"]
 script = ExtResource("1_wck56")
@@ -28,8 +29,12 @@ tile_map_data = PackedByteArray("AAAAAAEAAAAAAAAAAAABAAEAAAAAAAAAAAACAAEAAAAAAAA
 tile_set = ExtResource("3_yucxy")
 
 [node name="level_start" type="Node2D" parent="asdasd/main"]
-position = Vector2(120.94269, -39.77838)
+position = Vector2(110.9082, -29.579834)
 script = ExtResource("4_apk60")
+
+[node name="@Node2D@32617" type="Node2D" parent="asdasd/main"]
+position = Vector2(924.5284, -41.96656)
+script = ExtResource("5_yucxy")
 
 [node name="foreground" type="Node2D" parent="asdasd"]
 

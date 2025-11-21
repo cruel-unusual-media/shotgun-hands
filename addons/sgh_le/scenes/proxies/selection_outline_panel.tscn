@@ -13,7 +13,7 @@ border_color = Color(1, 1, 1, 1)
 anti_aliasing_size = 3.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4xvwb"]
-bg_color = Color(1, 1, 1, 0.2)
+bg_color = Color(1, 1, 1, 0.6392157)
 
 [node name="SelectionOutlinePanel" type="Panel"]
 self_modulate = Color(1, 1, 1, 0.9444877)
@@ -28,7 +28,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_7ygx6")
 script = ExtResource("1_4xvwb")
 
 [node name="fill" type="Panel" parent="."]
-self_modulate = Color(1, 1, 1, 0.992631)
+self_modulate = Color(1, 1, 1, 0.7560491)
 z_index = 999
 layout_mode = 1
 anchors_preset = 15
