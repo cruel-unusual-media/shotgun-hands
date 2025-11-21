@@ -6,6 +6,7 @@ extends PopupMenu
 func _ready() -> void:
 	_update_context_menu()
 	id_pressed.connect(get_parent().context_menu_option_chosen)
+	$add_object.id_pressed.connect(get_parent().add_object_option_pressed)
 
 func _update_context_menu() -> void:
 	clear()

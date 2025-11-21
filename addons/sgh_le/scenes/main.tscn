@@ -145,7 +145,7 @@ grow_vertical = 2
 [node name="tile_cursor" type="Sprite2D" parent="main/VBoxContainer/SubViewportContainer/SubViewport/level_proxies"]
 visible = false
 z_index = 840
-position = Vector2(1312, 160)
+position = Vector2(1120, 928)
 texture = ExtResource("5_qjw2d")
 
 [node name="tools_margin_container" type="MarginContainer" parent="main"]
@@ -422,23 +422,25 @@ item_2/id = 6
 script = ExtResource("7_txer4")
 
 [node name="add_object" type="PopupMenu" parent="context_menu"]
-item_count = 7
+item_count = 8
 item_0/text = "Trigger"
 item_0/id = 0
-item_1/text = "Effectors"
+item_1/text = "Room Entrance"
 item_1/id = 1
-item_1/separator = true
-item_2/text = "Freeze"
-item_2/id = 2
-item_3/text = "Move"
-item_3/id = 3
-item_4/text = "Spawn"
-item_4/id = 4
-item_5/text = "Entities"
-item_5/id = 5
-item_5/separator = true
-item_6/text = "Enemy"
-item_6/id = 6
+item_2/text = "Effectors"
+item_2/id = 1
+item_2/separator = true
+item_3/text = "Freeze"
+item_3/id = 2
+item_4/text = "Move"
+item_4/id = 3
+item_5/text = "Spawn"
+item_5/id = 4
+item_6/text = "Entities"
+item_6/id = 5
+item_6/separator = true
+item_7/text = "Enemy"
+item_7/id = 6
 
 [connection signal="button_down" from="main/VBoxContainer/HBoxContainer/level_config" to="main" method="_on_level_config_button_down"]
 [connection signal="button_down" from="main/tools_margin_container/tools/select" to="." method="_select_edit_mode" binds= [0]]

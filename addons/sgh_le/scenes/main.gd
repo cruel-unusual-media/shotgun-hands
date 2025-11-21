@@ -1,6 +1,9 @@
 @tool
 extends Control
 
+const tile_size : int = 32
+const tilemap_scale : float = 2.0
+
 var current_scene_root : Node
 #var loaded_scene_path : String = "a"
 
@@ -61,9 +64,9 @@ func _process(delta: float) -> void:
 	
 	$main/VBoxContainer/SubViewportContainer/SubViewport/level_proxies/tile_cursor.visible = _current_tool == EditTool.PAINT
 	$main/layers_margin_container.visible = _current_tool == EditTool.PAINT
-	$main/VBoxContainer/SubViewportContainer/SubViewport/level_proxies/tile_cursor.position = (get_global_space_mouse_position() - Vector2(32,32)).snappedf(64.0) + Vector2(32,32)
+	$main/VBoxContainer/SubViewportContainer/SubViewport/level_proxies/tile_cursor.position = (get_global_space_mouse_position() - Vector2((tile_size * tilemap_scale) / 2.0,(tile_size * tilemap_scale) / 2.0)).snappedf(tile_size * tilemap_scale) + Vector2((tile_size * tilemap_scale) / 2.0,(tile_size * tilemap_scale) / 2.0)
 	if _current_tool == EditTool.PAINT:
-		var _coord : Vector2i = Vector2i(get_global_space_mouse_position()) / Vector2i(64, 64)
+		var _coord : Vector2i = Vector2i(get_global_space_mouse_position()) / Vector2i(tile_size * tilemap_scale, tile_size * tilemap_scale)
 		if _drawing:
 			get_current_room_proxy().get_node(get_currently_edited_layer() + "/" + get_currently_edited_layer() + "_tiles").set_cell(_coord, 0, _paint_selected_atlas_coord)
 			if !_stroke_add.has(_coord):
@@ -167,6 +170,7 @@ func _add_tilemaplayer_proxy(tilemaplayer_name : String, parent_proxy : Node, li
 	_new_tilemaplayer_proxy.name = tilemaplayer_name
 	_new_tilemaplayer_proxy.set_meta("linked_node", linked_tilemaplayer)
 	parent_proxy.add_child(_new_tilemaplayer_proxy)
+	_new_tilemaplayer_proxy.scale = Vector2(2,2)
 	
 	if tilemaplayer_name == "background_tiles":
 		_new_tilemaplayer_proxy.modulate = Color(0.5, 0.5, 0.5, 1.0)
@@ -191,6 +195,17 @@ func _add_level_start_proxy(proxy_owner : Node, linked_node : Node) -> LevelStar
 	level_edit_states[current_scene_root].level_start = _new_level_start_proxy
 	
 	return _new_level_start_proxy
+
+
+func _add_room_entrance_proxy(parent_proxy : Node, linked_entrance : Node, at_position : Vector2) -> RoomEntrance:
+	var _new_level_entrance_proxy : RoomEntrance = preload("res://addons/sgh_le/scenes/proxies/room_entrance.tscn").instantiate()
+	level_edit_states[current_scene_root].node_clickboxes.append(_new_level_entrance_proxy.get_node("clickbox"))
+	parent_proxy.add_child(_new_level_entrance_proxy)
+	_new_level_entrance_proxy.owner = parent_proxy
+	_new_level_entrance_proxy.set_meta("linked_node", linked_entrance)
+	_new_level_entrance_proxy.global_position = at_position
+	
+	return _new_level_entrance_proxy
 
 
 func _copy_tilemap(from : TileMapLayer, to : TileMapLayer) -> void:
@@ -282,6 +297,16 @@ func _create_level_start(owner_node : Node, room_proxy : Node) -> void:
 	_new_level_start.name = "level_start"
 	add_node_to_level(_new_level_start, owner_node)
 	_add_level_start_proxy(room_proxy, _new_level_start)
+
+
+func _create_room_entrance(parent_node : Node, parent_proxy : Node, at_position : Vector2):
+	var _new_entrance : RoomEntrance = RoomEntrance.new()
+	add_node_to_level(_new_entrance, parent_node)
+	
+	_new_entrance.global_position = at_position
+	
+	var _proxy_entrance = _add_room_entrance_proxy(parent_proxy, _new_entrance, at_position)
+
 
 func _move_level_start(room_name : String, new_position : Vector2) -> void:
 	log_msg("Moving level start to " + str(new_position) + " in \"" + room_name + "\"")
@@ -383,6 +408,9 @@ func get_current_level_proxy() -> Level:
 func get_current_room_proxy() -> LevelRoom:
 	return get_current_level_proxy().get_node(level_edit_states[current_scene_root].selected_room)
 
+func get_current_room_name() -> String:
+	return level_edit_states[current_scene_root].selected_room
+
 func get_global_space_mouse_position() -> Vector2:
 	var _mouse_pos_fac = ((get_local_mouse_position() - Vector2(0, $main/VBoxContainer/HBoxContainer.size.y)) / $main/VBoxContainer/SubViewportContainer/SubViewport/editor_camera.get_viewport_rect().size) - Vector2(0.5, 0.5) #some small addition for calibration due to god knows what
 	return $main/VBoxContainer/SubViewportContainer/SubViewport/editor_camera.global_position + (_mouse_pos_fac * ($main/VBoxContainer/SubViewportContainer/SubViewport/editor_camera.get_viewport_rect().size / $main/VBoxContainer/SubViewportContainer/SubViewport/editor_camera.zoom))
@@ -466,3 +494,14 @@ func _clickbox_clicked(clickbox_control : Control) -> void:
 		_selection_outline_panel.reparent(clickbox_control, false)
 		_selection_outline_panel.visible = true
 		_selected_node = clickbox_control.get_parent()
+
+
+func add_object_option_pressed(id : int) -> void:
+	match id:
+		0:
+			print("Trigger")
+		1:
+			log_msg("Add entrance to room \"" + get_current_room_name() + "\"")
+			var _entrance_parent = current_scene_root.get_node(get_current_room_name() + "/main")
+			var _entrance_proxy_parent = get_current_room_proxy().get_node("main")
+			var _new_entrance = _create_room_entrance(_entrance_parent, _entrance_proxy_parent, _last_context_menu_open_pos)
