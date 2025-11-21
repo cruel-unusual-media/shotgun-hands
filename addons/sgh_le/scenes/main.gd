@@ -20,9 +20,17 @@ var _erasing : bool = false
 var _stroke_add : Array[Vector2i] = []
 var _stroke_erase : Array[Vector2i] = []
 
+@onready var _selection_outline_panel = preload("res://addons/sgh_le/scenes/proxies/selection_outline_panel.tscn").instantiate()
+var _selected_node : Node
+var _moving_node : Node
+var _move_grab_offset : Vector2
+
 var _current_tool : EditTool = EditTool.SELECT:
 	set(x):
 		_current_tool = x
+		
+		_moving_node = null
+		_selected_node = null
 		
 		match x:
 			EditTool.SELECT:
@@ -37,6 +45,7 @@ func _ready() -> void:
 	scene_changed.connect(_scene_changed)
 	_show_control("main")
 	$main/VBoxContainer/SubViewportContainer.gui_input.connect(_viewport_input)
+	add_child(_selection_outline_panel)
 
 
 func _process(delta: float) -> void:
@@ -65,9 +74,18 @@ func _process(delta: float) -> void:
 			if !_stroke_erase.has(_coord):
 				_stroke_erase.append(_coord)
 				
-		elif Input.is_key_pressed(KEY_ESCAPE):
+	if Input.is_key_pressed(KEY_ESCAPE):
+		_selected_node = null
+		if _current_tool == EditTool.PAINT:
 			_current_tool = EditTool.SELECT
-		
+	
+	
+	_selection_outline_panel.visible = _selected_node != null
+	
+	if _moving_node:
+		_moving_node.global_position = get_global_space_mouse_position() + _move_grab_offset
+
+
 func _select_edit_mode(id : int) -> void:
 	match id:
 		0:
@@ -80,6 +98,10 @@ func _select_edit_mode(id : int) -> void:
 
 
 func _load_new_level() -> void:
+	print(" * Loading in new level")
+	
+	level_edit_states.get_or_add(current_scene_root, LevelEditState.new())
+	
 	var _new_level_proxy = _add_level_proxy(current_scene_root.name, $main/VBoxContainer/SubViewportContainer/SubViewport/level_proxies)
 	for _room : LevelRoom in current_scene_root.get_children():
 		var _room_proxy : LevelRoom = _add_room_proxy(_room.name, _new_level_proxy, _room)
@@ -89,9 +111,13 @@ func _load_new_level() -> void:
 			
 			for _object in _layer.get_children():
 				if _object is TileMapLayer:
-					_add_tilemaplayer_proxy(_object.name, _layer_proxy, _object)
+					var _new_tilemaplayer_proxy : TileMapLayer = _add_tilemaplayer_proxy(_object.name, _layer_proxy, _object)
+					_copy_tilemap(_object, _new_tilemaplayer_proxy)
+				
+				if _object is LevelStart:
+					var _new_level_start_proxy = _add_level_start_proxy(_layer_proxy, _object)
+					_new_level_start_proxy.position = _object.position
 	
-	level_edit_states.get_or_add(current_scene_root, LevelEditState.new())
 	edit_room_idx(0)
 	
 	_add_origin_sprite()
@@ -155,18 +181,23 @@ func _add_tilemaplayer_proxy(tilemaplayer_name : String, parent_proxy : Node, li
 
 func _add_level_start_proxy(proxy_owner : Node, linked_node : Node) -> LevelStart:
 	#print("adding level start proxy")
-	var _new_level_start_proxy : LevelStart = LevelStart.new()
+	var _new_level_start_proxy : LevelStart = preload("res://addons/sgh_le/scenes/proxies/level_start.tscn").instantiate()
+	level_edit_states[current_scene_root].node_clickboxes.append(_new_level_start_proxy.get_node("clickbox"))
 	proxy_owner.add_child(_new_level_start_proxy)
 	_new_level_start_proxy.owner = proxy_owner
 	_new_level_start_proxy.set_meta("linked_node", linked_node)
 	
-	var _test_sprite = Sprite2D.new()
-	_test_sprite.texture = load("res://sh_logo.png")
-	_new_level_start_proxy.add_child(_test_sprite)
-	
 	level_edit_states[current_scene_root].level_start = _new_level_start_proxy
 	
 	return _new_level_start_proxy
+
+
+func _copy_tilemap(from : TileMapLayer, to : TileMapLayer) -> void:
+	var _used_cells = from.get_used_cells()
+	
+	for _cell : Vector2i in _used_cells:
+		to.set_cell(_cell, from.get_cell_source_id(_cell), from.get_cell_atlas_coords(_cell), from.get_cell_alternative_tile(_cell))
+
 
 
 func _scene_changed(new_scene : Node) -> void:
@@ -318,11 +349,11 @@ func create_new_level_scene() -> void:
 	
 	EditorInterface.open_scene_from_path(_scene_path) #open the scene in the editor
 
-
+var _last_context_menu_open_pos : Vector2
 func context_menu_option_chosen(id : int) -> void:
 	match id:
 		1:
-			_move_level_start(level_edit_states[current_scene_root].selected_room, get_global_space_mouse_position())
+			_move_level_start(level_edit_states[current_scene_root].selected_room, _last_context_menu_open_pos)
 		6:
 			$main/VBoxContainer/SubViewportContainer/SubViewport/editor_camera._return_to_origin()
 
@@ -330,6 +361,7 @@ func _show_context_menu(at_position : Vector2i) -> void:
 	if !_is_current_scene_a_level or current_scene_root.get_children().size() == 0 or _current_tool != EditTool.SELECT:
 		return
 	
+	_last_context_menu_open_pos = get_global_space_mouse_position()
 	$context_menu._update_context_menu()
 	$context_menu.popup(Rect2i(at_position + Vector2i(0, 75), Vector2i(200, 400)))
 	
@@ -392,8 +424,23 @@ func _viewport_input(event) -> void:
 		if event.button_index == MOUSE_BUTTON_LEFT:
 			_drawing = event.pressed
 			if !event.pressed:
+				_moving_node = null
 				if _current_tool == EditTool.PAINT:
 					_stroke_lifted()
+			else:
+				if _current_tool == EditTool.SELECT:
+					var _clickpos = get_global_space_mouse_position()
+					for _clickbox : Control in level_edit_states[current_scene_root].node_clickboxes:
+						var _global_clickbox_begin = _clickbox.get_begin() + _clickbox.get_parent().position
+						var _global_clickbox_end = _clickbox.get_end() + _clickbox.get_parent().position
+						
+						if _clickpos.x >= _global_clickbox_begin.x and _clickpos.x <= _global_clickbox_end.x and _clickpos.y >= _global_clickbox_begin.y and _clickpos.y <= _global_clickbox_end.y:
+							_clickbox_clicked(_clickbox)
+							return
+					
+					_moving_node = null
+					_selected_node = null
+					
 		
 		elif event.button_index == MOUSE_BUTTON_RIGHT:
 			_erasing = event.pressed
@@ -401,6 +448,22 @@ func _viewport_input(event) -> void:
 			if !event.pressed:
 				if _current_tool == EditTool.PAINT:
 					_erase_lifted()
-
+	
+	elif event is InputEventMouseMotion:
+		if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and _selected_node and not _moving_node:
+			_move_grab_offset = _selected_node.global_position - get_global_space_mouse_position()
+			_moving_node = _selected_node
+	
+	
 func log_msg(message : String) -> void:
 	print(" * ", message)
+
+
+func _clickbox_clicked(clickbox_control : Control) -> void:
+	if _selected_node == clickbox_control.get_parent():
+		_move_grab_offset = clickbox_control.get_parent().global_position - get_global_space_mouse_position()
+		_moving_node = clickbox_control.get_parent()
+	else:
+		_selection_outline_panel.reparent(clickbox_control, false)
+		_selection_outline_panel.visible = true
+		_selected_node = clickbox_control.get_parent()

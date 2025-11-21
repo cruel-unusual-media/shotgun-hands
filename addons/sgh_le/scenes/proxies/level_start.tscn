@@ -1,0 +1,40 @@
+[gd_scene load_steps=5 format=3 uid="uid://bkywbdpud7rxt"]
+
+[ext_resource type="Script" uid="uid://dgh8puau3rarb" path="res://Classes/Nodes/LevelStart.gd" id="1_fngrs"]
+[ext_resource type="Texture2D" uid="uid://gf4agagiun0e" path="res://Actors/Player/Sprites/spritesheet_sh_notext.png" id="2_abeh2"]
+[ext_resource type="PackedScene" uid="uid://b6r4npcvmu4fw" path="res://addons/sgh_le/scenes/proxies/selection_outline_panel.tscn" id="3_esii8"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_esii8"]
+atlas = ExtResource("2_abeh2")
+region = Rect2(501.575, 185.465, 97, 189.28)
+
+[node name="LevelStart" type="Node2D"]
+script = ExtResource("1_fngrs")
+metadata/_custom_type_script = "uid://dgh8puau3rarb"
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = SubResource("AtlasTexture_esii8")
+
+[node name="clickbox" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_left = -38.0
+offset_top = -76.0
+offset_right = 42.0
+offset_bottom = 84.0
+
+[node name="SelectionOutlinePanel" parent="clickbox" instance=ExtResource("3_esii8")]
+self_modulate = Color(1, 1, 1, 0.472865)
+layout_mode = 0
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+grow_horizontal = 1
+grow_vertical = 1
+
+[node name="Label" type="Label" parent="."]
+offset_left = -47.0
+offset_top = -104.0
+offset_right = 51.0
+offset_bottom = -81.0
+text = "LEVEL START"

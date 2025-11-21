@@ -9,3 +9,5 @@ var camera_pos : Vector2
 var camera_zoom : Vector2
 
 var level_start : LevelStart
+
+var node_clickboxes : Array[Control] = []

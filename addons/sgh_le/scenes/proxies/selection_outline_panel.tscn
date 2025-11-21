@@ -1,0 +1,37 @@
+[gd_scene load_steps=4 format=3 uid="uid://b6r4npcvmu4fw"]
+
+[ext_resource type="Script" uid="uid://c4843pv3m7kqp" path="res://addons/sgh_le/scenes/proxies/selection_outline_panel.gd" id="1_4xvwb"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7ygx6"]
+bg_color = Color(1, 1, 1, 0.13725491)
+draw_center = false
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 1, 1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4xvwb"]
+bg_color = Color(1, 1, 1, 0.2)
+
+[node name="SelectionOutlinePanel" type="Panel"]
+self_modulate = Color(1, 1, 1, 0.9444877)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_7ygx6")
+script = ExtResource("1_4xvwb")
+
+[node name="fill" type="Panel" parent="."]
+self_modulate = Color(1, 1, 1, 0.039861154)
+z_index = -1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_4xvwb")

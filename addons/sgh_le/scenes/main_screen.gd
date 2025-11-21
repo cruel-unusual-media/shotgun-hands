@@ -57,7 +57,7 @@ func _room_option_pressed(id : int) -> void:
 
 
 func update_room_list() -> void:
-	print("update room list")
+	#print("update room list")
 	var _rooms_popup : PopupMenu = $VBoxContainer/HBoxContainer/rooms.get_popup()
 	
 	for idx in _rooms_popup.item_count - 3:
