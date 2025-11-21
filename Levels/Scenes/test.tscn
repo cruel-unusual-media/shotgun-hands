@@ -1,0 +1,63 @@
+[gd_scene load_steps=5 format=4 uid="uid://byocn5xc5pqem"]
+
+[ext_resource type="Script" uid="uid://b8jimhiabxqwq" path="res://Classes/Nodes/Level.gd" id="1_wck56"]
+[ext_resource type="Script" uid="uid://cpya70aw6wa8c" path="res://Classes/Nodes/LevelRoom.gd" id="2_p3f6t"]
+[ext_resource type="TileSet" uid="uid://h5ykt387ck0w" path="res://Tilesets/Resources/debug.tres" id="3_yucxy"]
+[ext_resource type="Script" uid="uid://dgh8puau3rarb" path="res://Classes/Nodes/LevelStart.gd" id="4_apk60"]
+
+[node name="Test" type="Node2D"]
+script = ExtResource("1_wck56")
+
+[node name="asdasd" type="Node2D" parent="."]
+script = ExtResource("2_p3f6t")
+
+[node name="background" type="Node2D" parent="asdasd"]
+
+[node name="background_tiles" type="TileMapLayer" parent="asdasd/background"]
+modulate = Color(0.5, 0.5, 0.5, 1)
+scale = Vector2(2, 2)
+tile_map_data = PackedByteArray("AAAAAPr/AAAAAAAAAAAPAPv/AAAAAAAAAAAAAP//AAAAAAAAAAA=")
+tile_set = ExtResource("3_yucxy")
+collision_enabled = false
+
+[node name="main" type="Node2D" parent="asdasd"]
+
+[node name="main_tiles" type="TileMapLayer" parent="asdasd/main"]
+scale = Vector2(2, 2)
+tile_map_data = PackedByteArray("AAAAAAEAAAAAAAAAAAABAAEAAAAAAAAAAAACAAEAAAAAAAAAAAADAAEAAAAAAAAAAAAEAAEAAAAAAAAAAAAFAAEAAAAAAAAAAAAGAAEAAAAAAAAAAAAHAAEAAAAAAAAAAAAIAAEAAAAAAAAAAAAJAAEAAAAAAAAAAAAKAAEAAAAAAAAAAAALAAEAAAAAAAAAAAAMAAEAAAAAAAAAAAANAAEAAAAAAAAAAAAAAP3/AAAAAAAAAAAAAPz/AAAAAAAAAAAAAPv/AAAAAAAAAAAAAPr/AAAAAAAAAAABAP3/AAAAAAAAAAACAP3/AAAAAAAAAAADAP3/AAAAAAAAAAAEAP3/AAAAAAAAAAAFAP3/AAAAAAAAAAAGAP3/AAAAAAAAAAAHAP3/AAAAAAAAAAAIAP3/AAAAAAAAAAAJAP3/AAAAAAAAAAAKAP3/AAAAAAAAAAALAP3/AAAAAAAAAAAPAAEAAAAAAAAAAAAOAAEAAAAAAAAAAAAPAAAAAAAAAAAAAAAPAP//AAAAAAAAAAAPAP7/AAAAAAAAAAAPAP3/AAAAAAAAAAAPAPz/AAAAAAAAAAAPAPv/AAAAAAAAAAAPAPr/AAAAAAAAAAAPAPn/AAAAAAAAAAAOAPn/AAAAAAAAAAANAPn/AAAAAAAAAAAMAPn/AAAAAAAAAAALAPn/AAAAAAAAAAAKAPn/AAAAAAAAAAAJAPn/AAAAAAAAAAAIAPn/AAAAAAAAAAAHAPn/AAAAAAAAAAAGAPn/AAAAAAAAAAAFAPn/AAAAAAAAAAAAAPj/AAAAAAAAAAAAAPn/AAAAAAAAAAAEAPn/AAAAAAAAAAAAAP7/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAP//AAAAAAAAAAA=")
+tile_set = ExtResource("3_yucxy")
+
+[node name="level_start" type="Node2D" parent="asdasd/main"]
+position = Vector2(120.94269, -39.77838)
+script = ExtResource("4_apk60")
+
+[node name="foreground" type="Node2D" parent="asdasd"]
+
+[node name="foreground_tiles" type="TileMapLayer" parent="asdasd/foreground"]
+modulate = Color(1, 1, 1, 0.5)
+tile_set = ExtResource("3_yucxy")
+collision_enabled = false
+
+[node name="test" type="Node2D" parent="."]
+visible = false
+script = ExtResource("2_p3f6t")
+
+[node name="background" type="Node2D" parent="test"]
+
+[node name="background_tiles" type="TileMapLayer" parent="test/background"]
+modulate = Color(0.5, 0.5, 0.5, 1)
+tile_set = ExtResource("3_yucxy")
+collision_enabled = false
+
+[node name="main" type="Node2D" parent="test"]
+
+[node name="main_tiles" type="TileMapLayer" parent="test/main"]
+tile_map_data = PackedByteArray("AAAIAP7/AAAAAAAAAAAHAP7/AAAAAAAAAAAIAP3/AAAAAAAAAAAHAP3/AAAAAAAAAAAHAP//AAAAAAAAAAAIAP//AAAAAAAAAAAIAAAAAAAAAAAAAAAHAAAAAAAAAAAAAAAIAAEAAAAAAAAAAAAHAAEAAAAAAAAAAAAJAAIAAAAAAAAAAAAJAAMAAAAAAAAAAAAKAAMAAAAAAAAAAAAKAAIAAAAAAAAAAAAGAAIAAAAAAAAAAAAFAAIAAAAAAAAAAAAFAAMAAAAAAAAAAAAGAAMAAAAAAAAAAAA=")
+tile_set = ExtResource("3_yucxy")
+
+[node name="foreground" type="Node2D" parent="test"]
+
+[node name="foreground_tiles" type="TileMapLayer" parent="test/foreground"]
+modulate = Color(1, 1, 1, 0.5)
+tile_set = ExtResource("3_yucxy")
+collision_enabled = false

@@ -17,6 +17,7 @@ bg_color = Color(1, 1, 1, 0.2)
 
 [node name="SelectionOutlinePanel" type="Panel"]
 self_modulate = Color(1, 1, 1, 0.9444877)
+z_index = 1000
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -27,8 +28,8 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_7ygx6")
 script = ExtResource("1_4xvwb")
 
 [node name="fill" type="Panel" parent="."]
-self_modulate = Color(1, 1, 1, 0.5668695)
-z_index = -1
+self_modulate = Color(1, 1, 1, 0.992631)
+z_index = 999
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
