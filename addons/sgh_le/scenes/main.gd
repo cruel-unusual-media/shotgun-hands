@@ -94,6 +94,16 @@ func _load_new_level() -> void:
 	
 	level_edit_states.get_or_add(current_scene_root, LevelEditState.new())
 	edit_room_idx(0)
+	
+	_add_origin_sprite()
+
+
+func _add_origin_sprite() -> void:
+	var _origin_sprite : Sprite2D = Sprite2D.new()
+	_origin_sprite.texture = preload("res://addons/sgh_le/textures/editor_origin.png")
+	_origin_sprite.scale = Vector2(3,3)
+	get_current_room_proxy().add_child(_origin_sprite)
+	_origin_sprite.position = Vector2i(16 * 3,16 * 3)
 
 
 func _add_level_proxy(proxy_name : String, owner : Node) -> Node:
@@ -226,6 +236,8 @@ func create_room(room_name : String) -> void:
 			_new_layer.get_node("foreground_tiles").collision_enabled = false
 	
 	edit_room(room_name)
+	
+	_add_origin_sprite()
 	
 	if current_scene_root.get_children().size() == 1: #if the room we just added was the first one
 		_create_level_start(current_scene_root.get_node(level_edit_states[current_scene_root].selected_room + "/main"), _room_proxy)
@@ -370,6 +382,10 @@ func _erase_lifted() -> void:
 	_stroke_erase = []
 
 func _viewport_input(event) -> void:
+	if !Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT) and _erasing:
+		_erase_lifted()
+		_erasing = false
+	
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT:
 			_drawing = event.pressed
