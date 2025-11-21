@@ -19,6 +19,7 @@ func _toggle_toolbar_enabled(state : bool = true) -> void:
 	$VBoxContainer/HBoxContainer/rooms.disabled = !state
 	$VBoxContainer/HBoxContainer/level_config.disabled = !state
 	$VBoxContainer/SubViewportContainer.visible = state
+	$tools_margin_container.visible = state
 	
 
 func _toggle_level_configuration(state : bool) -> void:
@@ -65,7 +66,7 @@ func update_room_list() -> void:
 	var _id : int = 2
 	for room : LevelRoom in get_parent().current_scene_root.get_children():		
 		_rooms_popup.add_radio_check_item(room.name, _id)
-		if room.name == get_parent().shown_room_names[get_parent().current_scene_root]:
+		if room.name == get_parent().level_edit_states[get_parent().current_scene_root].selected_room:
 			_rooms_popup.set_item_checked(_id + 1, true)
 		_id += 1
 

@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://c8wue25i20fjs"]
+[gd_scene load_steps=17 format=3 uid="uid://c8wue25i20fjs"]
 
 [ext_resource type="Script" uid="uid://dwb08gw8ei4lh" path="res://addons/sgh_le/scenes/main.gd" id="1_ep5ol"]
 [ext_resource type="Script" uid="uid://o82ogn8ay18o" path="res://addons/sgh_le/scenes/main_screen.gd" id="2_8fyc8"]
@@ -10,9 +10,8 @@
 [ext_resource type="Texture2D" uid="uid://ditx70qecap7y" path="res://addons/sgh_le/textures/tile_cursor.png" id="5_qjw2d"]
 [ext_resource type="ButtonGroup" uid="uid://cntiefrla3jgv" path="res://addons/sgh_le/tools_button_group.tres" id="6_hpmdb"]
 [ext_resource type="Script" uid="uid://bra4kv4gxbjc6" path="res://addons/sgh_le/scenes/context_menu.gd" id="7_txer4"]
-[ext_resource type="Texture2D" uid="uid://igt75vgbqosq" path="res://addons/sgh_le/textures/ToolMove.svg" id="9_ipiro"]
 [ext_resource type="Texture2D" uid="uid://br4ws8ca0y1ft" path="res://addons/sgh_le/textures/ToolTriangle.svg" id="9_qjw2d"]
-[ext_resource type="Texture2D" uid="uid://dyf3lxdjf8c56" path="res://addons/sgh_le/textures/ToolRotate.svg" id="11_smjk1"]
+[ext_resource type="ButtonGroup" uid="uid://dwuniyeqd5la3" path="res://addons/sgh_le/layers_button_group.tres" id="10_w6ife"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ugtkf"]
 bg_color = Color(0.16386127, 0.1638613, 0.16386116, 1)
@@ -146,19 +145,22 @@ grow_vertical = 2
 [node name="tile_cursor" type="Sprite2D" parent="main/VBoxContainer/SubViewportContainer/SubViewport/level_proxies"]
 visible = false
 z_index = 840
-position = Vector2(1312, 992)
+position = Vector2(992, 864)
 texture = ExtResource("5_qjw2d")
 
 [node name="tools_margin_container" type="MarginContainer" parent="main"]
+visible = false
 layout_mode = 1
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -48.0
-offset_top = 53.0
-offset_right = -8.0
-offset_bottom = 234.0
-grow_horizontal = 0
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -62.5
+offset_top = -41.0
+offset_right = 62.5
+grow_horizontal = 2
+grow_vertical = 0
 theme_override_constants/margin_left = 5
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 5
@@ -176,7 +178,7 @@ layout_mode = 2
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_ugtkf")
 
-[node name="tools" type="VBoxContainer" parent="main/tools_margin_container"]
+[node name="tools" type="HBoxContainer" parent="main/tools_margin_container"]
 layout_mode = 2
 theme_override_constants/separation = 4
 
@@ -185,12 +187,11 @@ layout_mode = 2
 theme_override_constants/h_separation = 4
 toggle_mode = true
 button_group = ExtResource("6_hpmdb")
-text = "
-"
+text = "      "
 icon = ExtResource("3_ugtkf")
 icon_alignment = 1
 
-[node name="HSeparator" type="HSeparator" parent="main/tools_margin_container/tools"]
+[node name="HSeparator" type="VSeparator" parent="main/tools_margin_container/tools"]
 layout_mode = 2
 
 [node name="paint" type="Button" parent="main/tools_margin_container/tools"]
@@ -198,8 +199,7 @@ layout_mode = 2
 theme_override_constants/h_separation = 0
 toggle_mode = true
 button_group = ExtResource("6_hpmdb")
-text = "
-"
+text = "      "
 icon = ExtResource("4_hpmdb")
 icon_alignment = 1
 
@@ -208,30 +208,68 @@ layout_mode = 2
 theme_override_constants/h_separation = 0
 toggle_mode = true
 button_group = ExtResource("6_hpmdb")
-text = "
-"
+text = "      "
 icon = ExtResource("9_qjw2d")
 icon_alignment = 1
 
-[node name="move" type="Button" parent="main/tools_margin_container/tools"]
-layout_mode = 2
-theme_override_constants/h_separation = 0
-toggle_mode = true
-button_group = ExtResource("6_hpmdb")
-text = "
-"
-icon = ExtResource("9_ipiro")
-icon_alignment = 1
+[node name="layers_margin_container" type="MarginContainer" parent="main"]
+visible = false
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -119.0
+offset_top = 55.0
+offset_right = -8.0
+offset_bottom = 166.0
+grow_horizontal = 0
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
 
-[node name="rotate" type="Button" parent="main/tools_margin_container/tools"]
+[node name="inverted_margin" type="MarginContainer" parent="main/layers_margin_container"]
 layout_mode = 2
-theme_override_constants/h_separation = 0
+theme_override_constants/margin_left = -5
+theme_override_constants/margin_top = -5
+theme_override_constants/margin_right = -5
+theme_override_constants/margin_bottom = -5
+
+[node name="Panel" type="Panel" parent="main/layers_margin_container/inverted_margin"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_ugtkf")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="main/layers_margin_container"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="foreground" type="Button" parent="main/layers_margin_container/VBoxContainer"]
+layout_mode = 2
 toggle_mode = true
-button_group = ExtResource("6_hpmdb")
-text = "
-"
-icon = ExtResource("11_smjk1")
-icon_alignment = 1
+button_group = ExtResource("10_w6ife")
+text = "Foreground"
+alignment = 2
+
+[node name="main" type="Button" parent="main/layers_margin_container/VBoxContainer"]
+layout_mode = 2
+toggle_mode = true
+button_pressed = true
+button_group = ExtResource("10_w6ife")
+text = "Main"
+alignment = 2
+
+[node name="background" type="Button" parent="main/layers_margin_container/VBoxContainer"]
+layout_mode = 2
+toggle_mode = true
+button_group = ExtResource("10_w6ife")
+text = "Background"
+alignment = 2
+
+[node name="isolate_current" type="CheckButton" parent="main/layers_margin_container/VBoxContainer"]
+layout_mode = 2
+text = "Isolate current layer"
+flat = true
 
 [node name="level_configuration" type="Window" parent="main"]
 oversampling_override = 1.0
@@ -277,7 +315,7 @@ offset_right = 301.5
 offset_bottom = 11.5
 grow_horizontal = 2
 grow_vertical = 2
-text = "The currently selected scene is not a SGH level. Please select a different scene or create a level (File > New Level...)."
+text = "The currently selected scene is not a Shotgun Hands level. Please select a different scene or create a level (File > New Level...)."
 
 [node name="no_rooms_yet_warning" type="Control" parent="main"]
 visible = false
@@ -373,6 +411,7 @@ text = "Create"
 
 [node name="context_menu" type="PopupMenu" parent="."]
 oversampling_override = 1.0
+size = Vector2i(203, 197)
 item_count = 7
 item_0/text = "Add object..."
 item_0/id = 0
