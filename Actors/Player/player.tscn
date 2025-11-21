@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://crs1vr2enasav"]
+[gd_scene load_steps=10 format=3 uid="uid://crs1vr2enasav"]
 
 [ext_resource type="Script" uid="uid://dv54xufs4ao3l" path="res://Actors/Player/player.gd" id="1_vhr1b"]
 [ext_resource type="SpriteFrames" uid="uid://cxeoa46tbwhsa" path="res://Actors/Player/Sprites/2DPlayer_frames.tres" id="2_5ni5v"]
@@ -6,9 +6,10 @@
 [ext_resource type="Script" uid="uid://ck8hnd0csg4rk" path="res://Actors/Player/camera_2d.gd" id="3_v1key"]
 [ext_resource type="Script" uid="uid://bkrwwx5a7wgso" path="res://Actors/Player/player_recticle.gd" id="4_n7l8t"]
 [ext_resource type="Script" uid="uid://5g70dolrgvee" path="res://Actors/Player/shooting_component.gd" id="5_isd1h"]
+[ext_resource type="PackedScene" uid="uid://dlqa1fyyky5xj" path="res://Actors/Shared/damagable_component.tscn" id="7_8gtf5"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_vhr1b"]
-size = Vector2(58, 156)
+size = Vector2(58, 158)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_n7l8t"]
 size = Vector2(58, 79)
@@ -63,3 +64,9 @@ position_smoothing_enabled = true
 position_smoothing_speed = 50.0
 script = ExtResource("3_v1key")
 focus = NodePath("../HeadFocus")
+
+[node name="DamagableComponent" parent="." instance=ExtResource("7_8gtf5")]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DamagableComponent"]
+position = Vector2(0, -79)
+shape = SubResource("RectangleShape2D_vhr1b")

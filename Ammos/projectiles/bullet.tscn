@@ -4,8 +4,15 @@
 
 [node name="Bullet" type="Node2D"]
 script = ExtResource("1_re15m")
+velocity = Vector2(1, 0)
+collision_mask = 5
 
 [node name="Polygon2D" type="Polygon2D" parent="."]
 scale = Vector2(28, 1)
 color = Color(1, 1, 0, 1)
 polygon = PackedVector2Array(0, -1, 1, -1, 1, 1, 0, 1)
+
+[node name="RayCast2D" type="RayCast2D" parent="."]
+target_position = Vector2(28, 0)
+collision_mask = 5
+collide_with_areas = true

@@ -5,11 +5,23 @@ var damage_amount : int
 @export
 var velocity : Vector2
 
+@export_flags_2d_physics
+var collision_mask : int
+
+@onready var bullet_ray = $RayCast2D
+@onready var bullet_vis = $Polygon2D
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	pass # Replace with function body.
+	bullet_ray.collision_mask = collision_mask
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	pass
+	bullet_ray.target_position = velocity
+	
+	
+	
+	
+	position += velocity*delta
+	

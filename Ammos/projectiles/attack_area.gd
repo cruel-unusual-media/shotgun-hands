@@ -11,3 +11,11 @@ func _ready() -> void:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	pass
+
+func disable() -> void:
+	monitorable = false
+	monitoring = false
+
+func enable() -> void:
+	monitorable = true
+	monitoring = true

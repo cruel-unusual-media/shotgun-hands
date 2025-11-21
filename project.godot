@@ -97,7 +97,7 @@ hype_boost_3={
 
 2d_physics/layer_1="Player hitbox/things hurting the player"
 2d_physics/layer_2="Enemy hitbox/things hurting the enemy"
-2d_physics/layer_3="Thing that stops bullets but the player passes through"
+2d_physics/layer_3="Damagable Environment/pass through bullet stoppers"
 
 [rendering]
 

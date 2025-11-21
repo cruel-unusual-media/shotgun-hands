@@ -14,7 +14,9 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	pass
+	if is_instance_valid(health_bar):
+		health_bar.value = health_cur
+		health_bar.max_value = health_max
 
 func take_damage(damage : int) -> void:
 	health_cur -= damage
