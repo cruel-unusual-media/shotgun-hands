@@ -18,10 +18,17 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	bullet_ray.target_position = velocity
+	bullet_ray.target_position = velocity*delta
+	bullet_vis.rotation = velocity.angle()
+	bullet_vis.polygon[1].x = velocity.length()*delta
+	bullet_vis.polygon[2].x = velocity.length()*delta
 	
-	
-	
+	bullet_ray.force_raycast_update()
+	if bullet_ray.is_colliding():
+		var col = bullet_ray.get_collider()
+		if col is DamagableComponent:
+			col.get_hit(damage_amount)
+		queue_free()
 	
 	position += velocity*delta
 	
