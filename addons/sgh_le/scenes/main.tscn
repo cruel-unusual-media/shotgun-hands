@@ -145,7 +145,7 @@ grow_vertical = 2
 [node name="tile_cursor" type="Sprite2D" parent="main/VBoxContainer/SubViewportContainer/SubViewport/level_proxies"]
 visible = false
 z_index = 840
-position = Vector2(1312, 928)
+position = Vector2(1696, 736)
 texture = ExtResource("5_qjw2d")
 
 [node name="tools_margin_container" type="MarginContainer" parent="main"]
@@ -412,26 +412,13 @@ text = "Create"
 [node name="context_menu" type="PopupMenu" parent="."]
 oversampling_override = 1.0
 size = Vector2i(203, 197)
-item_count = 7
+item_count = 3
 item_0/text = "Add object..."
 item_0/id = 0
 item_1/text = "Place level start here"
 item_1/id = 1
 item_2/text = "Return to level origin"
 item_2/id = 6
-item_3/text = "Layers"
-item_3/id = -1
-item_3/separator = true
-item_4/text = "Foreground"
-item_4/checkable = 2
-item_4/checked = true
-item_4/id = 3
-item_5/text = "Main"
-item_5/checkable = 2
-item_5/id = 4
-item_6/text = "Background"
-item_6/checkable = 2
-item_6/id = 5
 script = ExtResource("7_txer4")
 
 [node name="add_object" type="PopupMenu" parent="context_menu"]

@@ -80,7 +80,6 @@ func _select_edit_mode(id : int) -> void:
 
 
 func _load_new_level() -> void:
-	print("new level found, loading it in")
 	var _new_level_proxy = _add_level_proxy(current_scene_root.name, $main/VBoxContainer/SubViewportContainer/SubViewport/level_proxies)
 	for _room : LevelRoom in current_scene_root.get_children():
 		var _room_proxy : LevelRoom = _add_room_proxy(_room.name, _new_level_proxy, _room)
@@ -103,11 +102,10 @@ func _add_origin_sprite() -> void:
 	_origin_sprite.texture = preload("res://addons/sgh_le/textures/editor_origin.png")
 	_origin_sprite.scale = Vector2(3,3)
 	get_current_room_proxy().add_child(_origin_sprite)
-	_origin_sprite.position = Vector2i(16 * 3,16 * 3)
 
 
 func _add_level_proxy(proxy_name : String, owner : Node) -> Node:
-	print("add level proxy node")
+	#print("add level proxy node")
 	var _new_level_proxy : Level = Level.new()
 	owner.add_child(_new_level_proxy)
 	_new_level_proxy.name = proxy_name
@@ -117,7 +115,7 @@ func _add_level_proxy(proxy_name : String, owner : Node) -> Node:
 
 
 func _add_room_proxy(proxy_name : String, owner : Node, linked_node : Node) -> Node:
-	print("add room proxy node")
+	#print("add room proxy node")
 	var _new_room_proxy : LevelRoom = LevelRoom.new()
 	owner.add_child(_new_room_proxy)
 	_new_room_proxy.name = proxy_name
@@ -128,7 +126,7 @@ func _add_room_proxy(proxy_name : String, owner : Node, linked_node : Node) -> N
 
 
 func _add_layer_proxy(layer_name : String, room_proxy_parent : LevelRoom, linked_layer : Node2D) -> Node2D:
-	print("add layer proxy node")
+	#print("add layer proxy node")
 	var _new_layer : Node2D = Node2D.new()
 	_new_layer.name = layer_name
 	_new_layer.set_meta("linked_node", linked_layer)
@@ -137,7 +135,7 @@ func _add_layer_proxy(layer_name : String, room_proxy_parent : LevelRoom, linked
 
 
 func _add_tilemaplayer_proxy(tilemaplayer_name : String, parent_proxy : Node, linked_tilemaplayer : Node) -> TileMapLayer:
-	print("add tilemap proxy")
+	#print("add tilemap proxy")
 	var _new_tilemaplayer_proxy : TileMapLayer = TileMapLayer.new()
 	_new_tilemaplayer_proxy.name = tilemaplayer_name
 	_new_tilemaplayer_proxy.set_meta("linked_node", linked_tilemaplayer)
@@ -156,7 +154,7 @@ func _add_tilemaplayer_proxy(tilemaplayer_name : String, parent_proxy : Node, li
 
 
 func _add_level_start_proxy(proxy_owner : Node, linked_node : Node) -> LevelStart:
-	print("adding level start proxy")
+	#print("adding level start proxy")
 	var _new_level_start_proxy : LevelStart = LevelStart.new()
 	proxy_owner.add_child(_new_level_start_proxy)
 	_new_level_start_proxy.owner = proxy_owner
@@ -200,6 +198,7 @@ func open_room_creation_dialog() -> void:
 	$room_creation_dialog.open_dialog()
 
 func create_room(room_name : String) -> void:
+	log_msg("Creating room \"" + room_name + "\"")
 	var _new_room_node : LevelRoom = LevelRoom.new()
 	_new_room_node.name = room_name
 	
@@ -243,7 +242,7 @@ func create_room(room_name : String) -> void:
 		_create_level_start(current_scene_root.get_node(level_edit_states[current_scene_root].selected_room + "/main"), _room_proxy)
 
 func _create_level_start(owner_node : Node, room_proxy : Node) -> void:
-	print("creating level start")
+	#print("creating level start")
 	
 	if level_edit_states[current_scene_root].level_start != null:
 		printerr("Tried creating level start but it already exists in this level. Try moving the currently existing one.")
@@ -255,6 +254,7 @@ func _create_level_start(owner_node : Node, room_proxy : Node) -> void:
 	_add_level_start_proxy(room_proxy, _new_level_start)
 
 func _move_level_start(room_name : String, new_position : Vector2) -> void:
+	log_msg("Moving level start to " + str(new_position) + " in \"" + room_name + "\"")
 	var _new_proxy_parent = get_current_room_proxy().get_node("main")
 	var _current_level_start_proxy : LevelStart = level_edit_states[current_scene_root].level_start
 	
@@ -269,6 +269,7 @@ func _move_level_start(room_name : String, new_position : Vector2) -> void:
 	_current_level_start.position = new_position
 
 func _delete_current_room() -> void:
+	log_msg("Deleting the current room")
 	if current_scene_root.get_children().size() > 0:
 		current_scene_root.get_node(level_edit_states[current_scene_root].selected_room).queue_free()
 		get_current_room_proxy().queue_free()
@@ -295,6 +296,7 @@ func _scene_creation_path_entered(_path : String) -> void:
 	_scene_path = _path
 
 func create_new_level_scene() -> void:
+	log_msg("Creating new level")
 	var _dialog : EditorFileDialog = EditorFileDialog.new()
 	_dialog.title = "Pick a location for your level file"
 	_dialog.file_mode = EditorFileDialog.FILE_MODE_SAVE_FILE
@@ -364,7 +366,7 @@ func _debug_func(id : int) -> void:
 			get_current_level_proxy().print_tree_pretty()
 
 func _stroke_lifted() -> void:
-	var _tilemap_proxy = get_current_room_proxy().get_node("main/main_tiles")
+	var _tilemap_proxy = get_current_room_proxy().get_node(get_currently_edited_layer() + "/" + get_currently_edited_layer() + "_tiles")
 	var _linked_tilemap : TileMapLayer = _tilemap_proxy.get_meta("linked_node")
 	
 	for _cell : Vector2i in _stroke_add:
@@ -373,7 +375,7 @@ func _stroke_lifted() -> void:
 	_stroke_add = []
 
 func _erase_lifted() -> void:
-	var _tilemap_proxy = get_current_room_proxy().get_node("main/main_tiles")
+	var _tilemap_proxy = get_current_room_proxy().get_node(get_currently_edited_layer() + "/" + get_currently_edited_layer() + "_tiles")
 	var _linked_tilemap : TileMapLayer = _tilemap_proxy.get_meta("linked_node")
 	
 	for _cell : Vector2i in _stroke_erase:
@@ -399,3 +401,6 @@ func _viewport_input(event) -> void:
 			if !event.pressed:
 				if _current_tool == EditTool.PAINT:
 					_erase_lifted()
+
+func log_msg(message : String) -> void:
+	print(" * ", message)
