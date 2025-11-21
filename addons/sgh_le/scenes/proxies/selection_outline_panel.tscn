@@ -10,6 +10,7 @@ border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
 border_color = Color(1, 1, 1, 1)
+anti_aliasing_size = 3.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4xvwb"]
 bg_color = Color(1, 1, 1, 0.2)
@@ -26,7 +27,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_7ygx6")
 script = ExtResource("1_4xvwb")
 
 [node name="fill" type="Panel" parent="."]
-self_modulate = Color(1, 1, 1, 0.039861154)
+self_modulate = Color(1, 1, 1, 0.5668695)
 z_index = -1
 layout_mode = 1
 anchors_preset = 15

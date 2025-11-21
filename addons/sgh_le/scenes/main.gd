@@ -84,6 +84,7 @@ func _process(delta: float) -> void:
 	
 	if _moving_node:
 		_moving_node.global_position = get_global_space_mouse_position() + _move_grab_offset
+		_moving_node.get_meta("linked_node").global_position = _moving_node.global_position
 
 
 func _select_edit_mode(id : int) -> void:
@@ -119,15 +120,13 @@ func _load_new_level() -> void:
 					_new_level_start_proxy.position = _object.position
 	
 	edit_room_idx(0)
-	
-	_add_origin_sprite()
 
 
-func _add_origin_sprite() -> void:
+func _add_origin_sprite(parent_room_proxy : LevelRoom) -> void:
 	var _origin_sprite : Sprite2D = Sprite2D.new()
 	_origin_sprite.texture = preload("res://addons/sgh_le/textures/editor_origin.png")
 	_origin_sprite.scale = Vector2(3,3)
-	get_current_room_proxy().add_child(_origin_sprite)
+	parent_room_proxy.add_child(_origin_sprite)
 
 
 func _add_level_proxy(proxy_name : String, owner : Node) -> Node:
@@ -147,6 +146,8 @@ func _add_room_proxy(proxy_name : String, owner : Node, linked_node : Node) -> N
 	_new_room_proxy.name = proxy_name
 	_new_room_proxy.owner = owner
 	_new_room_proxy.set_meta("linked_node", linked_node)
+	
+	_add_origin_sprite(_new_room_proxy)
 	
 	return _new_room_proxy
 
@@ -266,8 +267,6 @@ func create_room(room_name : String) -> void:
 			_new_layer.get_node("foreground_tiles").collision_enabled = false
 	
 	edit_room(room_name)
-	
-	_add_origin_sprite()
 	
 	if current_scene_root.get_children().size() == 1: #if the room we just added was the first one
 		_create_level_start(current_scene_root.get_node(level_edit_states[current_scene_root].selected_room + "/main"), _room_proxy)

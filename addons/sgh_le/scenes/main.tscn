@@ -145,7 +145,7 @@ grow_vertical = 2
 [node name="tile_cursor" type="Sprite2D" parent="main/VBoxContainer/SubViewportContainer/SubViewport/level_proxies"]
 visible = false
 z_index = 840
-position = Vector2(1824, 1120)
+position = Vector2(1312, 160)
 texture = ExtResource("5_qjw2d")
 
 [node name="tools_margin_container" type="MarginContainer" parent="main"]
