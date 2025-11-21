@@ -88,6 +88,13 @@ func _fade_out_black(fade_time : float = 0.2) -> void: ##Function behind fade_ou
 	return
 
 
+func add_to_camera(camera : Camera2D) -> void:
+	reparent(camera)
+
+func return_to_root() -> void:
+	reparent(get_tree().root)
+
+
 func _ready() -> void:
 	$LevelLoading.visible = false
 	$BlackOverlay.modulate.a = 0.0
