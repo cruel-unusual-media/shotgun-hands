@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bro3cv0fso5k7"]
+
+[ext_resource type="Script" uid="uid://crn5u1kohhg8p" path="res://Ammos/projectiles/attack_area.gd" id="1_ng4fg"]
+
+[node name="AttackArea" type="Area2D"]
+script = ExtResource("1_ng4fg")

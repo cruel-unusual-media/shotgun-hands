@@ -1,10 +1,11 @@
-[gd_scene load_steps=8 format=3 uid="uid://crs1vr2enasav"]
+[gd_scene load_steps=9 format=3 uid="uid://crs1vr2enasav"]
 
 [ext_resource type="Script" uid="uid://dv54xufs4ao3l" path="res://Actors/Player/player.gd" id="1_vhr1b"]
 [ext_resource type="SpriteFrames" uid="uid://cxeoa46tbwhsa" path="res://Actors/Player/Sprites/2DPlayer_frames.tres" id="2_5ni5v"]
 [ext_resource type="Script" uid="uid://cxm75lk51oc68" path="res://Actors/Player/controller_component.gd" id="2_b63gh"]
 [ext_resource type="Script" uid="uid://ck8hnd0csg4rk" path="res://Actors/Player/camera_2d.gd" id="3_v1key"]
 [ext_resource type="Script" uid="uid://bkrwwx5a7wgso" path="res://Actors/Player/player_recticle.gd" id="4_n7l8t"]
+[ext_resource type="Script" uid="uid://5g70dolrgvee" path="res://Actors/Player/shooting_component.gd" id="5_isd1h"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_vhr1b"]
 size = Vector2(58, 156)
@@ -54,6 +55,7 @@ color = Color(0, 1, 1, 1)
 polygon = PackedVector2Array(2, -2, 2, 2, -2, 2, -2, -2)
 
 [node name="ShootingComponent" type="Node2D" parent="PlayerRecticle"]
+script = ExtResource("5_isd1h")
 
 [node name="Camera2D" type="Camera2D" parent="." node_paths=PackedStringArray("focus")]
 position = Vector2(0, -121)

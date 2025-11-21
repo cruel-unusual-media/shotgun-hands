@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://dlqa1fyyky5xj"]
+
+[ext_resource type="Script" uid="uid://dykpdg2hya4vw" path="res://damagable_component.gd" id="1_64hen"]
+
+[node name="DamagableComponent" type="Area2D"]
+script = ExtResource("1_64hen")
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]

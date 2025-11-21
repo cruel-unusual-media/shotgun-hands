@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://bc6kl6o2g83wh"]
+
+[ext_resource type="Script" uid="uid://pia0hwsn6k73" path="res://Ammos/projectiles/bullet_basic.gd" id="1_re15m"]
+
+[node name="Bullet" type="Node2D"]
+script = ExtResource("1_re15m")
+
+[node name="Polygon2D" type="Polygon2D" parent="."]
+scale = Vector2(28, 1)
+color = Color(1, 1, 0, 1)
+polygon = PackedVector2Array(0, -1, 1, -1, 1, 1, 0, 1)
