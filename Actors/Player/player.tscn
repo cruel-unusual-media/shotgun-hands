@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://crs1vr2enasav"]
+[gd_scene load_steps=11 format=3 uid="uid://crs1vr2enasav"]
 
 [ext_resource type="Script" uid="uid://dv54xufs4ao3l" path="res://Actors/Player/player.gd" id="1_vhr1b"]
 [ext_resource type="SpriteFrames" uid="uid://cxeoa46tbwhsa" path="res://Actors/Player/Sprites/2DPlayer_frames.tres" id="2_5ni5v"]
@@ -7,6 +7,7 @@
 [ext_resource type="Script" uid="uid://bkrwwx5a7wgso" path="res://Actors/Player/player_recticle.gd" id="4_n7l8t"]
 [ext_resource type="Script" uid="uid://5g70dolrgvee" path="res://Actors/Player/shooting_component.gd" id="5_isd1h"]
 [ext_resource type="PackedScene" uid="uid://dlqa1fyyky5xj" path="res://Actors/Shared/damagable_component.tscn" id="7_8gtf5"]
+[ext_resource type="Script" uid="uid://b014414k0lgbj" path="res://Actors/Shared/health_component.gd" id="8_awv0x"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_vhr1b"]
 size = Vector2(58, 158)
@@ -15,6 +16,8 @@ size = Vector2(58, 158)
 size = Vector2(58, 79)
 
 [node name="Player" type="CharacterBody2D"]
+collision_layer = 5
+collision_mask = 5
 script = ExtResource("1_vhr1b")
 
 [node name="ControllerComponent" type="Node2D" parent="."]
@@ -65,8 +68,15 @@ position_smoothing_speed = 50.0
 script = ExtResource("3_v1key")
 focus = NodePath("../HeadFocus")
 
-[node name="DamagableComponent" parent="." instance=ExtResource("7_8gtf5")]
+[node name="DamagableComponent" parent="." node_paths=PackedStringArray("health_component") instance=ExtResource("7_8gtf5")]
+collision_layer = 4
+collision_mask = 4
+health_component = NodePath("../HealthComponent")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DamagableComponent"]
 position = Vector2(0, -79)
 shape = SubResource("RectangleShape2D_vhr1b")
+
+[node name="HealthComponent" type="Node2D" parent="."]
+script = ExtResource("8_awv0x")
+metadata/_custom_type_script = "uid://b014414k0lgbj"
