@@ -314,6 +314,8 @@ func _create_level_start(owner_node : Node, room_proxy : Node) -> void:
 func _create_room_entrance(parent_node : Node, parent_proxy : Node, at_position : Vector2):
 	var _new_entrance : Doorway = Doorway.new()
 	add_node_to_level(_new_entrance, parent_node)
+	_new_entrance.collision_layer = 4
+	_new_entrance.collision_mask = 4
 	var _entrance_collider = _new_entrance.setup_collider()
 	add_node_to_level(_entrance_collider, _new_entrance)
 	

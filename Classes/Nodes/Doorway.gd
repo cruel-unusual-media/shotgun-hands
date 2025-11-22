@@ -19,10 +19,15 @@ var _is_proxy : bool = false
 @export var target_doorway_label : String ##The doorway the player will be transported to in the room with the name [param target_doorway_room_name].
 @export var target_doorway_room_name : String ##The name of the room where the player will be transported to.
 
+signal doorway_entered
+signal doorway_exited
 
 func _ready() -> void:
-	#if Engine.is_editor_hint():
-	pass
+	if !Engine.is_editor_hint():
+		get_parent().get_parent().get_parent().submit_doorway(self)
+		body_entered.connect(_on_body_entered)
+		body_exited.connect(_on_body_exited)
+	
 
 func setup_collider() -> CollisionShape2D: #to be called and used by the level editor
 	print("add collider node")
@@ -34,6 +39,9 @@ func setup_collider() -> CollisionShape2D: #to be called and used by the level e
 	return _new_collision_shape
 
 func _update_self() -> void: #should only be called on non-proxies
+	if !Engine.is_editor_hint():
+		return
+	
 	get_node("collider").shape.size = doorway_size
 	
 	if !has_meta("linked_proxy"):
@@ -50,3 +58,11 @@ func _update_proxy_self() -> void:
 	get_node("clickbox").size = doorway_size
 	get_node("clickbox").position = doorway_size / -2.0
 	get_node("Label").text = doorway_label
+
+func _on_body_entered(_body) -> void:
+	if can_enter:
+		doorway_entered.emit()
+
+func _on_body_exited(_body) -> void:
+	print("emit exited")
+	doorway_exited.emit()

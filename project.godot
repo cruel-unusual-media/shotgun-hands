@@ -25,6 +25,7 @@ GameLogger="*res://Globals/Scripts/GameLogger.gd"
 GlobalEnums="*res://Globals/Scripts/GlobalEnums.gd"
 SceneManager="*res://Globals/Scripts/SceneManager.gd"
 LevelManager="*res://Globals/Scripts/LevelManager.gd"
+PlayerState="*res://Globals/Scripts/PlayerState.gd"
 
 [editor_plugins]
 
