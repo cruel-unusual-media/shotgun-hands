@@ -6,13 +6,21 @@ extends EditorInspectorPlugin
 
 var hide_parameters : bool = false #set by the main plugin. Do not touch.
 
-var exposed_parameters : Dictionary = {
-	
-}
+var _exposed_parameter_names : Array[String] = [
+	"doorway_label",
+	"doorway_size",
+	"can_enter",
+	"can_exit",
+	"z_doorway",
+	"target_doorway_label",
+	"target_doorway_room_name"
+]
 
 func _can_handle(object):
 	return true
 
 func _parse_property(object: Object, type: Variant.Type, name: String, hint_type: PropertyHint, hint_string: String, usage_flags: int, wide: bool) -> bool:
-		#print("parse property")
-		return hide_parameters
+		if name in _exposed_parameter_names:
+			return false
+		else:
+			return hide_parameters

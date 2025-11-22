@@ -145,7 +145,7 @@ grow_vertical = 2
 [node name="tile_cursor" type="Sprite2D" parent="main/VBoxContainer/SubViewportContainer/SubViewport/level_proxies"]
 visible = false
 z_index = 840
-position = Vector2(1120, 480)
+position = Vector2(1120, 224)
 texture = ExtResource("5_qjw2d")
 
 [node name="tools_margin_container" type="MarginContainer" parent="main"]
@@ -443,9 +443,6 @@ item_7/text = "Enemy"
 item_7/id = 6
 
 [connection signal="button_down" from="main/VBoxContainer/HBoxContainer/level_config" to="main" method="_on_level_config_button_down"]
-[connection signal="button_down" from="main/tools_margin_container/tools/select" to="." method="_select_edit_mode" binds= [0]]
-[connection signal="button_down" from="main/tools_margin_container/tools/paint" to="." method="_select_edit_mode" binds= [1]]
-[connection signal="button_down" from="main/tools_margin_container/tools/draw_collision" to="." method="_select_edit_mode" binds= [2]]
 [connection signal="button_down" from="main/level_configuration/MarginContainer/VBoxContainer/close" to="main" method="_on_level_config_close_button_down"]
 [connection signal="button_down" from="main/no_rooms_yet_warning/create_room" to="main" method="_create_first_room"]
 [connection signal="close_requested" from="room_creation_dialog" to="room_creation_dialog" method="_close_dialog"]

@@ -25,7 +25,7 @@ func initialize_level() -> void:
 		_freeze_room(_room, !_has_level_start)
 	
 	var _new_player_instance = preload("res://Actors/Player/player.tscn").instantiate()
-	_level_start.add_sibling(_new_player_instance)
+	#_level_start.add_sibling(_new_player_instance)
 	_new_player_instance.position = _level_start.position
 	
 	PersistentUI.add_to_camera(_new_player_instance.get_node("Camera2D"))
@@ -33,7 +33,7 @@ func initialize_level() -> void:
 	PersistentUI.return_to_root()
 
 
-func enter_room(room_to_enter : LevelRoom, entrance : RoomEntrance) -> void:
+func enter_room(room_to_enter : LevelRoom, entrance : Doorway) -> void:
 	if entrance.get_parent() != room_to_enter:
 		GameLogger.printerr_as_script(self, "enter_room(): Specified entrance is not part of the specified room!")
 	

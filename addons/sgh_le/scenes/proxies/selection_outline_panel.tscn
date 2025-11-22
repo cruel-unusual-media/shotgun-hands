@@ -28,7 +28,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_7ygx6")
 script = ExtResource("1_4xvwb")
 
 [node name="fill" type="Panel" parent="."]
-self_modulate = Color(1, 1, 1, 0.7560491)
+self_modulate = Color(1, 1, 1, 0.66673607)
 z_index = 999
 layout_mode = 1
 anchors_preset = 15
@@ -37,3 +37,32 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_4xvwb")
+
+[node name="resize_left" type="Button" parent="fill"]
+visible = false
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 2.0
+offset_top = -15.5
+offset_right = 48.0
+offset_bottom = 15.5
+grow_vertical = 2
+text = "Grab"
+
+[node name="resize_right" type="Button" parent="fill"]
+visible = false
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -48.0
+offset_top = -15.5
+offset_right = -2.0
+offset_bottom = 15.5
+grow_horizontal = 0
+grow_vertical = 2
+text = "Grab"

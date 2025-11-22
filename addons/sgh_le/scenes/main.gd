@@ -24,7 +24,12 @@ var _stroke_add : Array[Vector2i] = []
 var _stroke_erase : Array[Vector2i] = []
 
 @onready var _selection_outline_panel = preload("res://addons/sgh_le/scenes/proxies/selection_outline_panel.tscn").instantiate()
-var _selected_node : Node
+var _selected_node : Node:
+	set(x):
+		_selected_node = x
+		if _selected_node != null:
+			EditorInterface.edit_node(_selected_node.get_meta("linked_node"))
+		
 var _moving_node : Node
 var _move_grab_offset : Vector2
 
@@ -118,9 +123,14 @@ func _load_new_level() -> void:
 					var _new_tilemaplayer_proxy : TileMapLayer = _add_tilemaplayer_proxy(_object.name, _layer_proxy, _object)
 					_copy_tilemap(_object, _new_tilemaplayer_proxy)
 				
-				if _object is LevelStart:
+				elif _object is LevelStart:
 					var _new_level_start_proxy = _add_level_start_proxy(_layer_proxy, _object)
 					_new_level_start_proxy.position = _object.position
+				
+				elif _object is Doorway:
+					var _new_room_entrance_proxy = _add_room_entrance_proxy(_layer_proxy, _object, _object.global_position)
+					_object.set_meta("linked_proxy", _new_room_entrance_proxy)
+					_object._update_self()
 	
 	edit_room_idx(0)
 
@@ -197,8 +207,10 @@ func _add_level_start_proxy(proxy_owner : Node, linked_node : Node) -> LevelStar
 	return _new_level_start_proxy
 
 
-func _add_room_entrance_proxy(parent_proxy : Node, linked_entrance : Node, at_position : Vector2) -> RoomEntrance:
-	var _new_level_entrance_proxy : RoomEntrance = preload("res://addons/sgh_le/scenes/proxies/room_entrance.tscn").instantiate()
+func _add_room_entrance_proxy(parent_proxy : Node, linked_entrance : Node, at_position : Vector2) -> Doorway:
+	print("adding proxy")
+	var _new_level_entrance_proxy : Doorway = preload("res://addons/sgh_le/scenes/proxies/doorway.tscn").instantiate()
+	_new_level_entrance_proxy._is_proxy = true
 	level_edit_states[current_scene_root].node_clickboxes.append(_new_level_entrance_proxy.get_node("clickbox"))
 	parent_proxy.add_child(_new_level_entrance_proxy)
 	_new_level_entrance_proxy.owner = parent_proxy
@@ -300,13 +312,16 @@ func _create_level_start(owner_node : Node, room_proxy : Node) -> void:
 
 
 func _create_room_entrance(parent_node : Node, parent_proxy : Node, at_position : Vector2):
-	var _new_entrance : RoomEntrance = RoomEntrance.new()
+	var _new_entrance : Doorway = Doorway.new()
 	add_node_to_level(_new_entrance, parent_node)
+	var _entrance_collider = _new_entrance.setup_collider()
+	add_node_to_level(_entrance_collider, _new_entrance)
 	
 	_new_entrance.global_position = at_position
 	
 	var _proxy_entrance = _add_room_entrance_proxy(parent_proxy, _new_entrance, at_position)
-
+	
+	_new_entrance.set_meta("linked_proxy", _proxy_entrance)
 
 func _move_level_start(room_name : String, new_position : Vector2) -> void:
 	log_msg("Moving level start to " + str(new_position) + " in \"" + room_name + "\"")
