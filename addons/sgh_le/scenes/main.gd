@@ -43,10 +43,17 @@ var _current_tool : EditTool = EditTool.SELECT:
 		match x:
 			EditTool.SELECT:
 				$main/tools_margin_container/tools.get_node("select").button_pressed = true
+				$main/layers_margin_container/VBoxContainer/isolate_current.button_pressed = false
 			EditTool.PAINT:
 				$main/tools_margin_container/tools.get_node("paint").button_pressed = true
 			EditTool.DRAW_COL:
 				$main/tools_margin_container/tools.get_node("draw_collision").button_pressed = true
+				$main/layers_margin_container/VBoxContainer/isolate_current.button_pressed = false
+
+
+
+
+var _previous_layer_name
 
 func _ready() -> void:
 	$main/VBoxContainer/SubViewportContainer/SubViewport/editor_camera._right_clicked.connect(_show_context_menu)
@@ -65,20 +72,22 @@ func _process(delta: float) -> void:
 	$main/not_a_level_warning.visible = !_is_current_scene_a_level
 	$main/no_rooms_yet_warning.visible = _is_current_scene_a_level and current_scene_root.get_children().size() == 0
 	
+	if !_is_current_scene_a_level:
+		return
 	
-	
+	$main/tile_selection.visible = _current_tool == EditTool.PAINT
 	$main/VBoxContainer/SubViewportContainer/SubViewport/level_proxies/tile_cursor.visible = _current_tool == EditTool.PAINT
 	$main/layers_margin_container.visible = _current_tool == EditTool.PAINT
 	$main/VBoxContainer/SubViewportContainer/SubViewport/level_proxies/tile_cursor.position = (get_global_space_mouse_position() - Vector2((tile_size * tilemap_scale) / 2.0,(tile_size * tilemap_scale) / 2.0)).snappedf(tile_size * tilemap_scale) + Vector2((tile_size * tilemap_scale) / 2.0,(tile_size * tilemap_scale) / 2.0)
 	if _current_tool == EditTool.PAINT:
 		var _coord : Vector2i = Vector2i(get_global_space_mouse_position()) / Vector2i(tile_size * tilemap_scale, tile_size * tilemap_scale)
 		if _drawing:
-			get_current_room_proxy().get_node(get_currently_edited_layer() + "/" + get_currently_edited_layer() + "_tiles").set_cell(_coord, 0, _paint_selected_atlas_coord)
+			get_current_room_proxy().get_node(get_currently_edited_layer_path()).set_cell(_coord, 0, _paint_selected_atlas_coord)
 			if !_stroke_add.has(_coord):
 				_stroke_add.append(_coord)
 				
 		elif _erasing:
-			get_current_room_proxy().get_node(get_currently_edited_layer() + "/" + get_currently_edited_layer() + "_tiles").set_cell(_coord, -1)
+			get_current_room_proxy().get_node(get_currently_edited_layer_path()).set_cell(_coord, -1)
 			if !_stroke_erase.has(_coord):
 				_stroke_erase.append(_coord)
 				
@@ -93,6 +102,18 @@ func _process(delta: float) -> void:
 	if _moving_node:
 		_moving_node.global_position = get_global_space_mouse_position() + _move_grab_offset
 		_moving_node.get_meta("linked_node").global_position = _moving_node.global_position
+	
+	if _previous_layer_name != get_currently_edited_layer_name():
+		_layer_changed(get_currently_edited_layer_name())
+	
+	level_edit_states[current_scene_root].selected_layer = get_currently_edited_layer_name()
+	
+	_previous_layer_name = get_currently_edited_layer_name()
+	
+	get_current_room_proxy().get_node("main/main_front_tiles").visible = !$main/layers_margin_container/VBoxContainer/isolate_current.button_pressed or level_edit_states[current_scene_root].selected_layer == "main_front"
+	get_current_room_proxy().get_node("main/main_back_tiles").visible = !$main/layers_margin_container/VBoxContainer/isolate_current.button_pressed or level_edit_states[current_scene_root].selected_layer == "main_back"
+	get_current_room_proxy().get_node("foreground/foreground_tiles").visible = !$main/layers_margin_container/VBoxContainer/isolate_current.button_pressed or level_edit_states[current_scene_root].selected_layer == "foreground"
+	get_current_room_proxy().get_node("background/background_tiles").visible = !$main/layers_margin_container/VBoxContainer/isolate_current.button_pressed or level_edit_states[current_scene_root].selected_layer == "background"
 
 
 func _select_edit_mode(id : int) -> void:
@@ -189,7 +210,13 @@ func _add_tilemaplayer_proxy(tilemaplayer_name : String, parent_proxy : Node, li
 		_new_tilemaplayer_proxy.modulate = Color(1.0, 1.0, 1.0, 0.5)
 		_new_tilemaplayer_proxy.collision_enabled = false
 	
-	_new_tilemaplayer_proxy.tile_set = preload("res://Tilesets/Resources/debug.tres")
+	match tilemaplayer_name:
+		"main_back_tiles":
+			_new_tilemaplayer_proxy.tile_set = preload("res://Tilesets/Resources/placeholder.tres")
+		"main_front_tiles": 
+			_new_tilemaplayer_proxy.tile_set = preload("res://Tilesets/Resources/placeholder_overlay.tres")
+		_:
+			_new_tilemaplayer_proxy.tile_set = preload("res://Tilesets/Resources/debug.tres")
 	
 	return _new_tilemaplayer_proxy
 
@@ -267,7 +294,7 @@ func create_room(room_name : String) -> void:
 	
 	var _room_proxy = _add_room_proxy(room_name, $main/VBoxContainer/SubViewportContainer/SubViewport/level_proxies.get_node(NodePath(current_scene_root.name)), _new_room_node)
 	
-	var _layers_to_be_made = ["background", "main", "foreground"]
+	var _layers_to_be_made = ["background", "foreground"]
 	
 	var _create_layer_func = func(_layer_name : String) -> Node2D:
 		var _new_layer : Node2D = Node2D.new()
@@ -276,8 +303,9 @@ func create_room(room_name : String) -> void:
 		var _layer_proxy = _add_layer_proxy(_layer_name, _room_proxy, _new_layer)
 		
 		var _new_tilemap : TileMapLayer = TileMapLayer.new()
-		_new_tilemap.tile_set = preload("res://Tilesets/Resources/debug.tres")
+		_new_tilemap.tile_set = preload("res://Tilesets/Resources/placeholder.tres")
 		_new_tilemap.name = _layer_name + "_tiles"
+		_new_tilemap.scale = Vector2(2,2)
 		add_node_to_level(_new_tilemap, _new_layer)
 		_add_tilemaplayer_proxy(_layer_name + "_tiles", _layer_proxy, _new_tilemap)
 		
@@ -292,6 +320,26 @@ func create_room(room_name : String) -> void:
 		elif _layer_name == "foreground":
 			_new_layer.get_node("foreground_tiles").modulate = Color(1.0, 1.0, 1.0, 0.5)
 			_new_layer.get_node("foreground_tiles").collision_enabled = false
+	
+	var _new_main_layer : Node2D = Node2D.new()
+	_new_main_layer.name = "main"
+	add_node_to_level(_new_main_layer, _new_room_node)
+	var _layer_proxy = _add_layer_proxy("main", _room_proxy, _new_main_layer)
+	
+	var _new_back_tilemap : TileMapLayer = TileMapLayer.new()
+	_new_back_tilemap.tile_set = preload("res://Tilesets/Resources/placeholder.tres")
+	_new_back_tilemap.name = "main_back_tiles"
+	_new_back_tilemap.scale = Vector2(2,2)
+	add_node_to_level(_new_back_tilemap, _new_main_layer)
+	_add_tilemaplayer_proxy("main_back_tiles", _layer_proxy, _new_back_tilemap)
+	
+	var _new_front_tilemap : TileMapLayer = TileMapLayer.new()
+	_new_front_tilemap.tile_set = preload("res://Tilesets/Resources/placeholder_overlay.tres")
+	_new_front_tilemap.name = "main_front_tiles"
+	_new_front_tilemap.scale = Vector2(2,2)
+	add_node_to_level(_new_front_tilemap, _new_main_layer)
+	_add_tilemaplayer_proxy("main_front_tiles", _layer_proxy, _new_front_tilemap)
+	print(_new_front_tilemap.tile_set)
 	
 	edit_room(room_name)
 	
@@ -405,16 +453,38 @@ func _show_context_menu(at_position : Vector2i) -> void:
 	_last_context_menu_open_pos = get_global_space_mouse_position()
 	$context_menu._update_context_menu()
 	$context_menu.popup(Rect2i(at_position + Vector2i(0, 75), Vector2i(200, 400)))
-	
-func get_currently_edited_layer() -> String:
+
+func get_currently_edited_layer_name() -> String:
 	var _layer_buttons = $main/layers_margin_container/VBoxContainer
 	
 	if _layer_buttons.get_node("foreground").button_pressed:
 		return "foreground"
-	elif _layer_buttons.get_node("main").button_pressed:
-		return "main"
+	elif _layer_buttons.get_node("main/main-back").button_pressed:
+		return "main_back"
+	elif _layer_buttons.get_node("main/main-front").button_pressed:
+		return "main_front"
 	else:
 		return "background"
+
+func get_currently_edited_layer_path() -> String:
+	var _layer_buttons = $main/layers_margin_container/VBoxContainer
+	
+	if _layer_buttons.get_node("foreground").button_pressed:
+		return "foreground/foreground_tiles"
+	elif _layer_buttons.get_node("main/main-back").button_pressed:
+		return "main/main_back_tiles"
+	elif _layer_buttons.get_node("main/main-front").button_pressed:
+		return "main/main_front_tiles"
+	else:
+		return "background/background_tiles"
+
+func _layer_changed(new_layer_name : String) -> void:
+	match new_layer_name:
+		"main_front":
+			$main/tile_selection.load_tileset_source(preload("res://Tilesets/Resources/placeholder_overlay.tres").get_source(0))
+		_:
+			$main/tile_selection.load_tileset_source(preload("res://Tilesets/Resources/placeholder.tres").get_source(0))
+
 
 func get_current_level_start() -> LevelStart:
 	return null
@@ -442,7 +512,7 @@ func _debug_func(id : int) -> void:
 			get_current_level_proxy().print_tree_pretty()
 
 func _stroke_lifted() -> void:
-	var _tilemap_proxy = get_current_room_proxy().get_node(get_currently_edited_layer() + "/" + get_currently_edited_layer() + "_tiles")
+	var _tilemap_proxy = get_current_room_proxy().get_node(get_currently_edited_layer_path())
 	var _linked_tilemap : TileMapLayer = _tilemap_proxy.get_meta("linked_node")
 	
 	for _cell : Vector2i in _stroke_add:
@@ -451,7 +521,7 @@ func _stroke_lifted() -> void:
 	_stroke_add = []
 
 func _erase_lifted() -> void:
-	var _tilemap_proxy = get_current_room_proxy().get_node(get_currently_edited_layer() + "/" + get_currently_edited_layer() + "_tiles")
+	var _tilemap_proxy = get_current_room_proxy().get_node(get_currently_edited_layer_path())
 	var _linked_tilemap : TileMapLayer = _tilemap_proxy.get_meta("linked_node")
 	
 	for _cell : Vector2i in _stroke_erase:

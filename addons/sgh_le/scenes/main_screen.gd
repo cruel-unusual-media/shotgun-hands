@@ -30,9 +30,8 @@ func _toggle_level_configuration(state : bool) -> void:
 		$level_configuration.hide()
 
 func _on_level_config_button_down() -> void:
-	if get_parent().loaded_scene_path != "":
-		_toggle_level_configuration(true)
-		$VBoxContainer/HBoxContainer/level_config.release_focus()
+	_toggle_level_configuration(true)
+	$VBoxContainer/HBoxContainer/level_config.release_focus()
 
 
 func _on_level_config_close_button_down() -> void:

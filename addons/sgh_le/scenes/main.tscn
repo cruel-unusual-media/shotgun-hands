@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://c8wue25i20fjs"]
+[gd_scene load_steps=18 format=3 uid="uid://c8wue25i20fjs"]
 
 [ext_resource type="Script" uid="uid://dwb08gw8ei4lh" path="res://addons/sgh_le/scenes/main.gd" id="1_ep5ol"]
 [ext_resource type="Script" uid="uid://o82ogn8ay18o" path="res://addons/sgh_le/scenes/main_screen.gd" id="2_8fyc8"]
@@ -12,6 +12,7 @@
 [ext_resource type="Script" uid="uid://bra4kv4gxbjc6" path="res://addons/sgh_le/scenes/context_menu.gd" id="7_txer4"]
 [ext_resource type="Texture2D" uid="uid://br4ws8ca0y1ft" path="res://addons/sgh_le/textures/ToolTriangle.svg" id="9_qjw2d"]
 [ext_resource type="ButtonGroup" uid="uid://dwuniyeqd5la3" path="res://addons/sgh_le/layers_button_group.tres" id="10_w6ife"]
+[ext_resource type="Script" uid="uid://ywdruywormop" path="res://addons/sgh_le/scenes/tile_selection.gd" id="11_qjw2d"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ugtkf"]
 bg_color = Color(0.16386127, 0.1638613, 0.16386116, 1)
@@ -92,6 +93,25 @@ disabled = true
 text = "Level Configuration"
 flat = true
 
+[node name="background" type="MenuButton" parent="main/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "Room Background"
+item_count = 4
+popup/item_0/text = "Black"
+popup/item_0/checkable = 2
+popup/item_0/id = 3
+popup/item_1/text = "City Day"
+popup/item_1/checkable = 2
+popup/item_1/checked = true
+popup/item_1/id = 0
+popup/item_2/text = "City Night"
+popup/item_2/checkable = 2
+popup/item_2/id = 1
+popup/item_3/text = "Garbage Disposal"
+popup/item_3/checkable = 2
+popup/item_3/id = 2
+
 [node name="debug" type="MenuButton" parent="main/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 0
@@ -145,7 +165,7 @@ grow_vertical = 2
 [node name="tile_cursor" type="Sprite2D" parent="main/VBoxContainer/SubViewportContainer/SubViewport/level_proxies"]
 visible = false
 z_index = 840
-position = Vector2(1120, 96)
+position = Vector2(992, 480)
 texture = ExtResource("5_qjw2d")
 
 [node name="tools_margin_container" type="MarginContainer" parent="main"]
@@ -251,12 +271,24 @@ button_group = ExtResource("10_w6ife")
 text = "Foreground"
 alignment = 2
 
-[node name="main" type="Button" parent="main/layers_margin_container/VBoxContainer"]
+[node name="main" type="HBoxContainer" parent="main/layers_margin_container/VBoxContainer"]
 layout_mode = 2
+
+[node name="main-back" type="Button" parent="main/layers_margin_container/VBoxContainer/main"]
+layout_mode = 2
+size_flags_horizontal = 3
 toggle_mode = true
 button_pressed = true
 button_group = ExtResource("10_w6ife")
-text = "Main"
+text = "Main: Back"
+alignment = 2
+
+[node name="main-front" type="Button" parent="main/layers_margin_container/VBoxContainer/main"]
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+button_group = ExtResource("10_w6ife")
+text = "Main: Front"
 alignment = 2
 
 [node name="background" type="Button" parent="main/layers_margin_container/VBoxContainer"]
@@ -294,8 +326,21 @@ layout_mode = 2
 
 [node name="Label" type="Label" parent="main/level_configuration/MarginContainer/VBoxContainer"]
 layout_mode = 2
-size_flags_horizontal = 4
-text = "test"
+text = "Background Distance"
+
+[node name="background_distance" type="HSlider" parent="main/level_configuration/MarginContainer/VBoxContainer"]
+layout_mode = 2
+max_value = 1.0
+step = 0.01
+
+[node name="Label2" type="Label" parent="main/level_configuration/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Foreground Distance"
+
+[node name="foreground_distance" type="HSlider" parent="main/level_configuration/MarginContainer/VBoxContainer"]
+layout_mode = 2
+max_value = 1.0
+step = 0.01
 
 [node name="close" type="Button" parent="main/level_configuration/MarginContainer/VBoxContainer"]
 layout_mode = 2
@@ -362,6 +407,23 @@ grow_horizontal = 2
 grow_vertical = 2
 text = "Create Room"
 
+[node name="tile_selection" type="FoldableContainer" parent="main"]
+layout_mode = 0
+offset_top = 98.0
+offset_right = 128.0
+offset_bottom = 137.0
+title = "Tile Selection"
+script = ExtResource("11_qjw2d")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="main/tile_selection"]
+custom_minimum_size = Vector2(0, 300)
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="main/tile_selection/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
 [node name="room_creation_dialog" type="Window" parent="."]
 oversampling_override = 1.0
 position = Vector2i(0, 36)
@@ -425,7 +487,7 @@ script = ExtResource("7_txer4")
 item_count = 8
 item_0/text = "Trigger"
 item_0/id = 0
-item_1/text = "Room Entrance"
+item_1/text = "Doorway"
 item_1/id = 1
 item_2/text = "Effectors"
 item_2/id = 1
@@ -443,6 +505,9 @@ item_7/text = "Enemy"
 item_7/id = 6
 
 [connection signal="button_down" from="main/VBoxContainer/HBoxContainer/level_config" to="main" method="_on_level_config_button_down"]
+[connection signal="button_down" from="main/tools_margin_container/tools/select" to="." method="_select_edit_mode" binds= [0]]
+[connection signal="button_down" from="main/tools_margin_container/tools/paint" to="." method="_select_edit_mode" binds= [1]]
+[connection signal="button_down" from="main/tools_margin_container/tools/draw_collision" to="." method="_select_edit_mode" binds= [2]]
 [connection signal="button_down" from="main/level_configuration/MarginContainer/VBoxContainer/close" to="main" method="_on_level_config_close_button_down"]
 [connection signal="button_down" from="main/no_rooms_yet_warning/create_room" to="main" method="_create_first_room"]
 [connection signal="close_requested" from="room_creation_dialog" to="room_creation_dialog" method="_close_dialog"]

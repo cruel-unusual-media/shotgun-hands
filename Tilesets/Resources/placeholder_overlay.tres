@@ -1,0 +1,14 @@
+[gd_resource type="TileSet" load_steps=3 format=3 uid="uid://ctferlmu81uug"]
+
+[ext_resource type="Texture2D" uid="uid://ddelm5hcrlufc" path="res://Tilesets/Textures/placeholder_overlay.png" id="1_4dul6"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_gngwv"]
+texture = ExtResource("1_4dul6")
+texture_region_size = Vector2i(32, 32)
+0:0/0 = 0
+0:1/0 = 0
+
+[resource]
+tile_size = Vector2i(32, 32)
+physics_layer_0/collision_layer = 1
+sources/0 = SubResource("TileSetAtlasSource_gngwv")

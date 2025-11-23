@@ -79,7 +79,7 @@ func submit_doorway(doorway : Doorway) -> void:
 	if doorway.can_enter:
 		doorway.doorway_entered.connect(enter_room.bind(doorway.target_doorway_room_name, doorway.target_doorway_label, doorway))
 	
-	doorway.doorway_exited.connect(func(): _doorway_exited(doorway))
+	doorway.doorway_exited.connect(func(): await get_tree().create_timer(0.01).timeout; _doorway_exited(doorway))
 
 func _doorway_exited(doorway : Doorway) -> void:
 	print(doorway, _last_entered_doorway)
