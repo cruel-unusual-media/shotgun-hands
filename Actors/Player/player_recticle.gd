@@ -1,7 +1,9 @@
-extends Node2D
+class_name PlayerRecticle extends Node2D
 
 @export
 var focus : Node2D
+@export
+var normal : Vector2
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -12,5 +14,5 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	var mPos = get_global_mouse_position() - focus.global_position
 	position = mPos.normalized()*35 + focus.position
-	var angle = mPos.angle()
+	normal = mPos.normalized()
 	

@@ -60,6 +60,5 @@ polygon = PackedVector2Array(0, 0, 1, 0, 1, 1, 0, 1)
 position = Vector2(449, 223)
 
 [node name="Bullet" parent="." instance=ExtResource("2_34js4")]
-position = Vector2(238, 575)
-damage_amount = 1
-velocity = Vector2(10, 0)
+position = Vector2(267, 590)
+velocity = Vector2(1000, 0)

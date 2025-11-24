@@ -7,7 +7,7 @@ const JUMP_VELOCITY = -600.0
 enum {IDLE, MOVING, FALLING, JUMPING, SHOOTING_IDLE, SHOOTING_MOVING, SHOOTING_FALLING, SHOTGUN_JUMP, CROUCHING, SLIDING}
 
 var state = JUMPING # State is used to determine the currently used animation
-@onready var shootTarget : Node2D = $Target
+#@onready var shootTarget : Node2D = $Target
 var prevState = IDLE
 @onready var sprite = $AnimatedSprite2D
 

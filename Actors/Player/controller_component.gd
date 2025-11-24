@@ -6,6 +6,16 @@ var hitbox_default_size : float
 var hitbox_default_pos : Vector2
 var head_check : Area2D
 var friction : int = 10
+var can_shotgun_jump = true
+
+@export
+var recticle : PlayerRecticle
+## The ammo launched by the primary fire. Should be a child of the recticle.
+@export
+var primary_ammo : AmmoGeneric
+## The ammo launched by the secondary fire. Should be a child of the recticle.
+@export
+var secondary_ammo : AmmoGeneric
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -59,6 +69,20 @@ func _process(delta: float) -> void:
 			player.state = player.JUMPING
 		else:
 			player.state = player.FALLING
+	
+	if Input.is_action_just_pressed("fire_left"):
+		var shot = primary_ammo.fire(recticle.normal.angle())
+		if can_shotgun_jump and not player.is_on_floor() and shot:
+			if recticle.normal.y < 0:
+				player.velocity.y = min(0, player.velocity.y)
+			player.velocity -= recticle.normal*800
+	if Input.is_action_just_pressed("fire_right"):
+		var shot = secondary_ammo.fire(recticle.normal.angle())
+		if can_shotgun_jump and not player.is_on_floor() and shot:
+			if recticle.normal.y < 0:
+				player.velocity.y = min(0, player.velocity.y)
+			player.velocity -= recticle.normal*800
+	
 
 
 	player.move_and_slide()

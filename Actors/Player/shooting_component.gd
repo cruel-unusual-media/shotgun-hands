@@ -1,9 +1,6 @@
 class_name ShootingComponent extends Node2D
 
-@export
-var primary_ammo : PackedScene
-@export
-var secondary_ammo : PackedScene
+
 
 
 # Called when the node enters the scene tree for the first time.

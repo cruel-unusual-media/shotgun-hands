@@ -5,7 +5,7 @@
 [ext_resource type="Script" uid="uid://cxm75lk51oc68" path="res://Actors/Player/controller_component.gd" id="2_b63gh"]
 [ext_resource type="Script" uid="uid://ck8hnd0csg4rk" path="res://Actors/Player/camera_2d.gd" id="3_v1key"]
 [ext_resource type="Script" uid="uid://bkrwwx5a7wgso" path="res://Actors/Player/player_recticle.gd" id="4_n7l8t"]
-[ext_resource type="Script" uid="uid://5g70dolrgvee" path="res://Actors/Player/shooting_component.gd" id="5_isd1h"]
+[ext_resource type="PackedScene" uid="uid://cv53sl1qoc2vs" path="res://Ammos/ammy_types/basic_ammo_type.tscn" id="5_awv0x"]
 [ext_resource type="PackedScene" uid="uid://dlqa1fyyky5xj" path="res://Actors/Shared/damagable_component.tscn" id="7_8gtf5"]
 [ext_resource type="Script" uid="uid://b014414k0lgbj" path="res://Actors/Shared/health_component.gd" id="8_awv0x"]
 
@@ -16,12 +16,15 @@ size = Vector2(58, 158)
 size = Vector2(58, 79)
 
 [node name="Player" type="CharacterBody2D"]
-collision_layer = 5
+collision_layer = 0
 collision_mask = 5
 script = ExtResource("1_vhr1b")
 
-[node name="ControllerComponent" type="Node2D" parent="."]
+[node name="ControllerComponent" type="Node2D" parent="." node_paths=PackedStringArray("recticle", "primary_ammo", "secondary_ammo")]
 script = ExtResource("2_b63gh")
+recticle = NodePath("../PlayerRecticle")
+primary_ammo = NodePath("../PlayerRecticle/BasicAmmoType")
+secondary_ammo = NodePath("../PlayerRecticle/BasicAmmoType2")
 
 [node name="HeadFocus" type="Node2D" parent="."]
 position = Vector2(0, -121)
@@ -58,8 +61,14 @@ scale = Vector2(2, 1.9999999)
 color = Color(0, 1, 1, 1)
 polygon = PackedVector2Array(2, -2, 2, 2, -2, 2, -2, -2)
 
-[node name="ShootingComponent" type="Node2D" parent="PlayerRecticle"]
-script = ExtResource("5_isd1h")
+[node name="BasicAmmoType" parent="PlayerRecticle" instance=ExtResource("5_awv0x")]
+bullet_count = 6
+projectile_spread = 30.0
+max_ammo = 6
+
+[node name="BasicAmmoType2" parent="PlayerRecticle" instance=ExtResource("5_awv0x")]
+bullet_count = 2
+max_ammo = 6
 
 [node name="Camera2D" type="Camera2D" parent="." node_paths=PackedStringArray("focus")]
 position = Vector2(0, -121)
