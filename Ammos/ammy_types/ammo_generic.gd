@@ -65,6 +65,7 @@ func fire(dir : float) -> bool:
 			#pass
 		delay_timer.start(fire_delay)
 		can_fire = false
+		ammo -= 1
 		return true
 	else:
 		return false

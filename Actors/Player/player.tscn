@@ -31,6 +31,9 @@ shotgun_jump_timer = NodePath("../ShotgunJumpTimer")
 wait_time = 0.1
 one_shot = true
 
+[node name="ReloadTimer" type="Timer" parent="."]
+one_shot = true
+
 [node name="HeadFocus" type="Node2D" parent="."]
 position = Vector2(0, -121)
 
@@ -99,3 +102,4 @@ script = ExtResource("8_awv0x")
 metadata/_custom_type_script = "uid://b014414k0lgbj"
 
 [connection signal="timeout" from="ShotgunJumpTimer" to="ControllerComponent" method="_on_shotgun_jump_timer_timeout"]
+[connection signal="timeout" from="ReloadTimer" to="ControllerComponent" method="_on_reload_timer_timeout"]

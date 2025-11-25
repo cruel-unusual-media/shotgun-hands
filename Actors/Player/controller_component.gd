@@ -22,6 +22,10 @@ var secondary_ammo : AmmoGeneric
 ## Mercy time between two inputs that allows shotgun jumping
 @export
 var shotgun_jump_timer : Timer
+## Timer for how long a reload takes
+@export
+var reload_timer : Timer
+var reloading : bool = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -136,8 +140,15 @@ func handle_fire() -> void:
 			player.velocity.y = min(0, player.velocity.y)
 		player.velocity -= recticle.normal*800
 		shotgun_jump_count += 1
-	
+	if Input.is_action_just_pressed("fire_reload"):
+		reload_timer.start()
 
 
 func _on_shotgun_jump_timer_timeout() -> void:
 	can_shotgun_jump = false
+
+
+func _on_reload_timer_timeout() -> void:
+	primary_ammo.reload()
+	secondary_ammo.reload()
+	reloading = false
