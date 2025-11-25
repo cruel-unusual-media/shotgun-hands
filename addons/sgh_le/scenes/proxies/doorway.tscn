@@ -1,40 +1,54 @@
-[gd_scene load_steps=2 format=3 uid="uid://cpbyjmeu868a"]
+[gd_scene load_steps=4 format=3 uid="uid://cpbyjmeu868a"]
 
 [ext_resource type="Script" uid="uid://c116lbly7rw0s" path="res://Classes/Nodes/Doorway.gd" id="1_o8yya"]
+[ext_resource type="Texture2D" uid="uid://gf4agagiun0e" path="res://Actors/Player/Sprites/spritesheet_sh_notext.png" id="2_rohig"]
 
-[node name="Doorway" type="Area2D"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_pmon2"]
+atlas = ExtResource("2_rohig")
+region = Rect2(501.575, 185.465, 97, 189.28)
+
+[node name="Doorway" type="Node2D"]
 script = ExtResource("1_o8yya")
-z_doorway = null
-target_doorway_label = null
-target_doorway_room_name = null
-metadata/_custom_type_script = "uid://c116lbly7rw0s"
 
-[node name="clickbox" type="ColorRect" parent="."]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -20.0
-offset_right = 20.0
-offset_bottom = 20.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0, 0.7882353, 0.7882353, 0.23921569)
+[node name="Sprite2D" type="Sprite2D" parent="."]
+modulate = Color(0.40784314, 0.2901961, 1, 0.3764706)
+texture = SubResource("AtlasTexture_pmon2")
+
+[node name="clickbox" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_left = -38.0
+offset_top = -76.0
+offset_right = 42.0
+offset_bottom = 84.0
 
 [node name="Label" type="Label" parent="."]
-modulate = Color(1, 1, 1, 0.59607846)
+modulate = Color(1, 1, 1, 0.47058824)
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -11.5
-offset_right = 20.0
-offset_bottom = 11.5
+offset_left = -54.0
+offset_top = -11.0
+offset_right = 55.0
+offset_bottom = 12.0
 grow_horizontal = 2
 grow_vertical = 2
 text = "New Doorway"
+horizontal_alignment = 1
+
+[node name="Label2" type="Label" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -54.5
+offset_top = -100.0
+offset_right = 54.5
+offset_bottom = -77.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "DOORWAY"
 horizontal_alignment = 1

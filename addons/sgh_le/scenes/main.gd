@@ -110,10 +110,11 @@ func _process(delta: float) -> void:
 	
 	_previous_layer_name = get_currently_edited_layer_name()
 	
-	get_current_room_proxy().get_node("main/main_front_tiles").visible = !$main/layers_margin_container/VBoxContainer/isolate_current.button_pressed or level_edit_states[current_scene_root].selected_layer == "main_front"
-	get_current_room_proxy().get_node("main/main_back_tiles").visible = !$main/layers_margin_container/VBoxContainer/isolate_current.button_pressed or level_edit_states[current_scene_root].selected_layer == "main_back"
-	get_current_room_proxy().get_node("foreground/foreground_tiles").visible = !$main/layers_margin_container/VBoxContainer/isolate_current.button_pressed or level_edit_states[current_scene_root].selected_layer == "foreground"
-	get_current_room_proxy().get_node("background/background_tiles").visible = !$main/layers_margin_container/VBoxContainer/isolate_current.button_pressed or level_edit_states[current_scene_root].selected_layer == "background"
+	if get_current_room_proxy():
+		get_current_room_proxy().get_node("main/main_front_tiles").visible = !$main/layers_margin_container/VBoxContainer/isolate_current.button_pressed or level_edit_states[current_scene_root].selected_layer == "main_front"
+		get_current_room_proxy().get_node("main/main_back_tiles").visible = !$main/layers_margin_container/VBoxContainer/isolate_current.button_pressed or level_edit_states[current_scene_root].selected_layer == "main_back"
+		get_current_room_proxy().get_node("foreground/foreground_tiles").visible = !$main/layers_margin_container/VBoxContainer/isolate_current.button_pressed or level_edit_states[current_scene_root].selected_layer == "foreground"
+		get_current_room_proxy().get_node("background/background_tiles").visible = !$main/layers_margin_container/VBoxContainer/isolate_current.button_pressed or level_edit_states[current_scene_root].selected_layer == "background"
 
 
 func _select_edit_mode(id : int) -> void:
@@ -359,7 +360,7 @@ func _create_level_start(owner_node : Node, room_proxy : Node) -> void:
 	_add_level_start_proxy(room_proxy, _new_level_start)
 
 
-func _create_room_entrance(parent_node : Node, parent_proxy : Node, at_position : Vector2):
+func _create_doorway(parent_node : Node, parent_proxy : Node, at_position : Vector2):
 	var _new_entrance : Doorway = Doorway.new()
 	add_node_to_level(_new_entrance, parent_node)
 	_new_entrance.collision_layer = 4
@@ -372,6 +373,22 @@ func _create_room_entrance(parent_node : Node, parent_proxy : Node, at_position 
 	var _proxy_entrance = _add_room_entrance_proxy(parent_proxy, _new_entrance, at_position)
 	
 	_new_entrance.set_meta("linked_proxy", _proxy_entrance)
+
+
+func _create_trigger(parent_node : Node, parent_proxy : Node, at_position : Vector2):
+	var _new_trigger : Trigger = Trigger.new()
+	add_node_to_level(_new_trigger, parent_node)
+	_new_trigger.collision_layer = 4
+	_new_trigger.collision_mask = 4
+	var _trigger_collider = _new_trigger.setup_collider()
+	add_node_to_level(_trigger_collider, _new_trigger)
+	
+	_new_trigger.global_position = at_position
+	
+	var _proxy_trigger = _add_room_entrance_proxy(parent_proxy, _new_trigger, at_position)
+	
+	_new_trigger.set_meta("linked_proxy", _proxy_trigger)
+
 
 func _move_level_start(room_name : String, new_position : Vector2) -> void:
 	log_msg("Moving level start to " + str(new_position) + " in \"" + room_name + "\"")
@@ -390,6 +407,7 @@ func _move_level_start(room_name : String, new_position : Vector2) -> void:
 
 func _delete_current_room() -> void:
 	log_msg("Deleting the current room")
+	_selection_outline_panel.reparent(self)
 	if current_scene_root.get_children().size() > 0:
 		current_scene_root.get_node(level_edit_states[current_scene_root].selected_room).queue_free()
 		get_current_room_proxy().queue_free()
@@ -586,9 +604,12 @@ func _clickbox_clicked(clickbox_control : Control) -> void:
 func add_object_option_pressed(id : int) -> void:
 	match id:
 		0:
-			print("Trigger")
+			log_msg("Add trigger to room \"" + get_current_room_name() + "\"")
+			var _trigger_parent = current_scene_root.get_node(get_current_room_name() + "/main")
+			var _trigger_proxy_parent = get_current_room_proxy().get_node("main")
+			var _new_trigger = _create_trigger(_trigger_parent, _trigger_proxy_parent, _last_context_menu_open_pos)
 		1:
-			log_msg("Add entrance to room \"" + get_current_room_name() + "\"")
+			log_msg("Add doorway to room \"" + get_current_room_name() + "\"")
 			var _entrance_parent = current_scene_root.get_node(get_current_room_name() + "/main")
 			var _entrance_proxy_parent = get_current_room_proxy().get_node("main")
-			var _new_entrance = _create_room_entrance(_entrance_parent, _entrance_proxy_parent, _last_context_menu_open_pos)
+			var _new_entrance = _create_doorway(_entrance_parent, _entrance_proxy_parent, _last_context_menu_open_pos)
