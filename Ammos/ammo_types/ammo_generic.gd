@@ -92,3 +92,6 @@ func _on_delay_timer_timeout() -> void:
 
 func reload() -> void:
 	ammo = max_ammo
+	
+	can_fire = true
+	

@@ -26,6 +26,10 @@ var shotgun_jump_timer : Timer
 @export
 var reload_timer : Timer
 var reloading : bool = false
+## The focus that the camera and shooting revolves around
+@export
+var player_focus : Node2D
+@onready var focus_def_y = player_focus.position.y
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -80,6 +84,7 @@ func _process(delta: float) -> void:
 			player.state = player.JUMPING
 		else:
 			player.state = player.FALLING
+		end_crouch()
 	
 	handle_fire()
 	
@@ -93,6 +98,7 @@ func handle_crouch():
 		if not (player.state == player.CROUCHING or player.state == player.SLIDING):
 			hitbox.position.y = hitbox_default_pos.y/2
 			hitbox.shape.size.y = hitbox_default_size/2
+			player_focus.position.y = focus_def_y/2
 			
 			player.state = player.CROUCHING
 			if player.velocity.x != 0 and Input.is_action_pressed("move_crouch"):
@@ -111,6 +117,7 @@ func handle_crouch():
 	else:
 		hitbox.position.y = hitbox_default_pos.y
 		hitbox.shape.size.y = hitbox_default_size
+		player_focus.position.y = focus_def_y
 		if (player.state == player.CROUCHING or player.state == player.SLIDING):
 			player.state = player.IDLE
 	
@@ -120,28 +127,35 @@ func handle_crouch():
 	#if direction != 0:
 		#player.state = player.SLIDING
 
+func end_crouch() -> void:
+	hitbox.position.y = hitbox_default_pos.y
+	hitbox.shape.size.y = hitbox_default_size
+	player_focus.position.y = focus_def_y
+
 func handle_fire() -> void:
-	var shot = false
-	var shots = 0
-	if Input.is_action_pressed("fire_left"):
-		shot = primary_ammo.fire(recticle.normal.angle())
-		if shot:
-			shots += 1
-	if Input.is_action_pressed("fire_right"):
-		shot = secondary_ammo.fire(recticle.normal.angle())
-		if shot:
-			shots += 1
-	if not player.is_on_floor() and shot:
-		shotgun_jump_timer.start()
-		can_shotgun_jump = true
-		shots -= 1
-	if can_shotgun_jump and not player.is_on_floor() and shot and shotgun_jump_count < shotgun_jump_max and shots >= 1:
-		if recticle.normal.y > 0:
-			player.velocity.y = min(0, player.velocity.y)
-		player.velocity -= recticle.normal*800
-		shotgun_jump_count += 1
-	if Input.is_action_just_pressed("fire_reload"):
-		reload_timer.start()
+	if not reloading:
+		var shot = false
+		var shots = 0
+		if Input.is_action_pressed("fire_left"):
+			shot = primary_ammo.fire(recticle.normal.angle())
+			if shot:
+				shots += 1
+		if Input.is_action_pressed("fire_right"):
+			shot = secondary_ammo.fire(recticle.normal.angle())
+			if shot:
+				shots += 1
+		if not player.is_on_floor() and shot:
+			shotgun_jump_timer.start()
+			can_shotgun_jump = true
+			shots -= 1
+		if can_shotgun_jump and not player.is_on_floor() and shot and shotgun_jump_count < shotgun_jump_max and shots >= 1:
+			if recticle.normal.y > 0:
+				player.velocity.y = min(0, player.velocity.y)
+			player.velocity -= recticle.normal*800
+			shotgun_jump_count += 1
+		if Input.is_action_just_pressed("fire_reload"):
+			reloading = true
+			reload_timer.start()
 
 
 func _on_shotgun_jump_timer_timeout() -> void:

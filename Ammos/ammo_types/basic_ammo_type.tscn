@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://cv53sl1qoc2vs"]
+
+[ext_resource type="Script" uid="uid://c24hil6ucb0u" path="res://Ammos/ammo_types/ammo_generic.gd" id="1_s5eks"]
+[ext_resource type="PackedScene" uid="uid://bc6kl6o2g83wh" path="res://Ammos/projectiles/bullet.tscn" id="2_smvhw"]
+
+[node name="BasicAmmoType" type="Node2D"]
+script = ExtResource("1_s5eks")
+projectile_type = ExtResource("2_smvhw")
+fire_delay = 0.5
+
+[node name="DelayTimer" type="Timer" parent="."]
+wait_time = 0.5
+one_shot = true
