@@ -3,6 +3,9 @@ class_name AmmoGeneric extends Node2D
 ## The projectile type used. Any scene can be placed here and will be instantiated as a projectile.
 @export
 var projectile_type : PackedScene
+## Particle effect created when shooting
+@export
+var shoot_effect : CPUParticles2D
 ## The number of bullets fired by this
 @export
 var bullet_count : int = 1
@@ -45,6 +48,8 @@ func _process(delta: float) -> void:
 # Shoots a projectile if possible and returns false if it can't
 func fire(dir : float) -> bool:
 	if can_fire:
+		if is_instance_valid(shoot_effect):
+			shoot_effect.restart(true)
 		if bullet_count == 1:
 			send_bullet(dir + randf_range(-deg_to_rad(projectile_inaccuracy)/2, deg_to_rad(projectile_inaccuracy)/2), Vector2.ZERO)
 		else:

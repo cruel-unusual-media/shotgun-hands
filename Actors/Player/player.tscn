@@ -25,13 +25,15 @@ collision_layer = 0
 collision_mask = 5
 script = ExtResource("1_vhr1b")
 
-[node name="ControllerComponent" type="Node2D" parent="." node_paths=PackedStringArray("recticle", "primary_ammo", "secondary_ammo", "shotgun_jump_timer", "reload_timer", "player_focus")]
+[node name="ControllerComponent" type="Node2D" parent="." node_paths=PackedStringArray("recticle", "primary_ammo", "secondary_ammo", "melee_area", "shotgun_jump_timer", "reload_timer", "melee_timer", "player_focus")]
 script = ExtResource("2_b63gh")
 recticle = NodePath("../PlayerRecticle")
 primary_ammo = NodePath("../PlayerRecticle/Buckshot")
 secondary_ammo = NodePath("../PlayerRecticle/Slugshot")
+melee_area = NodePath("../PlayerRecticle/MeleeAttack")
 shotgun_jump_timer = NodePath("../ShotgunJumpTimer")
 reload_timer = NodePath("../ReloadTimer")
+melee_timer = NodePath("../MeleeCooldown")
 player_focus = NodePath("../HeadFocus")
 
 [node name="ShotgunJumpTimer" type="Timer" parent="."]
@@ -40,6 +42,10 @@ one_shot = true
 
 [node name="ReloadTimer" type="Timer" parent="."]
 wait_time = 6.0
+one_shot = true
+
+[node name="MeleeCooldown" type="Timer" parent="."]
+wait_time = 0.5
 one_shot = true
 
 [node name="HeadFocus" type="Node2D" parent="."]
@@ -117,3 +123,4 @@ metadata/_custom_type_script = "uid://b014414k0lgbj"
 
 [connection signal="timeout" from="ShotgunJumpTimer" to="ControllerComponent" method="_on_shotgun_jump_timer_timeout"]
 [connection signal="timeout" from="ReloadTimer" to="ControllerComponent" method="_on_reload_timer_timeout"]
+[connection signal="timeout" from="MeleeCooldown" to="ControllerComponent" method="_on_melee_cooldown_timeout"]

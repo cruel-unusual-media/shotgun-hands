@@ -19,6 +19,9 @@ var primary_ammo : AmmoGeneric
 ## The ammo launched by the secondary fire. Should be a child of the recticle.
 @export
 var secondary_ammo : AmmoGeneric
+## Melee attack area
+@export
+var melee_area : AttackArea
 ## Mercy time between two inputs that allows shotgun jumping
 @export
 var shotgun_jump_timer : Timer
@@ -26,10 +29,13 @@ var shotgun_jump_timer : Timer
 @export
 var reload_timer : Timer
 var reloading : bool = false
+@export
+var melee_timer : Timer
 ## The focus that the camera and shooting revolves around
 @export
 var player_focus : Node2D
 @onready var focus_def_y = player_focus.position.y
+var can_melee : bool = true
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -156,6 +162,13 @@ func handle_fire() -> void:
 		if Input.is_action_just_pressed("fire_reload"):
 			reloading = true
 			reload_timer.start()
+	
+	if Input.is_action_just_pressed("fire_melee") and can_melee:
+		melee_area.enable()
+		var tmr = get_tree().create_timer(0.05)
+		tmr.timeout.connect(melee_area.disable)
+		melee_timer.start()
+		can_melee = false
 
 
 func _on_shotgun_jump_timer_timeout() -> void:
@@ -166,3 +179,7 @@ func _on_reload_timer_timeout() -> void:
 	primary_ammo.reload()
 	secondary_ammo.reload()
 	reloading = false
+
+
+func _on_melee_cooldown_timeout() -> void:
+	can_melee = true
