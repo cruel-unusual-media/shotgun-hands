@@ -24,11 +24,11 @@ var _stroke_add : Array[Vector2i] = []
 var _stroke_erase : Array[Vector2i] = []
 
 @onready var _selection_outline_panel = preload("res://addons/sgh_le/scenes/proxies/selection_outline_panel.tscn").instantiate()
-var _selected_node : Node:
+var _selected_proxy : Node:
 	set(x):
-		_selected_node = x
-		if _selected_node != null:
-			EditorInterface.edit_node(_selected_node.get_meta("linked_node"))
+		_selected_proxy = x
+		if _selected_proxy != null:
+			EditorInterface.edit_node(_selected_proxy.get_meta("linked_node"))
 		
 var _moving_node : Node
 var _move_grab_offset : Vector2
@@ -38,7 +38,7 @@ var _current_tool : EditTool = EditTool.SELECT:
 		_current_tool = x
 		
 		_moving_node = null
-		_selected_node = null
+		_selected_proxy = null
 		
 		$main/layers_margin_container/VBoxContainer/isolate_current.button_pressed = false
 		
@@ -107,12 +107,12 @@ func _process(delta: float) -> void:
 				_stroke_erase.append(_coord)
 				
 	if Input.is_key_pressed(KEY_ESCAPE):
-		_selected_node = null
+		_selected_proxy = null
 		if _current_tool != EditTool.SELECT:
 			_current_tool = EditTool.SELECT
 	
 	
-	_selection_outline_panel.visible = _selected_node != null
+	_selection_outline_panel.visible = _selected_proxy != null
 	
 	if _moving_node:
 		_moving_node.global_position = get_global_space_mouse_position() + _move_grab_offset
@@ -458,11 +458,34 @@ func _delete_current_room() -> void:
 func _delete_selected_object() -> void:
 	_selection_outline_panel.reparent(self, false)
 	
-	if _selected_node.has_node("clickbox"):
-		level_edit_states[current_scene_root].node_clickboxes.erase(_selected_node.get_node("clickbox"))
+	if _selected_proxy.has_node("clickbox"):
+		level_edit_states[current_scene_root].node_clickboxes.erase(_selected_proxy.get_node("clickbox"))
 	
-	_selected_node.get_meta("linked_node").queue_free()
-	_selected_node.queue_free()
+	_selected_proxy.get_meta("linked_node").queue_free()
+	_selected_proxy.queue_free()
+
+
+func _get_node_child_index(node : Node) -> int:
+	var _index : int = 0
+	for _ch in node.get_parent().get_children():
+		if _ch == node:
+			break
+		
+		_index += 1
+	
+	return _index
+
+func _move_node_in_tree(node : Node, offset : int) -> void:
+	node.get_parent().move_child(node, _get_node_child_index(node) + offset)
+
+
+func _push_selected_object_back() -> void:
+	_move_node_in_tree(_selected_proxy, - 1)
+	_move_node_in_tree(_selected_proxy.get_meta("linked_node"), - 1)
+	
+func _pull_selected_object_up() -> void:
+	_move_node_in_tree(_selected_proxy, 1)
+	_move_node_in_tree(_selected_proxy.get_meta("linked_node"), 1)
 
 
 func edit_room_idx(idx : int) -> void:
@@ -512,6 +535,10 @@ func context_menu_option_chosen(id : int) -> void:
 			$main/VBoxContainer/SubViewportContainer/SubViewport/editor_camera._return_to_origin()
 		20:
 			_delete_selected_object()
+		21:
+			_push_selected_object_back()
+		22:
+			_pull_selected_object_up()
 
 func _show_node_context_menu() -> void:
 	_last_context_menu_open_pos = get_global_space_mouse_position()
@@ -625,7 +652,7 @@ func _viewport_input(event) -> void:
 							return
 					
 					_moving_node = null
-					_selected_node = null
+					_selected_proxy = null
 				
 				elif _current_tool == EditTool.PLACE_SPRITE:
 					_place_currently_selected_sprite()
@@ -641,16 +668,16 @@ func _viewport_input(event) -> void:
 			else:
 				if event.pressed:
 					_click_clickbox_at_pos(get_global_space_mouse_position(), false)
-					if _selected_node:
+					if _selected_proxy:
 						_show_node_context_menu()
 						
 					else:
 						_show_context_menu()
 	
 	elif event is InputEventMouseMotion:
-		if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and _selected_node and not _moving_node:
-			_move_grab_offset = _selected_node.global_position - get_global_space_mouse_position()
-			_moving_node = _selected_node
+		if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and _selected_proxy and not _moving_node:
+			_move_grab_offset = _selected_proxy.global_position - get_global_space_mouse_position()
+			_moving_node = _selected_proxy
 
 
 func _click_clickbox_at_pos(_clickpos : Vector2, allow_move : bool = true) -> Node:
@@ -661,7 +688,7 @@ func _click_clickbox_at_pos(_clickpos : Vector2, allow_move : bool = true) -> No
 		if _clickpos.x >= _global_clickbox_begin.x and _clickpos.x <= _global_clickbox_end.x and _clickpos.y >= _global_clickbox_begin.y and _clickpos.y <= _global_clickbox_end.y:
 			return _clickbox_clicked(_clickbox, allow_move)
 	
-	_selected_node = null
+	_selected_proxy = null
 	return null
 	
 
@@ -671,15 +698,15 @@ func log_msg(message : String) -> void:
 
 
 func _clickbox_clicked(clickbox_control : Control, allow_move : bool = true) -> Node:
-	if _selected_node == clickbox_control.get_parent() and allow_move:
+	if _selected_proxy == clickbox_control.get_parent() and allow_move:
 		_move_grab_offset = clickbox_control.get_parent().global_position - get_global_space_mouse_position()
 		_moving_node = clickbox_control.get_parent()
 	else:
 		_selection_outline_panel.reparent(clickbox_control, false)
 		_selection_outline_panel.visible = true
-		_selected_node = clickbox_control.get_parent()
+		_selected_proxy = clickbox_control.get_parent()
 	
-	return _selected_node
+	return _selected_proxy
 
 
 func add_object_option_pressed(id : int) -> void:

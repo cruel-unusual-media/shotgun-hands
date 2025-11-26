@@ -14,7 +14,8 @@ var _exposed_parameter_names : Array[String] = [
 	"exit_target_object",
 	"exit_action",
 	"target_doorway_label",
-	"target_doorway_room_name"
+	"target_doorway_room_name",
+	"doorway_label"
 ]
 
 func _can_handle(object):

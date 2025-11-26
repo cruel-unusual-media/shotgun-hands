@@ -20,3 +20,8 @@ func _update_node_context_menu() -> void:
 	clear()
 	
 	add_item("Delete object", 20)
+	if get_parent()._selected_proxy is LevelStart:
+		set_item_disabled(get_item_index(20), true)
+	add_separator()
+	add_item("Push object back", 21)
+	add_item("Pull object forwards", 22)
