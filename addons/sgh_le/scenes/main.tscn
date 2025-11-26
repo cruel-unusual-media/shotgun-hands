@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://c8wue25i20fjs"]
+[gd_scene load_steps=22 format=3 uid="uid://c8wue25i20fjs"]
 
 [ext_resource type="Script" uid="uid://dwb08gw8ei4lh" path="res://addons/sgh_le/scenes/main.gd" id="1_ep5ol"]
 [ext_resource type="Script" uid="uid://o82ogn8ay18o" path="res://addons/sgh_le/scenes/main_screen.gd" id="2_8fyc8"]
@@ -7,12 +7,16 @@
 [ext_resource type="Texture2D" uid="uid://vw1rx2mj7rhn" path="res://addons/sgh_le/textures/Paint.svg" id="4_hpmdb"]
 [ext_resource type="Script" uid="uid://c5vhnx1modamr" path="res://addons/sgh_le/scenes/editor_camera.gd" id="4_ien0c"]
 [ext_resource type="Script" uid="uid://bdcu3kvxga6t3" path="res://addons/sgh_le/scenes/room_creation_dialog.gd" id="4_xpdnm"]
+[ext_resource type="Material" uid="uid://dwcwvbybcjx4e" path="res://addons/sgh_le/materials/blink.tres" id="5_53adg"]
 [ext_resource type="Texture2D" uid="uid://ditx70qecap7y" path="res://addons/sgh_le/textures/tile_cursor.png" id="5_qjw2d"]
 [ext_resource type="ButtonGroup" uid="uid://cntiefrla3jgv" path="res://addons/sgh_le/tools_button_group.tres" id="6_hpmdb"]
+[ext_resource type="Texture2D" uid="uid://dl6oij53hfog7" path="res://Levels/Sprites/Decorations/Boxes.png" id="6_jq70s"]
 [ext_resource type="Script" uid="uid://bra4kv4gxbjc6" path="res://addons/sgh_le/scenes/context_menu.gd" id="7_txer4"]
 [ext_resource type="Texture2D" uid="uid://br4ws8ca0y1ft" path="res://addons/sgh_le/textures/ToolTriangle.svg" id="9_qjw2d"]
+[ext_resource type="Texture2D" uid="uid://klcmbklmwlto" path="res://addons/sgh_le/textures/ToolAddSprite.svg" id="9_smjk1"]
 [ext_resource type="ButtonGroup" uid="uid://dwuniyeqd5la3" path="res://addons/sgh_le/layers_button_group.tres" id="10_w6ife"]
 [ext_resource type="Script" uid="uid://ywdruywormop" path="res://addons/sgh_le/scenes/tile_selection.gd" id="11_qjw2d"]
+[ext_resource type="Script" uid="uid://catoqgp6nx3i1" path="res://addons/sgh_le/scenes/sprite_selection.gd" id="13_3f68h"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ugtkf"]
 bg_color = Color(0.16386127, 0.1638613, 0.16386116, 1)
@@ -165,8 +169,18 @@ grow_vertical = 2
 [node name="tile_cursor" type="Sprite2D" parent="main/VBoxContainer/SubViewportContainer/SubViewport/level_proxies"]
 visible = false
 z_index = 840
+material = ExtResource("5_53adg")
 position = Vector2(992, 480)
 texture = ExtResource("5_qjw2d")
+
+[node name="sprite_cursor" type="Sprite2D" parent="main/VBoxContainer/SubViewportContainer/SubViewport/level_proxies"]
+visible = false
+modulate = Color(1, 1, 1, 0.58431375)
+z_index = 840
+material = ExtResource("5_53adg")
+position = Vector2(992, 480)
+scale = Vector2(2, 2)
+texture = ExtResource("6_jq70s")
 
 [node name="tools_margin_container" type="MarginContainer" parent="main"]
 visible = false
@@ -221,6 +235,15 @@ toggle_mode = true
 button_group = ExtResource("6_hpmdb")
 text = "      "
 icon = ExtResource("4_hpmdb")
+icon_alignment = 1
+
+[node name="add_sprite" type="Button" parent="main/tools_margin_container/tools"]
+layout_mode = 2
+theme_override_constants/h_separation = 0
+toggle_mode = true
+button_group = ExtResource("6_hpmdb")
+text = "      "
+icon = ExtResource("9_smjk1")
 icon_alignment = 1
 
 [node name="draw_collision" type="Button" parent="main/tools_margin_container/tools"]
@@ -424,6 +447,23 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
+[node name="sprite_selection" type="FoldableContainer" parent="main"]
+layout_mode = 0
+offset_top = 98.0
+offset_right = 128.0
+offset_bottom = 137.0
+title = "Sprite Selection"
+script = ExtResource("13_3f68h")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="main/sprite_selection"]
+custom_minimum_size = Vector2(0, 300)
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="main/sprite_selection/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
 [node name="room_creation_dialog" type="Window" parent="."]
 oversampling_override = 1.0
 position = Vector2i(0, 36)
@@ -480,7 +520,7 @@ item_0/id = 0
 item_1/text = "Place level start here"
 item_1/id = 1
 item_2/text = "Return to level origin"
-item_2/id = 6
+item_2/id = 2
 script = ExtResource("7_txer4")
 
 [node name="add_object" type="PopupMenu" parent="context_menu"]
@@ -498,7 +538,8 @@ item_3/id = 6
 [connection signal="button_down" from="main/VBoxContainer/HBoxContainer/level_config" to="main" method="_on_level_config_button_down"]
 [connection signal="button_down" from="main/tools_margin_container/tools/select" to="." method="_select_edit_mode" binds= [0]]
 [connection signal="button_down" from="main/tools_margin_container/tools/paint" to="." method="_select_edit_mode" binds= [1]]
-[connection signal="button_down" from="main/tools_margin_container/tools/draw_collision" to="." method="_select_edit_mode" binds= [2]]
+[connection signal="button_down" from="main/tools_margin_container/tools/add_sprite" to="." method="_select_edit_mode" binds= [2]]
+[connection signal="button_down" from="main/tools_margin_container/tools/draw_collision" to="." method="_select_edit_mode" binds= [3]]
 [connection signal="button_down" from="main/level_configuration/MarginContainer/VBoxContainer/close" to="main" method="_on_level_config_close_button_down"]
 [connection signal="button_down" from="main/no_rooms_yet_warning/create_room" to="main" method="_create_first_room"]
 [connection signal="close_requested" from="room_creation_dialog" to="room_creation_dialog" method="_close_dialog"]

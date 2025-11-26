@@ -1,6 +1,9 @@
-[gd_scene load_steps=2 format=3 uid="uid://b8yc4sybdycl"]
+[gd_scene load_steps=3 format=3 uid="uid://b8yc4sybdycl"]
 
 [ext_resource type="Script" uid="uid://maiftr741gry" path="res://Classes/Nodes/Trigger.gd" id="1_hp7oy"]
+
+[sub_resource type="FontVariation" id="FontVariation_hp7oy"]
+variation_transform = Transform2D(1, 0.135, 0, 1, 0, 0)
 
 [node name="Trigger" type="Area2D"]
 script = ExtResource("1_hp7oy")
@@ -35,6 +38,7 @@ grow_vertical = 2
 
 [node name="type" type="Label" parent="VBoxContainer"]
 layout_mode = 2
+theme_override_fonts/font = SubResource("FontVariation_hp7oy")
 text = "Send Player To Room"
 horizontal_alignment = 1
 

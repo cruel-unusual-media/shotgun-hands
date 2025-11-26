@@ -15,7 +15,7 @@ var _is_current_scene_a_level : bool = false
 
 signal scene_changed
 
-enum EditTool {SELECT, PAINT, DRAW_COL}
+enum EditTool {SELECT, PAINT, PLACE_SPRITE, DRAW_COL}
 
 var _paint_selected_atlas_coord : Vector2i = Vector2i.ZERO
 var _drawing : bool = false
@@ -40,23 +40,30 @@ var _current_tool : EditTool = EditTool.SELECT:
 		_moving_node = null
 		_selected_node = null
 		
+		$main/layers_margin_container/VBoxContainer/isolate_current.button_pressed = false
+		
 		match x:
 			EditTool.SELECT:
 				$main/tools_margin_container/tools.get_node("select").button_pressed = true
-				$main/layers_margin_container/VBoxContainer/isolate_current.button_pressed = false
 			EditTool.PAINT:
 				$main/tools_margin_container/tools.get_node("paint").button_pressed = true
+			EditTool.PLACE_SPRITE:
+				$main/tools_margin_container/tools.get_node("add_sprite").button_pressed = true
+				$main/sprite_selection.load_sprites()
 			EditTool.DRAW_COL:
 				$main/tools_margin_container/tools.get_node("draw_collision").button_pressed = true
-				$main/layers_margin_container/VBoxContainer/isolate_current.button_pressed = false
 
 
 
 
 var _previous_layer_name
 
+var _selected_sprite_name : String = "Boxes.png":
+	set(x):
+		_selected_sprite_name = x
+		$main/VBoxContainer/SubViewportContainer/SubViewport/level_proxies/sprite_cursor.texture = load("res://Levels/Sprites/Decorations/" + x)
+
 func _ready() -> void:
-	$main/VBoxContainer/SubViewportContainer/SubViewport/editor_camera._right_clicked.connect(_show_context_menu)
 	scene_changed.connect(_scene_changed)
 	_show_control("main")
 	$main/VBoxContainer/SubViewportContainer.gui_input.connect(_viewport_input)
@@ -74,6 +81,14 @@ func _process(delta: float) -> void:
 	
 	if !_is_current_scene_a_level:
 		return
+	
+	$main/sprite_selection.visible = _current_tool == EditTool.PLACE_SPRITE
+	$main/VBoxContainer/SubViewportContainer/SubViewport/level_proxies/sprite_cursor.visible = _current_tool == EditTool.PLACE_SPRITE
+	$main/VBoxContainer/SubViewportContainer/SubViewport/level_proxies/sprite_cursor.position = get_global_space_mouse_position()
+	
+	if _current_tool == EditTool.PLACE_SPRITE:
+		if Input.is_key_pressed(KEY_SHIFT):
+			$main/VBoxContainer/SubViewportContainer/SubViewport/level_proxies/sprite_cursor.position = $main/VBoxContainer/SubViewportContainer/SubViewport/level_proxies/sprite_cursor.position.snappedf(4.0)
 	
 	$main/tile_selection.visible = _current_tool == EditTool.PAINT
 	$main/VBoxContainer/SubViewportContainer/SubViewport/level_proxies/tile_cursor.visible = _current_tool == EditTool.PAINT
@@ -93,7 +108,7 @@ func _process(delta: float) -> void:
 				
 	if Input.is_key_pressed(KEY_ESCAPE):
 		_selected_node = null
-		if _current_tool == EditTool.PAINT:
+		if _current_tool != EditTool.SELECT:
 			_current_tool = EditTool.SELECT
 	
 	
@@ -124,6 +139,8 @@ func _select_edit_mode(id : int) -> void:
 		1:
 			_current_tool = EditTool.PAINT
 		2:
+			_current_tool = EditTool.PLACE_SPRITE
+		3:
 			_current_tool = EditTool.DRAW_COL
 
 
@@ -247,6 +264,17 @@ func _add_room_entrance_proxy(parent_proxy : Node, linked_entrance : Node, at_po
 	
 	return _new_level_entrance_proxy
 
+func _add_trigger_proxy(parent_proxy : Node, linked_trigger : Node, at_position : Vector2) -> Trigger:
+	var _new_trigger_proxy : Trigger = preload("res://addons/sgh_le/scenes/proxies/trigger.tscn").instantiate()
+	_new_trigger_proxy._is_proxy = true
+	level_edit_states[current_scene_root].node_clickboxes.append(_new_trigger_proxy.get_node("clickbox"))
+	parent_proxy.add_child(_new_trigger_proxy)
+	_new_trigger_proxy.owner = parent_proxy
+	_new_trigger_proxy.set_meta("linked_node", linked_trigger)
+	_new_trigger_proxy.global_position = at_position
+	
+	return _new_trigger_proxy
+
 
 func _copy_tilemap(from : TileMapLayer, to : TileMapLayer) -> void:
 	var _used_cells = from.get_used_cells()
@@ -363,10 +391,6 @@ func _create_level_start(owner_node : Node, room_proxy : Node) -> void:
 func _create_doorway(parent_node : Node, parent_proxy : Node, at_position : Vector2):
 	var _new_entrance : Doorway = Doorway.new()
 	add_node_to_level(_new_entrance, parent_node)
-	_new_entrance.collision_layer = 4
-	_new_entrance.collision_mask = 4
-	var _entrance_collider = _new_entrance.setup_collider()
-	add_node_to_level(_entrance_collider, _new_entrance)
 	
 	_new_entrance.global_position = at_position
 	
@@ -385,7 +409,7 @@ func _create_trigger(parent_node : Node, parent_proxy : Node, at_position : Vect
 	
 	_new_trigger.global_position = at_position
 	
-	var _proxy_trigger = _add_room_entrance_proxy(parent_proxy, _new_trigger, at_position)
+	var _proxy_trigger = _add_trigger_proxy(parent_proxy, _new_trigger, at_position)
 	
 	_new_trigger.set_meta("linked_proxy", _proxy_trigger)
 
@@ -405,9 +429,22 @@ func _move_level_start(room_name : String, new_position : Vector2) -> void:
 	_current_level_start_proxy.position = new_position
 	_current_level_start.position = new_position
 
+
+func _place_currently_selected_sprite() -> void:
+	var _new_sprite : Sprite2D = Sprite2D.new()
+	_new_sprite.texture = load("res://Levels/Sprites/Decorations/" + _selected_sprite_name)
+	add_node_to_level(_new_sprite, get_current_room_proxy().get_node("main"))
+	if Input.is_key_pressed(KEY_SHIFT):
+		_new_sprite.global_position = get_global_space_mouse_position().snappedf(4.0)
+	else:
+		_new_sprite.global_position = get_global_space_mouse_position()
+	
+	_new_sprite.scale = Vector2(2.0, 2.0)
+
+
 func _delete_current_room() -> void:
 	log_msg("Deleting the current room")
-	_selection_outline_panel.reparent(self)
+	_selection_outline_panel.reparent(self, false)
 	if current_scene_root.get_children().size() > 0:
 		current_scene_root.get_node(level_edit_states[current_scene_root].selected_room).queue_free()
 		get_current_room_proxy().queue_free()
@@ -416,6 +453,16 @@ func _delete_current_room() -> void:
 		edit_room_idx(0)
 	else:
 		$main.update_room_list()
+
+
+func _delete_selected_object() -> void:
+	_selection_outline_panel.reparent(self, false)
+	
+	if _selected_node.has_node("clickbox"):
+		level_edit_states[current_scene_root].node_clickboxes.erase(_selected_node.get_node("clickbox"))
+	
+	_selected_node.get_meta("linked_node").queue_free()
+	_selected_node.queue_free()
 
 
 func edit_room_idx(idx : int) -> void:
@@ -461,16 +508,23 @@ func context_menu_option_chosen(id : int) -> void:
 	match id:
 		1:
 			_move_level_start(level_edit_states[current_scene_root].selected_room, _last_context_menu_open_pos)
-		6:
+		2:
 			$main/VBoxContainer/SubViewportContainer/SubViewport/editor_camera._return_to_origin()
+		20:
+			_delete_selected_object()
 
-func _show_context_menu(at_position : Vector2i) -> void:
+func _show_node_context_menu() -> void:
+	_last_context_menu_open_pos = get_global_space_mouse_position()
+	$context_menu._update_node_context_menu()
+	$context_menu.popup(Rect2i(get_global_mouse_position() + Vector2(0, 75), Vector2i(200, 400)))
+
+func _show_context_menu() -> void:
 	if !_is_current_scene_a_level or current_scene_root.get_children().size() == 0 or _current_tool != EditTool.SELECT:
 		return
 	
 	_last_context_menu_open_pos = get_global_space_mouse_position()
 	$context_menu._update_context_menu()
-	$context_menu.popup(Rect2i(at_position + Vector2i(0, 75), Vector2i(200, 400)))
+	$context_menu.popup(Rect2i(get_global_mouse_position() + Vector2(0, 75), Vector2i(200, 400)))
 
 func get_currently_edited_layer_name() -> String:
 	var _layer_buttons = $main/layers_margin_container/VBoxContainer
@@ -572,33 +626,60 @@ func _viewport_input(event) -> void:
 					
 					_moving_node = null
 					_selected_node = null
+				
+				elif _current_tool == EditTool.PLACE_SPRITE:
+					_place_currently_selected_sprite()
 					
 		
 		elif event.button_index == MOUSE_BUTTON_RIGHT:
-			_erasing = event.pressed
-			
-			if !event.pressed:
-				if _current_tool == EditTool.PAINT:
-					_erase_lifted()
+			if _current_tool == EditTool.PAINT:
+				_erasing = event.pressed
+				
+				if !event.pressed:
+					if _current_tool == EditTool.PAINT:
+						_erase_lifted()
+			else:
+				if event.pressed:
+					_click_clickbox_at_pos(get_global_space_mouse_position(), false)
+					if _selected_node:
+						_show_node_context_menu()
+						
+					else:
+						_show_context_menu()
 	
 	elif event is InputEventMouseMotion:
 		if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and _selected_node and not _moving_node:
 			_move_grab_offset = _selected_node.global_position - get_global_space_mouse_position()
 			_moving_node = _selected_node
+
+
+func _click_clickbox_at_pos(_clickpos : Vector2, allow_move : bool = true) -> Node:
+	for _clickbox : Control in level_edit_states[current_scene_root].node_clickboxes:
+		var _global_clickbox_begin = _clickbox.get_begin() + _clickbox.get_parent().position
+		var _global_clickbox_end = _clickbox.get_end() + _clickbox.get_parent().position
+					
+		if _clickpos.x >= _global_clickbox_begin.x and _clickpos.x <= _global_clickbox_end.x and _clickpos.y >= _global_clickbox_begin.y and _clickpos.y <= _global_clickbox_end.y:
+			return _clickbox_clicked(_clickbox, allow_move)
 	
+	_selected_node = null
+	return null
+	
+
 	
 func log_msg(message : String) -> void:
 	print(" * ", message)
 
 
-func _clickbox_clicked(clickbox_control : Control) -> void:
-	if _selected_node == clickbox_control.get_parent():
+func _clickbox_clicked(clickbox_control : Control, allow_move : bool = true) -> Node:
+	if _selected_node == clickbox_control.get_parent() and allow_move:
 		_move_grab_offset = clickbox_control.get_parent().global_position - get_global_space_mouse_position()
 		_moving_node = clickbox_control.get_parent()
 	else:
 		_selection_outline_panel.reparent(clickbox_control, false)
 		_selection_outline_panel.visible = true
 		_selected_node = clickbox_control.get_parent()
+	
+	return _selected_node
 
 
 func add_object_option_pressed(id : int) -> void:

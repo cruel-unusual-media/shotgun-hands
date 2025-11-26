@@ -13,4 +13,10 @@ func _update_context_menu() -> void:
 	
 	add_submenu_node_item("Add object...", $add_object, 0)
 	add_item("Place level start here", 1)
-	add_item("Return to level origin", 6)
+	add_item("Return to level origin", 2)
+
+
+func _update_node_context_menu() -> void:
+	clear()
+	
+	add_item("Delete object", 20)

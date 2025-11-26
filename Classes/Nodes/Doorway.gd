@@ -18,21 +18,10 @@ func _ready() -> void:
 	if !Engine.is_editor_hint():
 		get_parent().get_parent().get_parent().submit_doorway(self)
 	
-
-func setup_collider() -> CollisionShape2D: #to be called and used by the level editor
-	print("add collider node")
-	var _new_collision_shape : CollisionShape2D = CollisionShape2D.new()
-	_new_collision_shape.shape = RectangleShape2D.new()
-	_new_collision_shape.shape.size = Vector2(40,40)
-	_new_collision_shape.name = "collider"
 	
-	return _new_collision_shape
-
 func _update_self() -> void: #should only be called on non-proxies
 	if !Engine.is_editor_hint():
 		return
-	
-	get_node("collider").shape.size = doorway_size
 	
 	if !has_meta("linked_proxy"):
 		return
