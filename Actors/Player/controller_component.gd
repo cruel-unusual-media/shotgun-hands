@@ -37,6 +37,11 @@ var player_focus : Node2D
 @onready var focus_def_y = player_focus.position.y
 var can_melee : bool = true
 
+var overheat : float = 0.0
+const OVERHEAT_DROP_RATE : float = 1/1.7
+const OVERHEATED_DECAY_TIME : float = 12
+var overheated : bool = false
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	hitbox = player.get_node("Collidor")
@@ -46,7 +51,12 @@ func _ready() -> void:
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
+func _physics_process(delta: float) -> void:
+	if not overheated:
+		overheat -= OVERHEAT_DROP_RATE * delta
+		if overheat <= 0:
+			overheat = 0
+	
 	# Add the gravity.
 	if not player.is_on_floor():
 		player.velocity += player.get_gravity() * delta
@@ -94,8 +104,6 @@ func _process(delta: float) -> void:
 	
 	handle_fire()
 	
-
-
 	player.move_and_slide()
 
 
@@ -139,7 +147,7 @@ func end_crouch() -> void:
 	player_focus.position.y = focus_def_y
 
 func handle_fire() -> void:
-	if not reloading:
+	if not reloading and not overheated:
 		var shot = false
 		var shots = 0
 		if Input.is_action_pressed("fire_left"):
@@ -150,6 +158,9 @@ func handle_fire() -> void:
 			shot = secondary_ammo.fire(recticle.normal.angle())
 			if shot:
 				shots += 1
+		overheat += shots
+		if overheat >= 8:
+			begin_overheat()
 		if not player.is_on_floor() and shot:
 			shotgun_jump_timer.start()
 			can_shotgun_jump = true
@@ -170,6 +181,16 @@ func handle_fire() -> void:
 		melee_timer.start()
 		can_melee = false
 
+func begin_overheat() -> void:
+	overheated = true
+	overheat = 8
+	melee_area.damage = 150
+	melee_timer.wait_time = 0.2
+	var overtween = get_tree().create_tween()
+	overtween.tween_property(self, "overheat", 0, OVERHEATED_DECAY_TIME)
+	overtween.tween_property(self, "overheated", false, 0)
+	overtween.tween_property(melee_area, "damage", 50, 0)
+	overtween.tween_property(melee_timer, "wait_time", 0.5, 0)
 
 func _on_shotgun_jump_timer_timeout() -> void:
 	can_shotgun_jump = false

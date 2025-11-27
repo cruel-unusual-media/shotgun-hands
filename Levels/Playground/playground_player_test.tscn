@@ -1,6 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://bgpx38eqttxhg"]
+[gd_scene load_steps=10 format=3 uid="uid://bgpx38eqttxhg"]
 
 [ext_resource type="PackedScene" uid="uid://crs1vr2enasav" path="res://Actors/Player/player.tscn" id="1_ardo3"]
+[ext_resource type="PackedScene" uid="uid://dlqa1fyyky5xj" path="res://Actors/Shared/damagable_component.tscn" id="2_hkjpj"]
+[ext_resource type="PackedScene" uid="uid://dqdedq5ydc4p3" path="res://Actors/Shared/health_component.tscn" id="3_l25i5"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_ardo3"]
 
@@ -11,6 +13,12 @@ size = Vector2(103, 185)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ardo3"]
 size = Vector2(103, 69)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_a80q8"]
+size = Vector2(20, 48)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_486bd"]
+size = Vector2(20, 48)
 
 [node name="PlaygroundPlayerTest" type="Node2D"]
 
@@ -57,3 +65,30 @@ polygon = PackedVector2Array(0, 0, 1, 0, 1, 1, 0, 1)
 
 [node name="Player" parent="." instance=ExtResource("1_ardo3")]
 position = Vector2(449, 223)
+
+[node name="CharacterBody2D" type="CharacterBody2D" parent="."]
+position = Vector2(987, 648)
+
+[node name="Polygon2D" type="Polygon2D" parent="CharacterBody2D"]
+polygon = PackedVector2Array(10, 0, 10, -48, -10, -48, -10, 0)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D"]
+position = Vector2(0, -24)
+shape = SubResource("RectangleShape2D_a80q8")
+
+[node name="DamagableComponent" parent="CharacterBody2D" node_paths=PackedStringArray("health_component") instance=ExtResource("2_hkjpj")]
+health_component = NodePath("../HealthComponent")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D/DamagableComponent"]
+position = Vector2(0, -24)
+shape = SubResource("RectangleShape2D_486bd")
+
+[node name="HealthComponent" parent="CharacterBody2D" node_paths=PackedStringArray("health_bar") instance=ExtResource("3_l25i5")]
+health_max = 10000
+health_bar = NodePath("../ProgressBar")
+
+[node name="ProgressBar" type="ProgressBar" parent="CharacterBody2D"]
+offset_left = -36.0
+offset_top = -78.0
+offset_right = 38.0
+offset_bottom = -51.0
