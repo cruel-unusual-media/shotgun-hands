@@ -10,7 +10,7 @@ script = ExtResource("1_hp7oy")
 metadata/_custom_type_script = "uid://maiftr741gry"
 
 [node name="clickbox" type="ColorRect" parent="."]
-anchors_preset = 8
+anchors_preset = -1
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
