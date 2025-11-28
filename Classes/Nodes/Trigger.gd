@@ -66,6 +66,7 @@ func _update_self() -> void: #should only be called on non-proxies
 		
 
 func _update_proxy_self() -> void:
+	print(name, get_parent().get_parent())
 	get_node("clickbox").size = trigger_size
 	get_node("clickbox").position = trigger_size / -2.0
 	get_node("VBoxContainer/label").text = trigger_label
@@ -76,6 +77,7 @@ func _update_proxy_self() -> void:
 		get_node("VBoxContainer/type").text = "Freeze"
 	else:
 		get_node("VBoxContainer/type").text = "<None>"
+	
 func _on_body_entered(_body) -> void:
 	trigger_entered.emit()
 	_execute_entry_action()

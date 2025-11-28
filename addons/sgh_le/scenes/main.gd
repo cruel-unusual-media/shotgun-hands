@@ -63,6 +63,8 @@ var _selected_sprite_name : String = "Boxes.png":
 		_selected_sprite_name = x
 		$main/VBoxContainer/SubViewportContainer/SubViewport/level_proxies/sprite_cursor.texture = load("res://Levels/Sprites/Decorations/" + x)
 
+var _verbose_logging : bool = false
+
 func _ready() -> void:
 	scene_changed.connect(_scene_changed)
 	_show_control("main")
@@ -155,6 +157,8 @@ func _load_new_level() -> void:
 	for _room : LevelRoom in current_scene_root.get_children():
 		var _room_proxy : LevelRoom = _add_room_proxy(_room.name, _new_level_proxy, _room)
 		
+		edit_room_idx(0)
+		
 		for _layer : Node2D in _room.get_children():
 			var _layer_proxy : Node2D = _add_layer_proxy(_layer.name, _room_proxy, _layer)
 			
@@ -164,6 +168,7 @@ func _load_new_level() -> void:
 					_copy_tilemap(_object, _new_tilemaplayer_proxy)
 				
 				elif _object is LevelStart:
+					print("found level start")
 					var _new_level_start_proxy = _add_level_start_proxy(_layer_proxy, _object)
 					_new_level_start_proxy.position = _object.position
 				
@@ -177,8 +182,6 @@ func _load_new_level() -> void:
 				
 				elif _object is Sprite2D:
 					_add_sprite_proxy(_layer_proxy, _object)
-	
-	edit_room_idx(0)
 
 
 func _add_origin_sprite(parent_room_proxy : LevelRoom) -> void:
@@ -200,6 +203,9 @@ func _add_level_proxy(proxy_name : String, owner : Node) -> Node:
 
 func _add_room_proxy(proxy_name : String, owner : Node, linked_node : Node) -> Node:
 	#print("add room proxy node")
+	
+	level_edit_states[current_scene_root].room_node_clickboxes.get_or_add(proxy_name, [])
+	
 	var _new_room_proxy : LevelRoom = LevelRoom.new()
 	owner.add_child(_new_room_proxy)
 	_new_room_proxy.name = proxy_name
@@ -272,6 +278,7 @@ func _add_room_entrance_proxy(parent_proxy : Node, linked_entrance : Node, at_po
 	return _new_level_entrance_proxy
 
 func _add_trigger_proxy(parent_proxy : Node, linked_trigger : Node, at_position : Vector2) -> Trigger:
+	print("adding triggger_proxy")
 	var _new_trigger_proxy : Trigger = preload("res://addons/sgh_le/scenes/proxies/trigger.tscn").instantiate()
 	_new_trigger_proxy._is_proxy = true
 	level_edit_states[current_scene_root].room_node_clickboxes[get_current_room_name()].append(_new_trigger_proxy.get_node("clickbox"))
@@ -643,6 +650,8 @@ func _debug_func(id : int) -> void:
 	match id:
 		0:
 			get_current_level_proxy().print_tree_pretty()
+		1:
+			_verbose_logging = !_verbose_logging
 
 func _stroke_lifted() -> void:
 	var _tilemap_proxy = get_current_room_proxy().get_node(get_currently_edited_layer_path())
@@ -732,6 +741,10 @@ func _click_clickbox_at_pos(_clickpos : Vector2, allow_move : bool = true) -> No
 	
 func log_msg(message : String) -> void:
 	print(" * ", message)
+
+func log_msg_verbose(message : String) -> void:
+	if _verbose_logging:
+		print("> ", message)
 
 
 func _clickbox_clicked(clickbox_control : Control, allow_move : bool = true) -> Node:

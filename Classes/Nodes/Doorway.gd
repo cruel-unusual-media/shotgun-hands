@@ -1,4 +1,5 @@
 @tool
+@icon("res://addons/sgh_le/textures/Doorway.svg")
 extends Node2D
 class_name Doorway
 

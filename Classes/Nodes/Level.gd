@@ -1,3 +1,4 @@
+@icon("res://sh_logo.png")
 extends Node2D
 class_name Level
 
@@ -11,7 +12,8 @@ var _can_enter_doorways : bool = true
 var _last_entered_doorway : Doorway
 
 func _ready() -> void:
-	initialize_level()
+	if !Engine.is_editor_hint():
+		initialize_level()
 	#_level_start = $room1/LevelStart #ONLY HERE FOR DEBUGGING LEVEL, ONCE REAL LEVELS HAVE BEEN IMPLEMENTED THIS NEEDS TO GO
 
 
