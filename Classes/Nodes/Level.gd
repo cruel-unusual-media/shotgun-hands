@@ -6,7 +6,7 @@ class_name Level
 
 #A lot of these values are @exports. This is because only exported values get saved when packing a scene. Thus, if we want the level editor to be able to store information, we need exports
 
-@export var _level_start : LevelStart #set by the level editor
+@export var _level_start : LevelStart ##set by the level editor, don't touch
 
 var _can_enter_doorways : bool = true
 var _last_entered_doorway : Doorway

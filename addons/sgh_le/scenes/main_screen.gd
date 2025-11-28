@@ -63,6 +63,9 @@ func update_room_list() -> void:
 		_rooms_popup.remove_item(_rooms_popup.item_count - 1)
 	
 	var _id : int = 2
+	if !get_parent()._is_current_scene_a_level:
+		return
+	
 	for room : LevelRoom in get_parent().current_scene_root.get_children():		
 		_rooms_popup.add_radio_check_item(room.name, _id)
 		if room.name == get_parent().level_edit_states[get_parent().current_scene_root].selected_room:

@@ -178,7 +178,9 @@ func _load_new_level() -> void:
 					_object._update_self()
 				
 				elif _object is Trigger:
-					_add_trigger_proxy(_layer_proxy, _object, _object.global_position)
+					var _new_trigger_proxy = _add_trigger_proxy(_layer_proxy, _object, _object.global_position)
+					_object.set_meta("linked_proxy", _new_trigger_proxy)
+					_object._update_self()
 				
 				elif _object is Sprite2D:
 					_add_sprite_proxy(_layer_proxy, _object)
@@ -278,7 +280,7 @@ func _add_room_entrance_proxy(parent_proxy : Node, linked_entrance : Node, at_po
 	return _new_level_entrance_proxy
 
 func _add_trigger_proxy(parent_proxy : Node, linked_trigger : Node, at_position : Vector2) -> Trigger:
-	print("adding triggger_proxy")
+	#print("\n\nadding trigger proxy to parent ", parent_proxy, " with linked proxy ", linked_trigger)
 	var _new_trigger_proxy : Trigger = preload("res://addons/sgh_le/scenes/proxies/trigger.tscn").instantiate()
 	_new_trigger_proxy._is_proxy = true
 	level_edit_states[current_scene_root].room_node_clickboxes[get_current_room_name()].append(_new_trigger_proxy.get_node("clickbox"))
@@ -286,6 +288,8 @@ func _add_trigger_proxy(parent_proxy : Node, linked_trigger : Node, at_position 
 	_new_trigger_proxy.owner = parent_proxy
 	_new_trigger_proxy.set_meta("linked_node", linked_trigger)
 	_new_trigger_proxy.global_position = at_position
+	
+	#print("proxy parent: ", _new_trigger_proxy.get_parent(), "(", _new_trigger_proxy, " ", parent_proxy)
 	
 	return _new_trigger_proxy
 
@@ -431,6 +435,7 @@ func _create_doorway(parent_node : Node, parent_proxy : Node, at_position : Vect
 
 
 func _create_trigger(parent_node : Node, parent_proxy : Node, at_position : Vector2) -> Trigger:
+	print("creating trigger object")
 	var _new_trigger : Trigger = Trigger.new()
 	add_node_to_level(_new_trigger, parent_node)
 	_new_trigger.collision_layer = 4

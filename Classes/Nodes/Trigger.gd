@@ -35,13 +35,11 @@ signal trigger_entered
 signal trigger_exited
 
 func _ready() -> void:
-	#if !Engine.is_editor_hint():
-		#
-	body_entered.connect(_on_body_entered)
-	body_exited.connect(_on_body_exited)
+	if !Engine.is_editor_hint():
+		body_entered.connect(_on_body_entered)
+		body_exited.connect(_on_body_exited)
 	
-func setup_collider() -> CollisionShape2D: #to be called and used by the level editor
-	print("add collider node")
+func setup_collider() -> CollisionShape2D: ##to be called and used by the level editor, on non-proxies
 	var _new_collision_shape : CollisionShape2D = CollisionShape2D.new()
 	_new_collision_shape.shape = RectangleShape2D.new()
 	_new_collision_shape.shape.size = Vector2(40,40)
@@ -57,7 +55,7 @@ func _update_self() -> void: #should only be called on non-proxies
 	
 	if !has_meta("linked_proxy"):
 		return
-		
+
 	var _linked_proxy : Trigger = get_meta("linked_proxy")
 		
 	_linked_proxy.trigger_label = trigger_label
@@ -66,7 +64,10 @@ func _update_self() -> void: #should only be called on non-proxies
 		
 
 func _update_proxy_self() -> void:
-	print(name, get_parent().get_parent())
+	if !_is_proxy:
+		print("update proxy self requested while I am not a proxy")
+		return
+		
 	get_node("clickbox").size = trigger_size
 	get_node("clickbox").position = trigger_size / -2.0
 	get_node("VBoxContainer/label").text = trigger_label
