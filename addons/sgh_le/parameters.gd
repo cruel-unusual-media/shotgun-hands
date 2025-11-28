@@ -9,13 +9,15 @@ var hide_parameters : bool = false #set by the main plugin. Do not touch.
 var _exposed_parameter_names : Array[String] = [
 	"trigger_label",
 	"trigger_size",
-	"enter_target_object",
-	"enter_action",
-	"exit_target_object",
+	"entry_action_target_object",
+	"entry_action",
+	"exit_action_target_object",
 	"exit_action",
 	"target_doorway_label",
 	"target_doorway_room_name",
-	"doorway_label"
+	"doorway_label",
+	"description",
+	"initial_velocity"
 ]
 
 func _can_handle(object):

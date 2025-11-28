@@ -21,7 +21,6 @@ func initialize_level() -> void:
 		
 		for _child in _room.get_node("main").get_children():
 			if _child is LevelStart:
-				print("found level start")
 				_level_start = _child
 				_has_level_start = true
 				break
@@ -37,26 +36,12 @@ func initialize_level() -> void:
 	PersistentUI.return_to_root()
 
 
-func enter_room(room_to_enter_name : String, doorway_label : String, origin_doorway : Doorway) -> void:
-	_last_entered_doorway = origin_doorway
-	
-	print(_can_enter_doorways)
-	if !_can_enter_doorways:
-		return
-	
-	_can_enter_doorways = false
-	var room_to_enter : LevelRoom = get_node(room_to_enter_name)
-	var doorway : Doorway = room_to_enter.get_doorway_with_label(doorway_label)
-	
-	if doorway.get_parent().get_parent() != room_to_enter:
-		GameLogger.printerr_as_script(self, "enter_room(): Specified entrance is not part of the specified room!")
-		return
-		
+func enter_room(doorway : Doorway) -> void:
 	for _room in get_children():
 		if _room is not LevelRoom:
 			continue
 		
-		if _room == room_to_enter:
+		if _room == doorway.get_parent().get_parent():
 			_freeze_room(_room, false)
 		else:
 			_freeze_room(_room, true)
@@ -73,13 +58,6 @@ func _freeze_room(room : LevelRoom, state : bool) -> void:
 			room.position.y = 10000
 			room.set_deferred("process_mode", Node.PROCESS_MODE_DISABLED)
 
-
-func submit_doorway(doorway : Doorway) -> void:
-	print("submit ", doorway)
-	if doorway.can_enter:
-		doorway.doorway_entered.connect(enter_room.bind(doorway.target_doorway_room_name, doorway.target_doorway_label, doorway))
-	
-	doorway.doorway_exited.connect(func(): await get_tree().create_timer(0.01).timeout; _doorway_exited(doorway))
 
 func _doorway_exited(doorway : Doorway) -> void:
 	print(doorway, _last_entered_doorway)

@@ -1,0 +1,44 @@
+[gd_scene load_steps=6 format=4 uid="uid://dop1didvrbgdh"]
+
+[ext_resource type="Script" uid="uid://b8jimhiabxqwq" path="res://Classes/Nodes/Level.gd" id="1_hacfa"]
+[ext_resource type="Script" uid="uid://cpya70aw6wa8c" path="res://Classes/Nodes/LevelRoom.gd" id="2_q6hl6"]
+[ext_resource type="TileSet" uid="uid://bcf80k8c2i56u" path="res://Tilesets/Resources/placeholder.tres" id="3_3t2an"]
+[ext_resource type="TileSet" uid="uid://ctferlmu81uug" path="res://Tilesets/Resources/placeholder_overlay.tres" id="4_vigoe"]
+[ext_resource type="Script" uid="uid://dgh8puau3rarb" path="res://Classes/Nodes/LevelStart.gd" id="5_jkrk6"]
+
+[node name="Aaaaaa" type="Node2D" groups=["level"]]
+script = ExtResource("1_hacfa")
+
+[node name="asdasd" type="Node2D" parent="."]
+script = ExtResource("2_q6hl6")
+
+[node name="background" type="Node2D" parent="asdasd"]
+
+[node name="background_tiles" type="TileMapLayer" parent="asdasd/background"]
+modulate = Color(0.5, 0.5, 0.5, 1)
+scale = Vector2(2, 2)
+tile_set = ExtResource("3_3t2an")
+collision_enabled = false
+
+[node name="foreground" type="Node2D" parent="asdasd"]
+
+[node name="foreground_tiles" type="TileMapLayer" parent="asdasd/foreground"]
+modulate = Color(1, 1, 1, 0.5)
+scale = Vector2(2, 2)
+tile_set = ExtResource("3_3t2an")
+collision_enabled = false
+
+[node name="main" type="Node2D" parent="asdasd"]
+
+[node name="main_back_tiles" type="TileMapLayer" parent="asdasd/main"]
+scale = Vector2(2, 2)
+tile_map_data = PackedByteArray("AAANAAUAAAAAAAEAAAAMAAUAAAAAAAEAAAALAAUAAAAAAAEAAAAKAAUAAAAAAAEAAAAJAAUAAAAAAAEAAAAIAAUAAAAAAAEAAAAHAAUAAAAAAAEAAAAGAAUAAAAAAAEAAAAFAAUAAAAAAAEAAAAEAAUAAAAAAAEAAAADAAUAAAAAAAEAAAAOAAUAAAAAAAEAAAACAAUAAAAAAAEAAAABAAUAAAAAAAEAAAAAAAUAAAAAAAEAAAD//wUAAAAAAAEAAAD+/wUAAAAAAAEAAAA=")
+tile_set = ExtResource("3_3t2an")
+
+[node name="main_front_tiles" type="TileMapLayer" parent="asdasd/main"]
+scale = Vector2(2, 2)
+tile_map_data = PackedByteArray("AAAEAAUAAAAAAAAAAAAFAAUAAAAAAAAAAAAGAAUAAAAAAAAAAAAHAAUAAAAAAAAAAAAIAAUAAAAAAAAAAAAJAAUAAAAAAAAAAAAKAAUAAAAAAAAAAAALAAUAAAAAAAAAAAAMAAUAAAAAAAAAAAANAAUAAAAAAAAAAAA=")
+tile_set = ExtResource("4_vigoe")
+
+[node name="level_start" type="Node2D" parent="asdasd/main"]
+script = ExtResource("5_jkrk6")

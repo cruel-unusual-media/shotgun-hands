@@ -10,9 +10,9 @@ var _is_proxy : bool = false
 			_update_self()
 
 func _ready() -> void:
-	if !Engine.is_editor_hint():
-		get_parent().get_parent().get_parent().submit_doorway(self)
-	
+	#if !Engine.is_editor_hint():
+		#get_parent().get_parent().get_parent().submit_doorway(self)
+	pass
 	
 func _update_self() -> void: #should only be called on non-proxies
 	if !Engine.is_editor_hint():

@@ -53,7 +53,7 @@ var _current_tool : EditTool = EditTool.SELECT:
 			EditTool.DRAW_COL:
 				$main/tools_margin_container/tools.get_node("draw_collision").button_pressed = true
 
-
+var _selection_box : Control
 
 
 var _previous_layer_name
@@ -249,7 +249,7 @@ func _add_tilemaplayer_proxy(tilemaplayer_name : String, parent_proxy : Node, li
 func _add_level_start_proxy(proxy_owner : Node, linked_node : Node) -> LevelStart:
 	#print("adding level start proxy")
 	var _new_level_start_proxy : LevelStart = preload("res://addons/sgh_le/scenes/proxies/level_start.tscn").instantiate()
-	level_edit_states[current_scene_root].node_clickboxes.append(_new_level_start_proxy.get_node("clickbox"))
+	level_edit_states[current_scene_root].room_node_clickboxes[get_current_room_name()].append(_new_level_start_proxy.get_node("clickbox"))
 	proxy_owner.add_child(_new_level_start_proxy)
 	_new_level_start_proxy.owner = proxy_owner
 	_new_level_start_proxy.set_meta("linked_node", linked_node)
@@ -263,7 +263,7 @@ func _add_room_entrance_proxy(parent_proxy : Node, linked_entrance : Node, at_po
 	print("adding proxy")
 	var _new_level_entrance_proxy : Doorway = preload("res://addons/sgh_le/scenes/proxies/doorway.tscn").instantiate()
 	_new_level_entrance_proxy._is_proxy = true
-	level_edit_states[current_scene_root].node_clickboxes.append(_new_level_entrance_proxy.get_node("clickbox"))
+	level_edit_states[current_scene_root].room_node_clickboxes[get_current_room_name()].append(_new_level_entrance_proxy.get_node("clickbox"))
 	parent_proxy.add_child(_new_level_entrance_proxy)
 	_new_level_entrance_proxy.owner = parent_proxy
 	_new_level_entrance_proxy.set_meta("linked_node", linked_entrance)
@@ -274,7 +274,7 @@ func _add_room_entrance_proxy(parent_proxy : Node, linked_entrance : Node, at_po
 func _add_trigger_proxy(parent_proxy : Node, linked_trigger : Node, at_position : Vector2) -> Trigger:
 	var _new_trigger_proxy : Trigger = preload("res://addons/sgh_le/scenes/proxies/trigger.tscn").instantiate()
 	_new_trigger_proxy._is_proxy = true
-	level_edit_states[current_scene_root].node_clickboxes.append(_new_trigger_proxy.get_node("clickbox"))
+	level_edit_states[current_scene_root].room_node_clickboxes[get_current_room_name()].append(_new_trigger_proxy.get_node("clickbox"))
 	parent_proxy.add_child(_new_trigger_proxy)
 	_new_trigger_proxy.owner = parent_proxy
 	_new_trigger_proxy.set_meta("linked_node", linked_trigger)
@@ -313,8 +313,11 @@ func _scene_changed(new_scene : Node) -> void:
 		else:
 			edit_room(level_edit_states[current_scene_root].selected_room)
 	
-		for _level_root in level_edit_states:
-			_level_root.visible = _level_root == new_scene
+		for _level_root in $main/VBoxContainer/SubViewportContainer/SubViewport/level_proxies.get_children():
+			if _level_root is Level:
+				_level_root.visible = _level_root.name == new_scene.name
+	
+	$main.update_room_list()
 
 
 func _show_control(control_name : String) -> void:
@@ -336,6 +339,8 @@ func create_room(room_name : String) -> void:
 	log_msg("Creating room \"" + room_name + "\"")
 	var _new_room_node : LevelRoom = LevelRoom.new()
 	_new_room_node.name = room_name
+	
+	level_edit_states[current_scene_root].room_node_clickboxes[room_name] = []
 	
 	undo_redo.add_do_method(self, "add_node_to_level", _new_room_node, current_scene_root)
 	undo_redo.add_undo_method(_new_room_node, "queue_free")
@@ -388,7 +393,6 @@ func create_room(room_name : String) -> void:
 	_new_front_tilemap.scale = Vector2(2,2)
 	add_node_to_level(_new_front_tilemap, _new_main_layer)
 	_add_tilemaplayer_proxy("main_front_tiles", _layer_proxy, _new_front_tilemap)
-	print(_new_front_tilemap.tile_set)
 	
 	edit_room(room_name)
 	
@@ -419,7 +423,7 @@ func _create_doorway(parent_node : Node, parent_proxy : Node, at_position : Vect
 	_new_entrance.set_meta("linked_proxy", _proxy_entrance)
 
 
-func _create_trigger(parent_node : Node, parent_proxy : Node, at_position : Vector2):
+func _create_trigger(parent_node : Node, parent_proxy : Node, at_position : Vector2) -> Trigger:
 	var _new_trigger : Trigger = Trigger.new()
 	add_node_to_level(_new_trigger, parent_node)
 	_new_trigger.collision_layer = 4
@@ -432,6 +436,8 @@ func _create_trigger(parent_node : Node, parent_proxy : Node, at_position : Vect
 	var _proxy_trigger = _add_trigger_proxy(parent_proxy, _new_trigger, at_position)
 	
 	_new_trigger.set_meta("linked_proxy", _proxy_trigger)
+	
+	return _new_trigger
 
 
 func _move_level_start(room_name : String, new_position : Vector2) -> void:
@@ -468,14 +474,17 @@ func _place_currently_selected_sprite() -> void:
 func _delete_current_room() -> void:
 	log_msg("Deleting the current room")
 	_selection_outline_panel.reparent(self, false)
+	
+	level_edit_states[current_scene_root].selected_room = ""
+	
 	if current_scene_root.get_children().size() > 0:
 		current_scene_root.get_node(level_edit_states[current_scene_root].selected_room).queue_free()
 		get_current_room_proxy().queue_free()
 	await get_tree().create_timer(0.1).timeout
 	if current_scene_root.get_children().size() > 0:
 		edit_room_idx(0)
-	else:
-		$main.update_room_list()
+	
+	$main.update_room_list()
 
 
 func _delete_selected_object() -> void:
@@ -483,7 +492,7 @@ func _delete_selected_object() -> void:
 	_selection_outline_panel.reparent(self, false)
 	
 	if _selected_proxy.has_node("clickbox"):
-		level_edit_states[current_scene_root].node_clickboxes.erase(_selected_proxy.get_node("clickbox"))
+		level_edit_states[current_scene_root].room_node_clickboxes[get_current_room_name()].erase(_selected_proxy.get_node("clickbox"))
 	
 	_selected_proxy.get_meta("linked_node").get_parent().remove_child(_selected_proxy.get_meta("linked_node"))
 	_selected_proxy.call_deferred("queue_free")
@@ -542,6 +551,7 @@ func create_new_level_scene() -> void:
 	await _dialog.file_selected
 	
 	var _new_root_node : Level = Level.new() #setup scene to be created
+	_new_root_node.add_to_group("level", true)
 	_new_root_node.name = _scene_path.get_file().get_basename().to_pascal_case()
 	var _new_packed_scene : PackedScene = PackedScene.new()
 	_new_packed_scene.pack(_new_root_node)
@@ -698,7 +708,7 @@ func _viewport_input(event) -> void:
 func _click_clickbox_at_pos(_clickpos : Vector2, allow_move : bool = true) -> Node:
 	var _contestants : Array[Node] = []
 	
-	for _clickbox : Control in level_edit_states[current_scene_root].node_clickboxes:
+	for _clickbox : Control in level_edit_states[current_scene_root].room_node_clickboxes[get_current_room_name()]:
 		var _global_clickbox_begin = _clickbox.get_global_rect().position
 		var _global_clickbox_end = _clickbox.get_global_rect().end
 
@@ -742,7 +752,8 @@ func add_object_option_pressed(id : int) -> void:
 			log_msg("Add trigger to room \"" + get_current_room_name() + "\"")
 			var _trigger_parent = current_scene_root.get_node(get_current_room_name() + "/main")
 			var _trigger_proxy_parent = get_current_room_proxy().get_node("main")
-			var _new_trigger = _create_trigger(_trigger_parent, _trigger_proxy_parent, _last_context_menu_open_pos)
+			var _new_trigger : Trigger = _create_trigger(_trigger_parent, _trigger_proxy_parent, _last_context_menu_open_pos)
+			_new_trigger.setup_collider()
 		1:
 			log_msg("Add doorway to room \"" + get_current_room_name() + "\"")
 			var _entrance_parent = current_scene_root.get_node(get_current_room_name() + "/main")
@@ -755,7 +766,7 @@ func _add_clickbox_to_proxy(parent_proxy : Node2D, box_size : Vector2) -> void:
 	_new_clickbox.name = "clickbox"
 	
 	parent_proxy.add_child(_new_clickbox)
-	level_edit_states[current_scene_root].node_clickboxes.append(_new_clickbox)
+	level_edit_states[current_scene_root].room_node_clickboxes[get_current_room_name()].append(_new_clickbox)
 	
 	_new_clickbox.anchor_left = 0.5
 	_new_clickbox.anchor_right = 0.5

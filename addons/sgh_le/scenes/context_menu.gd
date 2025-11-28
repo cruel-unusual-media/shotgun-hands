@@ -25,3 +25,8 @@ func _update_node_context_menu() -> void:
 	add_separator()
 	add_item("Push object back", 21)
 	add_item("Pull object forwards", 22)
+	add_separator()
+	add_radio_check_item("Foreground", 23)
+	add_radio_check_item("Main", 24)
+	add_radio_check_item("Background", 25)
+	set_item_checked(get_item_index(24), true)

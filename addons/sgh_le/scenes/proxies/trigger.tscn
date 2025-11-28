@@ -10,7 +10,7 @@ script = ExtResource("1_hp7oy")
 metadata/_custom_type_script = "uid://maiftr741gry"
 
 [node name="clickbox" type="ColorRect" parent="."]
-anchors_preset = -1
+anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -21,7 +21,7 @@ offset_right = 20.0
 offset_bottom = 20.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0, 0.7882353, 0.7882353, 0.23921569)
+color = Color(0, 0.85490197, 0.85490197, 0.5019608)
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 anchors_preset = 8
@@ -39,7 +39,7 @@ grow_vertical = 2
 [node name="type" type="Label" parent="VBoxContainer"]
 layout_mode = 2
 theme_override_fonts/font = SubResource("FontVariation_hp7oy")
-text = "Send Player To Room"
+text = "<None>"
 horizontal_alignment = 1
 
 [node name="label" type="Label" parent="VBoxContainer"]

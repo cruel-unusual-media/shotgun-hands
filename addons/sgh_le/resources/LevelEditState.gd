@@ -10,4 +10,4 @@ var camera_zoom : Vector2
 
 var level_start : LevelStart
 
-var node_clickboxes : Array[Control] = []
+var room_node_clickboxes : Dictionary[String, Array] = {}
