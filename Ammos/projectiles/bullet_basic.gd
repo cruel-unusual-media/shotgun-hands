@@ -28,6 +28,9 @@ func _process(delta: float) -> void:
 		var col = bullet_ray.get_collider()
 		if col is DamagableComponent:
 			col.get_hit(damage_amount)
+		elif col is AttackArea:
+			if col.can_parry:
+				col.on_parry()
 		queue_free()
 	
 	position += velocity*delta

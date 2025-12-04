@@ -96,6 +96,7 @@ collision_mask = 3
 monitoring = false
 monitorable = false
 damage = 50
+can_parry = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerRecticle/MeleeAttack"]
 shape = SubResource("RectangleShape2D_g1lo4")
@@ -124,3 +125,6 @@ metadata/_custom_type_script = "uid://b014414k0lgbj"
 [connection signal="timeout" from="ShotgunJumpTimer" to="ControllerComponent" method="_on_shotgun_jump_timer_timeout"]
 [connection signal="timeout" from="ReloadTimer" to="ControllerComponent" method="_on_reload_timer_timeout"]
 [connection signal="timeout" from="MeleeCooldown" to="ControllerComponent" method="_on_melee_cooldown_timeout"]
+[connection signal="hit_object" from="PlayerRecticle/MeleeAttack" to="." method="slow_frame" binds= [0.1, 0.3]]
+[connection signal="parried_attack" from="PlayerRecticle/MeleeAttack" to="." method="slow_frame" binds= [0.05, 0.5]]
+[connection signal="hit_for" from="DamagableComponent" to="." method="slow_frame" unbinds=1]

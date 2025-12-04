@@ -176,7 +176,7 @@ func handle_fire() -> void:
 	
 	if Input.is_action_just_pressed("fire_melee") and can_melee:
 		melee_area.enable()
-		var tmr = get_tree().create_timer(0.05)
+		var tmr = get_tree().create_timer(0.1)
 		tmr.timeout.connect(melee_area.disable)
 		melee_timer.start()
 		can_melee = false
