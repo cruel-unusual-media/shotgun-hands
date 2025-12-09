@@ -32,6 +32,11 @@ var can_fire : bool = true
 @export
 var max_ammo : int = -1
 @onready var ammo : int = max_ammo
+@export
+var autofire : bool = false
+@export
+var interval : float = 0.0
+var autofire_time : float = 0.0
 
 
 
@@ -43,7 +48,11 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	pass
+	if autofire:
+		autofire_time -= delta
+		if autofire_time <= 0:
+			autofire_time = interval
+			fire(0.0)
 
 # Shoots a projectile if possible and returns false if it can't
 func fire(dir : float) -> bool:

@@ -31,6 +31,10 @@ func _process(delta: float) -> void:
 		elif col is AttackArea:
 			if col.can_parry:
 				col.on_parry()
+				collision_mask = col.collision_mask
+				bullet_ray.collision_mask = collision_mask
+				velocity = -velocity
+				return
 		queue_free()
 	
 	position += velocity*delta

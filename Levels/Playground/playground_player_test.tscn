@@ -1,8 +1,10 @@
-[gd_scene load_steps=10 format=3 uid="uid://bgpx38eqttxhg"]
+[gd_scene load_steps=12 format=3 uid="uid://bgpx38eqttxhg"]
 
 [ext_resource type="PackedScene" uid="uid://crs1vr2enasav" path="res://Actors/Player/player.tscn" id="1_ardo3"]
 [ext_resource type="PackedScene" uid="uid://dlqa1fyyky5xj" path="res://Actors/Shared/damagable_component.tscn" id="2_hkjpj"]
 [ext_resource type="PackedScene" uid="uid://dqdedq5ydc4p3" path="res://Actors/Shared/health_component.tscn" id="3_l25i5"]
+[ext_resource type="PackedScene" uid="uid://cv53sl1qoc2vs" path="res://Ammos/ammo_types/basic_ammo_type.tscn" id="4_l25i5"]
+[ext_resource type="PackedScene" uid="uid://b8tt3w8s2qt1h" path="res://Ammos/projectiles/evil_bullet.tscn" id="5_a80q8"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_ardo3"]
 
@@ -92,3 +94,10 @@ offset_left = -36.0
 offset_top = -78.0
 offset_right = 38.0
 offset_bottom = -51.0
+
+[node name="BasicAmmoType" parent="." instance=ExtResource("4_l25i5")]
+position = Vector2(254, 570)
+projectile_type = ExtResource("5_a80q8")
+bullet_count = 5
+autofire = true
+interval = 1.0
