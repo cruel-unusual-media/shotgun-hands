@@ -11,7 +11,7 @@ collision_mask = 3
 [node name="Polygon2D" type="Polygon2D" parent="."]
 scale = Vector2(2, 1)
 color = Color(1, 1, 0, 1)
-polygon = PackedVector2Array(0, -1, 1, -1, 1, 1, 0, 1)
+polygon = PackedVector2Array(-9.5, -1, 0, -1, 0, 1, -9.5, 1)
 
 [node name="RayCast2D" type="RayCast2D" parent="."]
 target_position = Vector2(28, 0)

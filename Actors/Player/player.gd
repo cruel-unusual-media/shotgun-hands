@@ -38,7 +38,7 @@ func stateChanged(newState):
 func slow_frame(time_scale : float, duration : float) -> void:
 	Engine.time_scale = time_scale
 	var tmr = get_tree().create_timer(duration*time_scale)
-	print("The frame do be freezin'")
+	#print("The frame do be freezin'")
 	await(tmr.timeout)
-	print("The frame don't be freezin'")
+	#print("The frame don't be freezin'")
 	Engine.time_scale = 1.0

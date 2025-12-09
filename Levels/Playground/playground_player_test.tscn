@@ -86,7 +86,7 @@ position = Vector2(0, -24)
 shape = SubResource("RectangleShape2D_486bd")
 
 [node name="HealthComponent" parent="CharacterBody2D" node_paths=PackedStringArray("health_bar") instance=ExtResource("3_l25i5")]
-health_max = 10000
+health_max = 1000
 health_bar = NodePath("../ProgressBar")
 
 [node name="ProgressBar" type="ProgressBar" parent="CharacterBody2D"]
