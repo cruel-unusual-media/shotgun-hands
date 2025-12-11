@@ -1,0 +1,24 @@
+[gd_scene load_steps=4 format=3 uid="uid://dgubrrki17vxb"]
+
+[ext_resource type="Script" uid="uid://fsqm6ldsmk2y" path="res://Ammos/projectiles/projectile_basic.gd" id="1_3i03m"]
+[ext_resource type="Texture2D" uid="uid://cohirudeqpu4q" path="res://unsorted_assets/placeholders/scernshoot.png" id="2_0ssa5"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_oebda"]
+
+[node name="ProjectileBasic" type="Area2D"]
+script = ExtResource("1_3i03m")
+metadata/_custom_type_script = "uid://crn5u1kohhg8p"
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(-1.5258789e-05, 0)
+scale = Vector2(0.036231853, 0.13986014)
+texture = ExtResource("2_0ssa5")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_oebda")
+
+[node name="DestroyTimer" type="Timer" parent="."]
+wait_time = 10.0
+autostart = true
+
+[connection signal="timeout" from="DestroyTimer" to="." method="destroy_self"]

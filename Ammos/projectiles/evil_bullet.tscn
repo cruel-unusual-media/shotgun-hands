@@ -11,10 +11,16 @@ collision_mask = 13
 [node name="Polygon2D" type="Polygon2D" parent="."]
 scale = Vector2(2, 1)
 color = Color(1, 1, 0, 1)
-polygon = PackedVector2Array(0, -1, 1, -1, 1, 1, 0, 1)
+polygon = PackedVector2Array(-9.5, -1, 0, -1, 0, 1, -9.5, 1)
 
 [node name="RayCast2D" type="RayCast2D" parent="."]
 target_position = Vector2(28, 0)
 collision_mask = 3
 hit_from_inside = true
 collide_with_areas = true
+
+[node name="DestroyTimer" type="Timer" parent="."]
+wait_time = 20.0
+autostart = true
+
+[connection signal="timeout" from="DestroyTimer" to="." method="queue_free"]
