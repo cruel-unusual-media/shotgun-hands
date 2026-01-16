@@ -14,14 +14,16 @@ scale = Vector2(0.036231853, 0.13986014)
 texture = ExtResource("2_od2q4")
 
 [node name="ProjectileComponent" parent="." node_paths=PackedStringArray("base") instance=ExtResource("1_3ya2f")]
-collision_layer = 4
-collision_mask = 5
+collision_layer = 12
+collision_mask = 13
 velocity = Vector2(200, 200)
 bounces = 3
 base = NodePath("..")
+parryable = true
 damage = 50
 
 [node name="CollisionShape2D2" type="CollisionShape2D" parent="ProjectileComponent"]
 shape = SubResource("CircleShape2D_2oeg7")
 
+[connection signal="area_entered" from="ProjectileComponent" to="ProjectileComponent" method="_on_area_entered"]
 [connection signal="on_destroy" from="ProjectileComponent" to="." method="queue_free"]

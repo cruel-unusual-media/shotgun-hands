@@ -16,6 +16,9 @@ var piercing : int = 0
 @export
 var base : Node2D
 
+@export
+var parryable : bool
+
 signal on_destroy
 
 # Called when the node enters the scene tree for the first time.
@@ -88,3 +91,20 @@ func _on_body_shape_entered(body_rid: RID, body: Node2D, body_shape_index: int, 
 		print(velocity)
 		velocity = -velocity.rotated(velocity.angle_to(-avg)*2)
 		print(velocity)
+
+
+func _on_area_entered(col: Area2D) -> void:
+	if col is AttackArea:
+		if col.can_parry and parryable:
+			col.on_parry()
+			collision_mask = col.collision_mask - 0b0001000000000000
+			collision_layer = col.collision_layer
+			velocity = Vector2.from_angle(col.rotation+randf_range(-PI/3, PI/3))*velocity.length()*1.25
+			damage *= 2
+			parryable = false
+			#print(name + " Was parried")
+			
+		elif col.can_parry:
+			pass
+		else:
+			destroy_self()
