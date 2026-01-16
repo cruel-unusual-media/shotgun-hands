@@ -96,7 +96,7 @@ hype_boost_3={
 
 [layer_names]
 
-2d_physics/layer_1="Damagable Environment/pass through bullet stoppers"
+2d_physics/layer_1="Damagable Environment/bullet stoppers"
 2d_physics/layer_2="Enemy hitbox/things hurting the enemy"
 2d_physics/layer_3="Player hitbox/things hurting the player"
 2d_physics/layer_4="Parryable projectile/Attack that can parry"

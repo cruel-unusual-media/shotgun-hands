@@ -10,5 +10,7 @@ metadata/_custom_type_script = "uid://crn5u1kohhg8p"
 wait_time = 20.0
 autostart = true
 
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="body_shape_entered" from="." to="." method="_on_body_shape_entered"]
 [connection signal="hit_target" from="." to="." method="_on_hit_target"]
 [connection signal="timeout" from="DestroyTimer" to="." method="destroy_self"]

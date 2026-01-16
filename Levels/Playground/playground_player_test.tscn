@@ -103,4 +103,4 @@ bullet_count = 5
 interval = 1.0
 
 [node name="ProjectileGeneric" parent="." instance=ExtResource("6_486bd")]
-position = Vector2(321, 242)
+position = Vector2(618, 367)
