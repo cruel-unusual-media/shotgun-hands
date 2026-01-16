@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://dqdedq5ydc4p3" path="res://Actors/Shared/health_component.tscn" id="3_l25i5"]
 [ext_resource type="PackedScene" uid="uid://cv53sl1qoc2vs" path="res://Ammos/ammo_types/basic_ammo_type.tscn" id="4_l25i5"]
 [ext_resource type="PackedScene" uid="uid://b8tt3w8s2qt1h" path="res://Ammos/projectiles/evil_bullet.tscn" id="5_a80q8"]
-[ext_resource type="PackedScene" uid="uid://dgubrrki17vxb" path="res://Ammos/projectiles/projectile_basic.tscn" id="6_486bd"]
+[ext_resource type="PackedScene" uid="uid://btq2gvqpwxxpp" path="res://Ammos/projectiles/projectile_generic.tscn" id="6_486bd"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_ardo3"]
 
@@ -100,9 +100,7 @@ offset_bottom = -51.0
 position = Vector2(254, 570)
 projectile_type = ExtResource("5_a80q8")
 bullet_count = 5
-autofire = true
 interval = 1.0
 
-[node name="ProjectileBasic" parent="." instance=ExtResource("6_486bd")]
-position = Vector2(342, 135)
-can_fall = true
+[node name="ProjectileGeneric" parent="." instance=ExtResource("6_486bd")]
+position = Vector2(321, 242)

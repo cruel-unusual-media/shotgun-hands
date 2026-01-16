@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3 uid="uid://dgubrrki17vxb"]
+
+[ext_resource type="Script" uid="uid://fsqm6ldsmk2y" path="res://Ammos/projectiles/projectile_basic.gd" id="1_3i03m"]
+
+[node name="ProjectileComponent" type="Area2D"]
+script = ExtResource("1_3i03m")
+metadata/_custom_type_script = "uid://crn5u1kohhg8p"
+
+[node name="DestroyTimer" type="Timer" parent="."]
+wait_time = 20.0
+autostart = true
+
+[connection signal="hit_target" from="." to="." method="_on_hit_target"]
+[connection signal="timeout" from="DestroyTimer" to="." method="destroy_self"]
