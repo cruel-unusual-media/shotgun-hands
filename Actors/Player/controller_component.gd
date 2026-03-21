@@ -1,4 +1,4 @@
-extends Node2D
+class_name PlayerController extends Node2D
 
 @onready var player : CharacterBody2D = get_parent()
 var hitbox : CollisionShape2D
