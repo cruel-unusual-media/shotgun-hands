@@ -1,0 +1,130 @@
+[gd_scene load_steps=14 format=3 uid="uid://crs1vr2enasav"]
+
+[ext_resource type="Script" uid="uid://dv54xufs4ao3l" path="res://Actors/Player/player.gd" id="1_vhr1b"]
+[ext_resource type="SpriteFrames" uid="uid://cxeoa46tbwhsa" path="res://Actors/Player/Sprites/2DPlayer_frames.tres" id="2_5ni5v"]
+[ext_resource type="Script" uid="uid://cxm75lk51oc68" path="res://Actors/Player/controller_component.gd" id="2_b63gh"]
+[ext_resource type="Script" uid="uid://ck8hnd0csg4rk" path="res://Actors/Player/camera_2d.gd" id="3_v1key"]
+[ext_resource type="Script" uid="uid://bkrwwx5a7wgso" path="res://Actors/Player/player_recticle.gd" id="4_n7l8t"]
+[ext_resource type="PackedScene" uid="uid://cy150n8wy6lm5" path="res://Ammos/ammo_types/buckshot.tscn" id="5_pnakb"]
+[ext_resource type="PackedScene" uid="uid://drhvloni7q3uu" path="res://Ammos/ammo_types/slugshot.tscn" id="6_g1lo4"]
+[ext_resource type="PackedScene" uid="uid://dlqa1fyyky5xj" path="res://Actors/Shared/damagable_component.tscn" id="7_8gtf5"]
+[ext_resource type="PackedScene" uid="uid://bro3cv0fso5k7" path="res://Ammos/projectiles/attack_area.tscn" id="7_g1lo4"]
+[ext_resource type="Script" uid="uid://b014414k0lgbj" path="res://Actors/Shared/health_component.gd" id="8_awv0x"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_vhr1b"]
+size = Vector2(58, 158)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_n7l8t"]
+size = Vector2(58, 79)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_g1lo4"]
+size = Vector2(52, 80)
+
+[node name="Player" type="CharacterBody2D"]
+collision_layer = 0
+collision_mask = 5
+script = ExtResource("1_vhr1b")
+
+[node name="ControllerComponent" type="Node2D" parent="." node_paths=PackedStringArray("recticle", "primary_ammo", "secondary_ammo", "melee_area", "shotgun_jump_timer", "reload_timer", "melee_timer", "player_focus")]
+script = ExtResource("2_b63gh")
+recticle = NodePath("../PlayerRecticle")
+primary_ammo = NodePath("../PlayerRecticle/Buckshot")
+secondary_ammo = NodePath("../PlayerRecticle/Slugshot")
+melee_area = NodePath("../PlayerRecticle/MeleeAttack")
+shotgun_jump_timer = NodePath("../ShotgunJumpTimer")
+reload_timer = NodePath("../ReloadTimer")
+melee_timer = NodePath("../MeleeCooldown")
+player_focus = NodePath("../HeadFocus")
+
+[node name="ShotgunJumpTimer" type="Timer" parent="."]
+wait_time = 0.1
+one_shot = true
+
+[node name="ReloadTimer" type="Timer" parent="."]
+wait_time = 6.0
+one_shot = true
+
+[node name="MeleeCooldown" type="Timer" parent="."]
+wait_time = 0.5
+one_shot = true
+
+[node name="HeadFocus" type="Node2D" parent="."]
+position = Vector2(0, -121)
+
+[node name="Collidor" type="CollisionShape2D" parent="."]
+position = Vector2(0, -79)
+shape = SubResource("RectangleShape2D_vhr1b")
+
+[node name="HeadCheck" type="Area2D" parent="."]
+collision_layer = 0
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HeadCheck"]
+position = Vector2(0, -118.5)
+shape = SubResource("RectangleShape2D_n7l8t")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+visible = false
+offset_left = -29.0
+offset_top = -158.0
+offset_right = 29.0
+color = Color(1, 0, 1, 1)
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -91)
+sprite_frames = ExtResource("2_5ni5v")
+animation = &"crouch"
+
+[node name="PlayerRecticle" type="Node2D" parent="." node_paths=PackedStringArray("focus")]
+position = Vector2(0, -121)
+script = ExtResource("4_n7l8t")
+focus = NodePath("../HeadFocus")
+
+[node name="Polygon2D" type="Polygon2D" parent="PlayerRecticle"]
+position = Vector2(1.7881393e-07, -2.3841858e-07)
+scale = Vector2(2, 1.9999999)
+color = Color(0, 1, 1, 1)
+polygon = PackedVector2Array(2, -2, 2, 2, -2, 2, -2, -2)
+
+[node name="Buckshot" parent="PlayerRecticle" instance=ExtResource("5_pnakb")]
+
+[node name="Slugshot" parent="PlayerRecticle" instance=ExtResource("6_g1lo4")]
+
+[node name="MeleeAttack" parent="PlayerRecticle" instance=ExtResource("7_g1lo4")]
+collision_layer = 3
+collision_mask = 3
+monitoring = false
+monitorable = false
+damage = 50
+can_parry = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerRecticle/MeleeAttack"]
+shape = SubResource("RectangleShape2D_g1lo4")
+disabled = true
+
+[node name="Camera2D" type="Camera2D" parent="." node_paths=PackedStringArray("focus")]
+position = Vector2(0, -121)
+position_smoothing_enabled = true
+position_smoothing_speed = 50.0
+script = ExtResource("3_v1key")
+focus = NodePath("../HeadFocus")
+
+[node name="DamagableComponent" parent="." node_paths=PackedStringArray("health_component") instance=ExtResource("7_8gtf5")]
+collision_layer = 4
+collision_mask = 4
+health_component = NodePath("../HealthComponent")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DamagableComponent"]
+position = Vector2(0, -79)
+shape = SubResource("RectangleShape2D_vhr1b")
+
+[node name="HealthComponent" type="Node2D" parent="."]
+script = ExtResource("8_awv0x")
+metadata/_custom_type_script = "uid://b014414k0lgbj"
+
+[connection signal="timeout" from="ShotgunJumpTimer" to="ControllerComponent" method="_on_shotgun_jump_timer_timeout"]
+[connection signal="timeout" from="ReloadTimer" to="ControllerComponent" method="_on_reload_timer_timeout"]
+[connection signal="timeout" from="MeleeCooldown" to="ControllerComponent" method="_on_melee_cooldown_timeout"]
+[connection signal="hit_object" from="PlayerRecticle/MeleeAttack" to="." method="slow_frame" binds= [0.1, 0.3]]
+[connection signal="parried_attack" from="PlayerRecticle/MeleeAttack" to="." method="slow_frame" binds= [0.05, 0.5]]
+[connection signal="hit_for" from="DamagableComponent" to="." method="slow_frame" unbinds=1]

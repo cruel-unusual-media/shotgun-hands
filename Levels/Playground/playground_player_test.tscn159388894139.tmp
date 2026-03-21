@@ -1,0 +1,42 @@
+[gd_scene load_steps=5 format=3 uid="uid://bgpx38eqttxhg"]
+
+[ext_resource type="PackedScene" uid="uid://crs1vr2enasav" path="res://Actors/Player/player.tscn" id="1_ardo3"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_ardo3"]
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_id2c4"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ardo3"]
+size = Vector2(103, 69)
+
+[node name="PlaygroundPlayerTest" type="Node2D"]
+
+[node name="RigidBody2D" type="RigidBody2D" parent="."]
+position = Vector2(461, 647)
+physics_material_override = SubResource("PhysicsMaterial_ardo3")
+gravity_scale = 0.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RigidBody2D"]
+shape = SubResource("WorldBoundaryShape2D_id2c4")
+
+[node name="Polygon2D" type="Polygon2D" parent="RigidBody2D"]
+position = Vector2(-460.99997, 1)
+scale = Vector2(1152.0001, 31)
+polygon = PackedVector2Array(0, 0, 1, 0, 1, 1, 0, 1)
+
+[node name="RigidBody2D2" type="RigidBody2D" parent="."]
+position = Vector2(793, 542)
+physics_material_override = SubResource("PhysicsMaterial_ardo3")
+gravity_scale = 0.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RigidBody2D2"]
+position = Vector2(41.5, -24.5)
+shape = SubResource("RectangleShape2D_ardo3")
+
+[node name="Polygon2D" type="Polygon2D" parent="RigidBody2D2"]
+position = Vector2(-9.999998, -59.000015)
+scale = Vector2(103.000046, 69.00004)
+polygon = PackedVector2Array(0, 0, 1, 0, 1, 1, 0, 1)
+
+[node name="Player" parent="." instance=ExtResource("1_ardo3")]
+position = Vector2(449, 223)
