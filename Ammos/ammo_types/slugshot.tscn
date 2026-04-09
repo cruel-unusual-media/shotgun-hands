@@ -9,6 +9,7 @@ colors = PackedColorArray(1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 1, 0, 0, 0, 1)
 
 [node name="Slugshot" type="Node2D" node_paths=PackedStringArray("shoot_effect")]
 script = ExtResource("1_lphl2")
+ammo_name = "Slugshot"
 projectile_type = ExtResource("2_5mwe2")
 shoot_effect = NodePath("CPUParticles2D")
 bullet_count = 2

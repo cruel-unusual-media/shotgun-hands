@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://crs1vr2enasav"]
+[gd_scene load_steps=15 format=3 uid="uid://crs1vr2enasav"]
 
 [ext_resource type="Script" uid="uid://dv54xufs4ao3l" path="res://Actors/Player/player.gd" id="1_vhr1b"]
 [ext_resource type="SpriteFrames" uid="uid://cxeoa46tbwhsa" path="res://Actors/Player/Sprites/2DPlayer_frames.tres" id="2_5ni5v"]
@@ -10,6 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://dlqa1fyyky5xj" path="res://Actors/Shared/damagable_component.tscn" id="7_8gtf5"]
 [ext_resource type="PackedScene" uid="uid://bro3cv0fso5k7" path="res://Ammos/projectiles/attack_area.tscn" id="7_g1lo4"]
 [ext_resource type="Script" uid="uid://b014414k0lgbj" path="res://Actors/Shared/health_component.gd" id="8_awv0x"]
+[ext_resource type="PackedScene" uid="uid://cenug7ef83cqs" path="res://Menus-UI/userinterface/player_ui.tscn" id="11_sciwa"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_vhr1b"]
 size = Vector2(58, 158)
@@ -121,6 +122,9 @@ shape = SubResource("RectangleShape2D_vhr1b")
 [node name="HealthComponent" type="Node2D" parent="."]
 script = ExtResource("8_awv0x")
 metadata/_custom_type_script = "uid://b014414k0lgbj"
+
+[node name="PlayerUI" parent="." node_paths=PackedStringArray("player") instance=ExtResource("11_sciwa")]
+player = NodePath("..")
 
 [connection signal="timeout" from="ShotgunJumpTimer" to="ControllerComponent" method="_on_shotgun_jump_timer_timeout"]
 [connection signal="timeout" from="ReloadTimer" to="ControllerComponent" method="_on_reload_timer_timeout"]

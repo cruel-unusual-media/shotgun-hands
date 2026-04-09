@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://bafuodme2iqql"]
+[gd_scene load_steps=3 format=3 uid="uid://bafuodme2iqql"]
 
-[ext_resource type="Script" path="res://Menus-UI/menus/main_menu.gd" id="1_nx2r7"]
+[ext_resource type="Theme" uid="uid://dvlonnktg3a4n" path="res://Menus-UI/ascended.tres" id="1_k7myw"]
+[ext_resource type="Script" uid="uid://cuqwn3o2yk6xa" path="res://Menus-UI/menus/main_menu.gd" id="1_nx2r7"]
 
 [node name="Main-menu" type="Control"]
 layout_mode = 3
@@ -9,6 +10,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("1_k7myw")
 script = ExtResource("1_nx2r7")
 
 [node name="CenterContainer" type="CenterContainer" parent="."]

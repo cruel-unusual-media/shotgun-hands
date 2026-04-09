@@ -25,6 +25,10 @@ GameLogger="*res://Globals/Scripts/GameLogger.gd"
 GlobalEnums="*res://Globals/Scripts/GlobalEnums.gd"
 SceneManager="*res://Globals/Scripts/SceneManager.gd"
 
+[gui]
+
+theme/custom="uid://dvlonnktg3a4n"
+
 [input]
 
 move_left={

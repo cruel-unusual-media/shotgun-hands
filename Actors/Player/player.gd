@@ -10,7 +10,8 @@ var state = JUMPING # State is used to determine the currently used animation
 #@onready var shootTarget : Node2D = $Target
 var prevState = IDLE
 @onready var sprite = $AnimatedSprite2D
-
+@onready var controller : PlayerController = $ControllerComponent
+@onready var health_component : HealthComponent = $HealthComponent
 
 func _physics_process(delta: float) -> void:
 	# Code was moved to $ControllerComponent

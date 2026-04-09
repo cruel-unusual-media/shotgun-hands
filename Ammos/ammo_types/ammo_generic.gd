@@ -1,5 +1,8 @@
 class_name AmmoGeneric extends Node2D
 
+## The name of the ammo type
+@export
+var ammo_name : String
 ## The projectile type used. Any scene can be placed here and will be instantiated as a projectile.
 @export
 var projectile_type : PackedScene
