@@ -1,4 +1,4 @@
-[gd_resource type="SpriteFrames" load_steps=12 format=3 uid="uid://cxeoa46tbwhsa"]
+[gd_resource type="SpriteFrames" format=3 uid="uid://cxeoa46tbwhsa"]
 
 [ext_resource type="Texture2D" uid="uid://gf4agagiun0e" path="res://Actors/Player/Sprites/spritesheet_sh_notext.png" id="1_4n0o7"]
 

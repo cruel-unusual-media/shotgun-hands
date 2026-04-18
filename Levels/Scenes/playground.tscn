@@ -1,6 +1,7 @@
-[gd_scene load_steps=13 format=3 uid="uid://bgpx38eqttxhg"]
+[gd_scene format=3 uid="uid://bgpx38eqttxhg"]
 
 [ext_resource type="PackedScene" uid="uid://crs1vr2enasav" path="res://Actors/Player/player.tscn" id="1_ardo3"]
+[ext_resource type="Script" uid="uid://ca8tqk5r60cel" path="res://Levels/Scenes/playground.gd" id="1_wt42a"]
 [ext_resource type="PackedScene" uid="uid://dlqa1fyyky5xj" path="res://Actors/Shared/damagable_component.tscn" id="2_hkjpj"]
 [ext_resource type="PackedScene" uid="uid://dqdedq5ydc4p3" path="res://Actors/Shared/health_component.tscn" id="3_l25i5"]
 [ext_resource type="PackedScene" uid="uid://cv53sl1qoc2vs" path="res://Ammos/ammo_types/basic_ammo_type.tscn" id="4_l25i5"]
@@ -23,84 +24,85 @@ size = Vector2(20, 48)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_486bd"]
 size = Vector2(20, 48)
 
-[node name="PlaygroundPlayerTest" type="Node2D"]
+[node name="PlaygroundPlayerTest" type="Node2D" unique_id=1940495998]
+script = ExtResource("1_wt42a")
 
-[node name="RigidBody2D" type="RigidBody2D" parent="."]
+[node name="RigidBody2D" type="RigidBody2D" parent="." unique_id=1160160147]
 position = Vector2(461, 647)
 physics_material_override = SubResource("PhysicsMaterial_ardo3")
 gravity_scale = 0.0
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="RigidBody2D"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RigidBody2D" unique_id=60190751]
 shape = SubResource("WorldBoundaryShape2D_id2c4")
 
-[node name="Polygon2D" type="Polygon2D" parent="RigidBody2D"]
+[node name="Polygon2D" type="Polygon2D" parent="RigidBody2D" unique_id=1252256477]
 position = Vector2(-460.99997, 1)
 scale = Vector2(1152.0001, 31)
 polygon = PackedVector2Array(0, 0, 1, 0, 1, 1, 0, 1)
 
-[node name="RigidBody2D3" type="RigidBody2D" parent="."]
+[node name="RigidBody2D3" type="RigidBody2D" parent="." unique_id=1003777383]
 position = Vector2(121, 638)
 physics_material_override = SubResource("PhysicsMaterial_ardo3")
 gravity_scale = 0.0
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="RigidBody2D3"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RigidBody2D3" unique_id=1627761529]
 position = Vector2(41.5, -82.5)
 shape = SubResource("RectangleShape2D_34js4")
 
-[node name="Polygon2D" type="Polygon2D" parent="RigidBody2D3"]
+[node name="Polygon2D" type="Polygon2D" parent="RigidBody2D3" unique_id=1802843553]
 position = Vector2(-9.999998, -175.00002)
 scale = Vector2(103.000046, 185.00005)
 polygon = PackedVector2Array(0, 0, 1, 0, 1, 1, 0, 1)
 
-[node name="RigidBody2D2" type="RigidBody2D" parent="."]
+[node name="RigidBody2D2" type="RigidBody2D" parent="." unique_id=634806664]
 position = Vector2(793, 542)
 physics_material_override = SubResource("PhysicsMaterial_ardo3")
 gravity_scale = 0.0
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="RigidBody2D2"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RigidBody2D2" unique_id=998989300]
 position = Vector2(41.5, -24.5)
 shape = SubResource("RectangleShape2D_ardo3")
 
-[node name="Polygon2D" type="Polygon2D" parent="RigidBody2D2"]
+[node name="Polygon2D" type="Polygon2D" parent="RigidBody2D2" unique_id=32148941]
 position = Vector2(-9.999998, -59.000015)
 scale = Vector2(103.000046, 69.00004)
 polygon = PackedVector2Array(0, 0, 1, 0, 1, 1, 0, 1)
 
-[node name="Player" parent="." instance=ExtResource("1_ardo3")]
+[node name="Player" parent="." unique_id=400592424 instance=ExtResource("1_ardo3")]
 position = Vector2(449, 223)
 
-[node name="CharacterBody2D" type="CharacterBody2D" parent="."]
+[node name="CharacterBody2D" type="CharacterBody2D" parent="." unique_id=1741746486]
 position = Vector2(987, 648)
 
-[node name="Polygon2D" type="Polygon2D" parent="CharacterBody2D"]
+[node name="Polygon2D" type="Polygon2D" parent="CharacterBody2D" unique_id=941482368]
 polygon = PackedVector2Array(10, 0, 10, -48, -10, -48, -10, 0)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D" unique_id=1046486714]
 position = Vector2(0, -24)
 shape = SubResource("RectangleShape2D_a80q8")
 
-[node name="DamagableComponent" parent="CharacterBody2D" node_paths=PackedStringArray("health_component") instance=ExtResource("2_hkjpj")]
+[node name="DamagableComponent" parent="CharacterBody2D" unique_id=2054073894 node_paths=PackedStringArray("health_component") instance=ExtResource("2_hkjpj")]
 health_component = NodePath("../HealthComponent")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D/DamagableComponent"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D/DamagableComponent" unique_id=1969440317]
 position = Vector2(0, -24)
 shape = SubResource("RectangleShape2D_486bd")
 
-[node name="HealthComponent" parent="CharacterBody2D" node_paths=PackedStringArray("health_bar") instance=ExtResource("3_l25i5")]
+[node name="HealthComponent" parent="CharacterBody2D" unique_id=596586661 node_paths=PackedStringArray("health_bar") instance=ExtResource("3_l25i5")]
 health_max = 1000
 health_bar = NodePath("../ProgressBar")
 
-[node name="ProgressBar" type="ProgressBar" parent="CharacterBody2D"]
+[node name="ProgressBar" type="ProgressBar" parent="CharacterBody2D" unique_id=6194623]
 offset_left = -36.0
 offset_top = -78.0
 offset_right = 38.0
 offset_bottom = -51.0
 
-[node name="BasicAmmoType" parent="." instance=ExtResource("4_l25i5")]
+[node name="BasicAmmoType" parent="." unique_id=1613531722 instance=ExtResource("4_l25i5")]
 position = Vector2(254, 570)
 projectile_type = ExtResource("5_a80q8")
 bullet_count = 5
 interval = 1.0
 
-[node name="ProjectileGeneric" parent="." instance=ExtResource("6_486bd")]
+[node name="ProjectileGeneric" parent="." unique_id=550564016 instance=ExtResource("6_486bd")]
 position = Vector2(618, 367)

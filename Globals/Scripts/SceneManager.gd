@@ -13,7 +13,7 @@ func switch_to_menu(menu_scene : GlobalEnums.Menus) -> void:
 	var _name_to_use : String
 	
 	
-	match menu_scene: #using enums to indicate scenes allows us to simply change the strings in this script instead of in every other script when refactoring 
+	match menu_scene: # using enums to indicate scenes allows us to simply change the strings in this script instead of in every other script when refactoring 
 		GlobalEnums.Menus.MAIN:
 			_name_to_use = "main_menu"
 		GlobalEnums.Menus.SETTINGS:
@@ -27,4 +27,21 @@ func switch_to_menu(menu_scene : GlobalEnums.Menus) -> void:
 	await PersistentUI.fade_in_black()
 	get_tree().change_scene_to_file(DefaultPaths.menu_scenes_path + _name_to_use + ".tscn")
 	PersistentUI.fade_out_black()
+
+
+func load_level(level_scene : GlobalEnums.Levels) -> void:
+	var _name_to_use : String
 	
+	
+	match level_scene: # using enums to indicate scenes allows us to simply change the strings in this script instead of in every other script when refactoring 
+		GlobalEnums.Levels.PLAYGROUND:
+			_name_to_use = "playground"
+		GlobalEnums.Levels.TUTORIAL:
+			_name_to_use = "tutorial"
+	
+	
+	GameLogger.print_as_autoload(self, "Loading level \"" + _name_to_use + "\"...")
+	
+	await PersistentUI.fade_in_black()
+	get_tree().change_scene_to_file(DefaultPaths.level_scenes_path + _name_to_use + ".tscn")
+	PersistentUI.fade_out_black()
