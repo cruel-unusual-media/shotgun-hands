@@ -1,8 +1,10 @@
 class_name PlayerCharacter extends CharacterBody2D
 
 
-const SPEED = 1000.0
-const JUMP_VELOCITY = -600.0
+const SPEED: float = 1000.0
+const GROUND_DECELERATION: float = 800.0
+const AIR_DECELERATION: float = 10.0
+const JUMP_VELOCITY: float = -600.0
 
 enum {IDLE, MOVING, FALLING, JUMPING, SHOOTING_IDLE, SHOOTING_MOVING, SHOOTING_FALLING, SHOTGUN_JUMP, CROUCHING, SLIDING}
 

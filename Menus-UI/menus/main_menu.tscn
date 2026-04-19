@@ -1,8 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://bafuodme2iqql"]
+[gd_scene format=3 uid="uid://bafuodme2iqql"]
 
-[ext_resource type="Script" path="res://Menus-UI/menus/main_menu.gd" id="1_nx2r7"]
+[ext_resource type="Script" uid="uid://cuqwn3o2yk6xa" path="res://Menus-UI/menus/main_menu.gd" id="1_nx2r7"]
 
-[node name="Main-menu" type="Control"]
+[node name="Main-menu" type="Control" unique_id=463735514]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -11,7 +11,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_nx2r7")
 
-[node name="CenterContainer" type="CenterContainer" parent="."]
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=1044200539]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -19,21 +19,22 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer" unique_id=329977559]
 layout_mode = 2
 
-[node name="Title" type="RichTextLabel" parent="CenterContainer/VBoxContainer"]
+[node name="Title" type="RichTextLabel" parent="CenterContainer/VBoxContainer" unique_id=696368890]
 layout_mode = 2
 text = "Shotgun Hands"
 fit_content = true
 autowrap_mode = 0
 
-[node name="PlayButton" type="Button" parent="CenterContainer/VBoxContainer"]
+[node name="PlayButton" type="Button" parent="CenterContainer/VBoxContainer" unique_id=826006132]
 layout_mode = 2
 text = "Play"
 
-[node name="QuitButton" type="Button" parent="CenterContainer/VBoxContainer"]
+[node name="QuitButton" type="Button" parent="CenterContainer/VBoxContainer" unique_id=1200759084]
 layout_mode = 2
 text = "Quit"
 
 [connection signal="button_down" from="CenterContainer/VBoxContainer/PlayButton" to="." method="_on_play_button_button_down"]
+[connection signal="button_down" from="CenterContainer/VBoxContainer/QuitButton" to="." method="_on_quit_button_button_down"]

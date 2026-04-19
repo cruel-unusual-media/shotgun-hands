@@ -5,3 +5,6 @@
 # Godot 4+ specific ignores
 .godot/
 /android/
+
+# idk what category this falls under
+export/
