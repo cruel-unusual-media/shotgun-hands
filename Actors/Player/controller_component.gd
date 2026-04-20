@@ -81,8 +81,8 @@ func _physics_process(delta: float) -> void:
 				player.sprite.flip_h = direction < 0
 			else:
 				var _additional_velocity: float = direction * player.SPEED*2*delta
-				if (not player.is_on_floor()):
-					_additional_velocity *= 0.05					
+				if (not player.is_on_floor() and sign(player.velocity.x) == direction):
+					_additional_velocity *= 0.1					
 				player.velocity.x += _additional_velocity
 					
 				#if player.is_on_floor():
