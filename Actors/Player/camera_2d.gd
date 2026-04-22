@@ -9,7 +9,7 @@ func _ready() -> void:
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
+func _physics_process(delta: float) -> void:
 	# Move camera to adjacent to cursor
 	var mPos = get_global_mouse_position() - focus.global_position
 	position = mPos/2 + focus.position#(get_local_mouse_position())/2
