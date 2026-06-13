@@ -25,7 +25,7 @@ collision_layer = 0
 collision_mask = 5
 script = ExtResource("1_vhr1b")
 
-[node name="ControllerComponent" type="Node2D" parent="." unique_id=587383347 node_paths=PackedStringArray("recticle", "primary_ammo", "secondary_ammo", "melee_area", "shotgun_jump_timer", "reload_timer", "melee_timer", "player_focus")]
+[node name="ControllerComponent" type="Node2D" parent="." unique_id=587383347 node_paths=PackedStringArray("recticle", "primary_ammo", "secondary_ammo", "melee_area", "shotgun_jump_timer", "reload_timer", "melee_timer", "jump_horizontal_boost_timer", "player_focus")]
 script = ExtResource("2_b63gh")
 recticle = NodePath("../PlayerRecticle")
 primary_ammo = NodePath("../PlayerRecticle/Buckshot")
@@ -34,19 +34,23 @@ melee_area = NodePath("../PlayerRecticle/MeleeAttack")
 shotgun_jump_timer = NodePath("../ShotgunJumpTimer")
 reload_timer = NodePath("../ReloadTimer")
 melee_timer = NodePath("../MeleeCooldown")
+jump_horizontal_boost_timer = NodePath("../JumpHorizontalBoostTimer")
 player_focus = NodePath("../HeadFocus")
 
 [node name="ShotgunJumpTimer" type="Timer" parent="." unique_id=1179658999]
-wait_time = 0.1
+wait_time = 0.2
 one_shot = true
 
 [node name="ReloadTimer" type="Timer" parent="." unique_id=2145047321]
-wait_time = 2.0
+wait_time = 1.5
 one_shot = true
 
 [node name="MeleeCooldown" type="Timer" parent="." unique_id=299506755]
 wait_time = 0.5
 one_shot = true
+
+[node name="JumpHorizontalBoostTimer" type="Timer" parent="." unique_id=1438964671]
+wait_time = 0.3
 
 [node name="HeadFocus" type="Node2D" parent="." unique_id=1060360178]
 position = Vector2(0, -121)
@@ -125,6 +129,7 @@ metadata/_custom_type_script = "uid://b014414k0lgbj"
 [connection signal="timeout" from="ShotgunJumpTimer" to="ControllerComponent" method="_on_shotgun_jump_timer_timeout"]
 [connection signal="timeout" from="ReloadTimer" to="ControllerComponent" method="_on_reload_timer_timeout"]
 [connection signal="timeout" from="MeleeCooldown" to="ControllerComponent" method="_on_melee_cooldown_timeout"]
+[connection signal="timeout" from="JumpHorizontalBoostTimer" to="ControllerComponent" method="_on_jump_horizontal_boost_timer_timeout"]
 [connection signal="hit_object" from="PlayerRecticle/MeleeAttack" to="." method="slow_frame" binds= [0.1, 0.3]]
 [connection signal="parried_attack" from="PlayerRecticle/MeleeAttack" to="." method="slow_frame" binds= [0.05, 0.5]]
 [connection signal="hit_for" from="DamagableComponent" to="." method="slow_frame" unbinds=1]

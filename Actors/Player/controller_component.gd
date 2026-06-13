@@ -1,11 +1,4 @@
-class_name PlayerController extends Node2D
-
-# Todo:
-# air deceleration
-# seperate sliding and crouching
-# diffrent jump heights based on length of key press
-# look at bullet code
-# camera limits and chase player
+class_name PlayerController extends Node2D	
 
 @onready var player : CharacterBody2D = get_parent()
 var hitbox : CollisionShape2D
@@ -15,6 +8,7 @@ var head_check : Area2D
 var friction : int = 10
 var can_shotgun_jump: bool = false
 var shotgun_jump_count: int = 0
+var jump_horizontal_boost: bool = true
 @export
 var shotgun_jump_max: int = 2
 
@@ -38,6 +32,8 @@ var reload_timer : Timer
 var reloading : bool = false
 @export
 var melee_timer : Timer
+@export
+var jump_horizontal_boost_timer: Timer
 ## The focus that the camera and shooting revolves around
 @export
 var player_focus : Node2D
@@ -82,16 +78,11 @@ func _physics_process(delta: float) -> void:
 			else:
 				var _additional_velocity: float = direction * player.SPEED*2*delta
 				if (not player.is_on_floor() and sign(player.velocity.x) == direction):
-					_additional_velocity *= 0.1					
+					_additional_velocity *= 0.2  	
 				player.velocity.x += _additional_velocity
 					
-				#if player.is_on_floor():
 				player.velocity.x = clampf(player.velocity.x, -player.SPEED, player.SPEED)
-				#else:
-				#	player.velocity.x = clampf(player.velocity.x, -player.SPEED*1.25, player.SPEED*1.25)
-					#	pass
-					#else:
-						#player.velocity.x -= direction * player.SPEED*2*delta
+
 				player.sprite.flip_h = direction < 0
 			if player.is_on_floor() and not player.state == player.CROUCHING:
 				player.state = player.MOVING
@@ -104,10 +95,15 @@ func _physics_process(delta: float) -> void:
 	
 	# Handle jump.
 	if Input.is_action_just_pressed("move_jump") and player.is_on_floor():
-		if (direction and player.velocity.x < 150):
-			player.velocity.x += direction * 300
 		player.velocity.y = player.JUMP_VELOCITY
 		player.state = player.JUMPING
+		jump_horizontal_boost_timer.start(0.3)
+	
+	if (direction and player.velocity.x < 100 and jump_horizontal_boost):
+		player.velocity.x += direction * 100
+		jump_horizontal_boost=false;
+		jump_horizontal_boost_timer.stop()
+	
 	
 	if player.is_on_floor():
 		handle_crouch()
@@ -164,29 +160,55 @@ func end_crouch() -> void:
 	player_focus.position.y = focus_def_y
 
 
-func handle_fire() -> void:
+func handle_fire() -> void:	
 	if not reloading and not overheated:
 		var shot: bool = false
-		var shots: int = 0
 		
 		if Input.is_action_pressed("fire_left"):
-			shot = primary_ammo.fire(recticle.normal.angle())
-		elif Input.is_action_pressed("fire_right"):
-			shot = secondary_ammo.fire(recticle.normal.angle())
+			var shot_left = primary_ammo.fire(recticle.normal.angle())
+			
+			if shotgun_jump_timer.is_stopped():
+				if shot_left:
+					GameLogger.print_as_autoload(self, "starting shotgun_jump_timer")
+					shotgun_jump_timer.start()
+			else:
+				if shot_left:
+					can_shotgun_jump = true;
+					shot = shot_left
+				
+			GameLogger.print_as_autoload(self, "shot: " + str(shot) + " shot_left: " + str(shot_left))
+			
+		if Input.is_action_pressed("fire_right"):
+			var shot_right = secondary_ammo.fire(recticle.normal.angle())
+			
+			if shotgun_jump_timer.is_stopped():
+				if shot_right:
+					GameLogger.print_as_autoload(self, "starting shotgun_jump_timer")
+					shotgun_jump_timer.start()
+			else:
+				if shot_right:
+					can_shotgun_jump = true;
+					shot = shot or shot_right
+				
+			GameLogger.print_as_autoload(self, "shot: " + str(shot) + " shot_right: " + str(shot_right))
 		
 		if shot:
-			shots += 1
+			if shotgun_jump_timer.is_stopped():
+				GameLogger.print_as_autoload(self, "starting shotgun_jump_timer")
+				shotgun_jump_timer.start()
 			overheat += 1
 		
 		if overheat >= 8:
 			begin_overheat()
-			
-		if not player.is_on_floor() and shot and shotgun_jump_count < shotgun_jump_max:
+		
+		if not player.is_on_floor() and can_shotgun_jump and shotgun_jump_count < shotgun_jump_max:
 			GameLogger.print_as_autoload(self, "shotgun jumping")
 			if recticle.normal.y > 0:
 				player.velocity.y = min(0, player.velocity.y)
-			player.velocity -= recticle.normal * 500
+			player.velocity -= recticle.normal * 450
 			shotgun_jump_count += 1
+			shotgun_jump_timer.stop()
+			can_shotgun_jump = false
 		
 		if Input.is_action_just_pressed("fire_reload"):
 			reloading = true
@@ -213,6 +235,7 @@ func begin_overheat() -> void:
 
 func _on_shotgun_jump_timer_timeout() -> void:
 	can_shotgun_jump = false
+	GameLogger.print_as_autoload(self, "shotgun_jump_timer ended")
 
 
 func _on_reload_timer_timeout() -> void:
@@ -223,3 +246,7 @@ func _on_reload_timer_timeout() -> void:
 
 func _on_melee_cooldown_timeout() -> void:
 	can_melee = true
+
+
+func _on_jump_horizontal_boost_timer_timeout() -> void:
+	jump_horizontal_boost = true;
