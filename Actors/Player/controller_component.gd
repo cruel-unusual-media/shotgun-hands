@@ -169,32 +169,25 @@ func handle_fire() -> void:
 			
 			if shotgun_jump_timer.is_stopped():
 				if shot_left:
-					GameLogger.print_as_autoload(self, "starting shotgun_jump_timer")
 					shotgun_jump_timer.start()
 			else:
 				if shot_left:
 					can_shotgun_jump = true;
 					shot = shot_left
-				
-			GameLogger.print_as_autoload(self, "shot: " + str(shot) + " shot_left: " + str(shot_left))
 			
 		if Input.is_action_pressed("fire_right"):
 			var shot_right = secondary_ammo.fire(recticle.normal.angle())
 			
 			if shotgun_jump_timer.is_stopped():
 				if shot_right:
-					GameLogger.print_as_autoload(self, "starting shotgun_jump_timer")
 					shotgun_jump_timer.start()
 			else:
 				if shot_right:
 					can_shotgun_jump = true;
 					shot = shot or shot_right
-				
-			GameLogger.print_as_autoload(self, "shot: " + str(shot) + " shot_right: " + str(shot_right))
 		
 		if shot:
 			if shotgun_jump_timer.is_stopped():
-				GameLogger.print_as_autoload(self, "starting shotgun_jump_timer")
 				shotgun_jump_timer.start()
 			overheat += 1
 		
@@ -202,7 +195,6 @@ func handle_fire() -> void:
 			begin_overheat()
 		
 		if not player.is_on_floor() and can_shotgun_jump and shotgun_jump_count < shotgun_jump_max:
-			GameLogger.print_as_autoload(self, "shotgun jumping")
 			if recticle.normal.y > 0:
 				player.velocity.y = min(0, player.velocity.y)
 			player.velocity -= recticle.normal * 450
