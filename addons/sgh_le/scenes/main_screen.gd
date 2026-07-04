@@ -18,6 +18,8 @@ func _toggle_toolbar_enabled(state : bool = true) -> void:
 	$VBoxContainer/HBoxContainer/file.disabled = false
 	$VBoxContainer/HBoxContainer/rooms.disabled = !state
 	$VBoxContainer/HBoxContainer/level_config.disabled = !state
+	$VBoxContainer/HBoxContainer/background.disabled = !state
+	$VBoxContainer/HBoxContainer/debug.disabled = !state
 	$VBoxContainer/SubViewportContainer.visible = state
 	$tools_margin_container.visible = state
 	

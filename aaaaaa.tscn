@@ -41,4 +41,5 @@ tile_map_data = PackedByteArray("AAAEAAUAAAAAAAAAAAAFAAUAAAAAAAAAAAAGAAUAAAAAAAA
 tile_set = ExtResource("4_vigoe")
 
 [node name="level_start" type="Node2D" parent="asdasd/main"]
+position = Vector2(87.947556, 175.89508)
 script = ExtResource("5_jkrk6")

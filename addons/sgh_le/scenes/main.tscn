@@ -100,6 +100,7 @@ flat = true
 [node name="background" type="MenuButton" parent="main/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 0
+disabled = true
 text = "Room Background"
 item_count = 4
 popup/item_0/text = "Black"
@@ -119,6 +120,7 @@ popup/item_3/id = 2
 [node name="debug" type="MenuButton" parent="main/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 0
+disabled = true
 text = "Developer Debug"
 item_count = 2
 popup/item_0/text = "Print Current Level Proxy Tree"

@@ -24,7 +24,7 @@ var _stroke_add : Array[Vector2i] = []
 var _stroke_erase : Array[Vector2i] = []
 
 @onready var _selection_outline_panel = preload("res://addons/sgh_le/scenes/proxies/selection_outline_panel.tscn").instantiate()
-var _selected_proxy : Node:
+var _selected_proxy : Node = null:
 	set(x):
 		_selected_proxy = x
 		if _selected_proxy != null:
@@ -758,7 +758,6 @@ func _clickbox_clicked(clickbox_control : Control, allow_move : bool = true) -> 
 		_moving_node = clickbox_control.get_parent()
 	else:
 		_selection_outline_panel.reparent(clickbox_control, false)
-		_selection_outline_panel.visible = true
 		_selected_proxy = clickbox_control.get_parent()
 	
 	return _selected_proxy
