@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=4 uid="uid://dop1didvrbgdh"]
+[gd_scene format=4 uid="uid://dop1didvrbgdh"]
 
 [ext_resource type="Script" uid="uid://b8jimhiabxqwq" path="res://Classes/Nodes/Level.gd" id="1_hacfa"]
 [ext_resource type="Script" uid="uid://cpya70aw6wa8c" path="res://Classes/Nodes/LevelRoom.gd" id="2_q6hl6"]

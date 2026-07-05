@@ -1,0 +1,67 @@
+[gd_scene format=3 uid="uid://cpi7jldao1oys"]
+
+[ext_resource type="Script" uid="uid://b8jimhiabxqwq" path="res://Classes/Nodes/Level.gd" id="1_0thhj"]
+[ext_resource type="Script" uid="uid://cpya70aw6wa8c" path="res://Classes/Nodes/LevelRoom.gd" id="2_f1kqd"]
+[ext_resource type="TileSet" uid="uid://bcf80k8c2i56u" path="res://Tilesets/Resources/placeholder.tres" id="3_bpdj3"]
+[ext_resource type="TileSet" uid="uid://ctferlmu81uug" path="res://Tilesets/Resources/placeholder_overlay.tres" id="4_fux6k"]
+
+[node name="Tutorial" type="Node2D" unique_id=6078651 groups=["level"]]
+script = ExtResource("1_0thhj")
+
+[node name="main" type="Node2D" parent="." unique_id=673591243]
+script = ExtResource("2_f1kqd")
+
+[node name="background" type="Node2D" parent="main" unique_id=651521539]
+
+[node name="background_tiles" type="TileMapLayer" parent="main/background" unique_id=1237475107]
+modulate = Color(0.5, 0.5, 0.5, 1)
+scale = Vector2(2, 2)
+tile_set = ExtResource("3_bpdj3")
+collision_enabled = false
+
+[node name="foreground" type="Node2D" parent="main" unique_id=550702990]
+
+[node name="foreground_tiles" type="TileMapLayer" parent="main/foreground" unique_id=2005857126]
+modulate = Color(1, 1, 1, 0.5)
+scale = Vector2(2, 2)
+tile_set = ExtResource("3_bpdj3")
+collision_enabled = false
+
+[node name="main" type="Node2D" parent="main" unique_id=2122880528]
+
+[node name="main_back_tiles" type="TileMapLayer" parent="main/main" unique_id=1365676613]
+scale = Vector2(2, 2)
+tile_set = ExtResource("3_bpdj3")
+
+[node name="main_front_tiles" type="TileMapLayer" parent="main/main" unique_id=267882373]
+scale = Vector2(2, 2)
+tile_set = ExtResource("4_fux6k")
+
+[node name="main 2" type="Node2D" parent="." unique_id=1569320364]
+script = ExtResource("2_f1kqd")
+
+[node name="background" type="Node2D" parent="main 2" unique_id=2126499535]
+
+[node name="background_tiles" type="TileMapLayer" parent="main 2/background" unique_id=1858979650]
+modulate = Color(0.5, 0.5, 0.5, 1)
+scale = Vector2(2, 2)
+tile_set = ExtResource("3_bpdj3")
+collision_enabled = false
+
+[node name="foreground" type="Node2D" parent="main 2" unique_id=171930827]
+
+[node name="foreground_tiles" type="TileMapLayer" parent="main 2/foreground" unique_id=1337255694]
+modulate = Color(1, 1, 1, 0.5)
+scale = Vector2(2, 2)
+tile_set = ExtResource("3_bpdj3")
+collision_enabled = false
+
+[node name="main" type="Node2D" parent="main 2" unique_id=620048312]
+
+[node name="main_back_tiles" type="TileMapLayer" parent="main 2/main" unique_id=933814913]
+scale = Vector2(2, 2)
+tile_set = ExtResource("3_bpdj3")
+
+[node name="main_front_tiles" type="TileMapLayer" parent="main 2/main" unique_id=1958910965]
+scale = Vector2(2, 2)
+tile_set = ExtResource("4_fux6k")

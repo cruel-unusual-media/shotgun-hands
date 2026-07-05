@@ -23,6 +23,8 @@ var _erasing : bool = false
 var _stroke_add : Array[Vector2i] = []
 var _stroke_erase : Array[Vector2i] = []
 
+var _editor_ur : EditorUndoRedoManager = EditorInterface.get_editor_undo_redo()
+
 @onready var _selection_outline_panel = preload("res://addons/sgh_le/scenes/proxies/selection_outline_panel.tscn").instantiate()
 var _selected_proxy : Node = null:
 	set(x):
@@ -480,7 +482,10 @@ func _place_currently_selected_sprite() -> void:
 		_new_sprite.global_position = get_global_space_mouse_position()
 	
 	_new_sprite.scale = Vector2(2.0, 2.0)
-	_add_sprite_proxy(get_current_room_proxy().get_node("main"), _new_sprite)
+	
+	var _proxy : Sprite2D = _add_sprite_proxy(get_current_room_proxy().get_node("main"), _new_sprite)
+	
+	_new_sprite.tree_exiting.connect(_proxy.queue_free)
 
 
 func _delete_current_room() -> void:
@@ -658,12 +663,11 @@ func _debug_func(id : int) -> void:
 		1:
 			_verbose_logging = !_verbose_logging
 
-func _stroke_lifted() -> void:
-	var _tilemap_proxy = get_current_room_proxy().get_node(get_currently_edited_layer_path())
-	var _linked_tilemap : TileMapLayer = _tilemap_proxy.get_meta("linked_node")
-	
-	for _cell : Vector2i in _stroke_add:
-		_linked_tilemap.set_cell(_cell, _tilemap_proxy.get_cell_source_id(_cell), _paint_selected_atlas_coord, _tilemap_proxy.get_cell_alternative_tile(_cell))
+func _stroke_lifted() -> void:	
+	_editor_ur.create_action("SGHLE: Paint Tiles")
+	_editor_ur.add_do_method(self, "_do_stroke", _stroke_add, _paint_selected_atlas_coord)
+	_editor_ur.add_undo_method(self, "_erase_stroke", _stroke_add) #This is the destructive way to do this. It'll take a bit more effort to write a non-destructive way
+	_editor_ur.commit_action()
 	
 	_stroke_add = []
 
@@ -675,6 +679,23 @@ func _erase_lifted() -> void:
 		_linked_tilemap.set_cell(_cell, -1)
 	
 	_stroke_erase = []
+
+func _add_stroke(stroke : Array[Vector2i], atlas_coord : Vector2i) -> void: ##Called by the UndoRedo of the godot editor. Do not call directly.
+	var _tilemap_proxy = get_current_room_proxy().get_node(get_currently_edited_layer_path())
+	var _linked_tilemap : TileMapLayer = _tilemap_proxy.get_meta("linked_node")
+	
+	for _cell : Vector2i in stroke:
+		_tilemap_proxy.set_cell(_cell, _tilemap_proxy.get_cell_source_id(_cell), atlas_coord, _tilemap_proxy.get_cell_alternative_tile(_cell))
+		_linked_tilemap.set_cell(_cell, _tilemap_proxy.get_cell_source_id(_cell), atlas_coord, _tilemap_proxy.get_cell_alternative_tile(_cell))
+
+func _erase_stroke(stroke : Array[Vector2i]) -> void:
+	var _tilemap_proxy = get_current_room_proxy().get_node(get_currently_edited_layer_path())
+	var _linked_tilemap : TileMapLayer = _tilemap_proxy.get_meta("linked_node")
+	
+	for _cell : Vector2i in stroke:
+		_tilemap_proxy.set_cell(_cell, _tilemap_proxy.get_cell_source_id(_cell), Vector2i(-1, -1))
+		_linked_tilemap.set_cell(_cell, _tilemap_proxy.get_cell_source_id(_cell), Vector2i(-1, -1))
+
 
 func _viewport_input(event) -> void:
 	if !Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT) and _erasing:
