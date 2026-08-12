@@ -199,7 +199,7 @@ func handle_fire() -> void:
 				player.velocity.y = min(0, player.velocity.y)
 			else:
 				player.velocity.y = max(0, player.velocity.y)
-			player.velocity -= recticle.normal * 550
+			player.velocity -= recticle.normal * 650
 			shotgun_jump_count += 1
 			shotgun_jump_timer.stop()
 			can_shotgun_jump = false
