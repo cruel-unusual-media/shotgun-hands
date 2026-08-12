@@ -160,7 +160,7 @@ func end_crouch() -> void:
 	player_focus.position.y = focus_def_y
 
 
-func handle_fire() -> void:	
+func handle_fire() -> void:
 	if not reloading and not overheated:
 		var shot: bool = false
 		
@@ -197,7 +197,9 @@ func handle_fire() -> void:
 		if not player.is_on_floor() and can_shotgun_jump and shotgun_jump_count < shotgun_jump_max:
 			if recticle.normal.y > 0:
 				player.velocity.y = min(0, player.velocity.y)
-			player.velocity -= recticle.normal * 450
+			else:
+				player.velocity.y = max(0, player.velocity.y)
+			player.velocity -= recticle.normal * 550
 			shotgun_jump_count += 1
 			shotgun_jump_timer.stop()
 			can_shotgun_jump = false
